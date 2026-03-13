@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of a Journal of Financial Econometrics paper proposing deep neural network quantile regression for non-linear Value-at-Risk forecasting, with mixed-frequency extensions and interpretability via SHAP and partial derivatives.">
+
+<title>Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" rel="next">
+<link href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Probabilistic forecasting</div>
+    <div class="quarto-category">Quantile regression</div>
+    <div class="quarto-category">Value-at-Risk</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Finance</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of a Journal of Financial Econometrics paper proposing deep neural network quantile regression for non-linear Value-at-Risk forecasting, with mixed-frequency extensions and interpretability via SHAP and partial derivatives.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Paper Title:</strong> <em>Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</em></li>
+<li><strong>Authors &amp; Year:</strong> Ilias Chronopoulos, Aristeidis Raftapostolos, and George Kapetanios (2024 journal version; advance access 2023)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Journal of Financial Econometrics</em></li>
+<li><strong>DOI:</strong> <a href="https://doi.org/10.1093/jjfinec/nbad014">https://doi.org/10.1093/jjfinec/nbad014</a></li>
+<li><strong>Primary Topic:</strong> Deep neural network quantile regression for non-linear VaR forecasting</li>
+<li><strong>Secondary Topics:</strong> Mixed-frequency modeling, MIDAS, Monte Carlo validation, interpretability of quantile neural networks, SHAP, partial derivatives</li>
+<li><strong>Code/Data Available?:</strong> Not emphasized in the core paper text I reviewed</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High, especially if my work involves deep quantile forecasting, explainability, or benchmarking non-linear quantile models</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="the-motivation-why-quantiles-why-var" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-quantiles-why-var">The Motivation (Why Quantiles / Why VaR?)</h3>
+<ul>
+<li>The paper starts from the classical argument that mean regression is often inadequate when the real interest is in the conditional tails of a distribution.</li>
+<li>In finance, this matters because risk management is fundamentally about downside extremes rather than average behavior.</li>
+<li>Value-at-Risk (VaR) is directly linked to conditional quantiles of returns, so a quantile regression framework is a natural modeling choice.</li>
+<li>The authors argue that standard <strong>linear quantile regression</strong> may be too restrictive for financial markets, where relationships between returns and predictors are often non-linear, asymmetric, and unstable over time.</li>
+</ul>
+</section>
+<section id="the-motivation-why-deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-deep-learning">The Motivation (Why Deep Learning?)</h3>
+<ul>
+<li>The central justification is that feed-forward neural networks have strong <strong>universal approximation</strong> properties, so they can approximate highly non-linear conditional quantile functions much more flexibly than linear or low-order sieve approaches.</li>
+<li>They position neural networks not just as generic predictors, but as a way to estimate a <strong>conditional quantile function</strong> directly through the quantile loss.</li>
+</ul>
+</section>
+<section id="the-motivation-why-explainability" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-explainability">The Motivation (Why Explainability?)</h3>
+<ul>
+<li>The authors explicitly acknowledge the “black-box” criticism of neural networks.</li>
+<li>Their response is not merely to forecast better, but also to make the neural quantile model more interpretable through:
+<ul>
+<li><strong>SHAP values</strong>, and</li>
+<li><strong>partial derivatives</strong> of the fitted network output with respect to inputs.</li>
+</ul></li>
+<li>This is important because in risk forecasting, users want to know not only <em>what</em> the VaR forecast is, but also <em>why</em> it changed.</li>
+</ul>
+</section>
+<section id="their-claim-to-fame-novelty" class="level3">
+<h3 class="anchored" data-anchor-id="their-claim-to-fame-novelty">Their claim to fame / Novelty</h3>
+<ul>
+<li>They propose a <strong>deep quantile estimator</strong> that directly models non-linear conditional quantiles via feed-forward neural networks.</li>
+<li>They extend the setup to allow <strong>mixed-frequency inputs</strong> through a MIDAS-style architecture.</li>
+<li>They also contribute to explainable ML in finance by comparing <strong>SHAP</strong> with <strong>partial-derivative-based interpretation</strong>.</li>
+<li>The paper frames itself as, to the best of the authors’ knowledge, the first finance application using a neural network quantile estimator specifically for <strong>VaR forecasting</strong>.</li>
+</ul>
+</section>
+<section id="their-ultimate-result" class="level3">
+<h3 class="anchored" data-anchor-id="their-ultimate-result">Their ultimate result</h3>
+<ul>
+<li>The deep quantile estimator outperforms linear quantile, MIDAS, and other non-parametric quantile competitors in their VaR forecasting exercise.</li>
+<li>They report predictive gains of <strong>up to 98% relative to the linear quantile benchmark</strong>, and up to <strong>84% for the non-linear MIDAS model</strong>, depending on the setup.</li>
+<li>Their interpretability comparison also concludes that <strong>partial derivatives are more stable and much cheaper computationally than SHAP</strong>, while still being informative.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="core-modeling-idea" class="level3">
+<h3 class="anchored" data-anchor-id="core-modeling-idea">Core modeling idea</h3>
+<ul>
+<li>Standard quantile regression estimates the conditional quantile by minimizing the <strong>pinball / check loss</strong>.</li>
+<li>The authors replace the linear predictor (x_t^()) with a neural network (G_(x_t; w)), yielding a <strong>non-linear quantile regression estimator</strong>: [ Q_y(x_t) = G_(x_t; w) ]</li>
+<li>The model is trained by minimizing the quantile loss over the neural network parameters.</li>
+</ul>
+</section>
+<section id="network-structure" class="level3">
+<h3 class="anchored" data-anchor-id="network-structure">Network structure</h3>
+<ul>
+<li>They focus on <strong>feed-forward neural networks</strong>.</li>
+<li>Hidden layers use <strong>ReLU</strong> activations.</li>
+<li>The output layer is <strong>linear</strong>.</li>
+<li>They frame the model as ranging from relatively parametric to more non-parametric depending on network width/depth.</li>
+</ul>
+</section>
+<section id="regularization" class="level3">
+<h3 class="anchored" data-anchor-id="regularization">Regularization</h3>
+<p>To control overfitting, they consider: - <strong>No regularization</strong> - <strong>Deep LASSO</strong> - <strong>Deep Ridge</strong> - <strong>Deep Elastic Net</strong></p>
+<p>This is a strong part of the paper because they do not present “deep learning” as a single monolithic model; they explicitly examine how different penalties affect finite-sample behavior and forecast quality.</p>
+</section>
+<section id="hyperparameter-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="hyperparameter-tuning">Hyperparameter tuning</h3>
+<p>They use a <strong>time-series cross-validation</strong> framework rather than random CV, which is the correct choice for dependent data.</p>
+<p>Tuned components include: - number of hidden layers - number of neurons - learning rate - batch size - dropout - regularization strength - Elastic Net mixing parameter - MIDAS polynomial parameters for mixed-frequency models</p>
+</section>
+<section id="optimization" class="level3">
+<h3 class="anchored" data-anchor-id="optimization">Optimization</h3>
+<ul>
+<li>They use <strong>ADAM</strong></li>
+<li>Maximum epochs: <strong>5000</strong></li>
+<li><strong>Early stopping</strong> is used to reduce overfitting</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="monte-carlo-design-what-it-actually-shows" class="level2">
+<h2 class="anchored" data-anchor-id="monte-carlo-design-what-it-actually-shows">4. Monte Carlo Design &amp; What It Actually Shows</h2>
+<section id="why-the-monte-carlo-section-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-monte-carlo-section-matters">Why the Monte Carlo section matters</h3>
+<p>This is one of the more valuable parts of the paper.<br>
+The authors do not jump straight to empirical finance results. They first ask whether the proposed deep quantile estimator behaves sensibly in controlled settings.</p>
+</section>
+<section id="monte-carlo-setup" class="level3">
+<h3 class="anchored" data-anchor-id="monte-carlo-setup">Monte Carlo setup</h3>
+<p>They study finite-sample performance over: - quantiles ( {1%, 2.5%, 5%, 10%, 20%} ) - sample sizes ( T {100, 300, 500, 1000} ) - 1000 replications</p>
+<p>They compare: - deep quantile - deep LASSO - deep Ridge - deep Elastic Net - shallow counterparts - linear quantile regression - polynomial quantile regression - spline-based quantile regression</p>
+</section>
+<section id="simulation-cases" class="level3">
+<h3 class="anchored" data-anchor-id="simulation-cases">Simulation cases</h3>
+<p>They test five settings: 1. <strong>Simple non-linear sinusoidal function with i.i.d. Gaussian regressor</strong> 2. <strong>AR(1) regressor</strong> 3. <strong>GARCH-type regressor</strong> 4. <strong>A function generated from a neural-network-like composition</strong> 5. <strong>Serially correlated errors</strong></p>
+</section>
+<section id="what-they-find" class="level3">
+<h3 class="anchored" data-anchor-id="what-they-find">What they find</h3>
+<ul>
+<li>Both shallow and deep neural quantile estimators generally show <strong>good finite-sample performance</strong></li>
+<li><strong>Shallow networks often outperform deeper ones</strong> in the simulation study</li>
+<li>Linear quantile regression fails badly when the true quantile function is non-linear</li>
+<li>Polynomial and spline alternatives also generally underperform in these non-linear settings</li>
+<li>Penalization is often helpful, especially in more difficult settings and extreme quantiles</li>
+</ul>
+</section>
+<section id="my-interpretation-of-this-section" class="level3">
+<h3 class="anchored" data-anchor-id="my-interpretation-of-this-section">My interpretation of this section</h3>
+<p>This Monte Carlo exercise gives the paper real methodological credibility.<br>
+It is not merely “deep learning won on one dataset.” The authors show that the model class itself is able to recover non-linear quantile functions under several stylized but meaningful data-generating processes.</p>
+<p>That said, the simulations are still relatively low-dimensional and controlled. They do not stress-test the method under severe regime change, covariate shift, heavy tails beyond Gaussian innovations, or highly multivariate predictor spaces of the kind now common in financial ML.</p>
+<hr>
+</section>
+</section>
+<section id="empirical-application-var-forecasting-setup" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-application-var-forecasting-setup">5. Empirical Application: VaR Forecasting Setup</h2>
+<section id="target-problem" class="level3">
+<h3 class="anchored" data-anchor-id="target-problem">Target problem</h3>
+<ul>
+<li>Forecast <strong>10-day-ahead VaR</strong> using daily data</li>
+<li>U.S. stock return losses over a long historical sample</li>
+<li>Sample period discussed in the paper: <strong>September 1985 to August 2020</strong></li>
+</ul>
+</section>
+<section id="out-of-sample-design" class="level3">
+<h3 class="anchored" data-anchor-id="out-of-sample-design">Out-of-sample design</h3>
+<ul>
+<li>Last <strong>2000 observations</strong> reserved for out-of-sample evaluation</li>
+<li>Remaining <strong>7053 observations</strong> used for tuning and estimation</li>
+<li>This split is chosen partly to make the <strong>conditional quantile forecast encompassing</strong> results comparable with earlier literature</li>
+</ul>
+</section>
+<section id="quantiles-forecasted" class="level3">
+<h3 class="anchored" data-anchor-id="quantiles-forecasted">Quantiles forecasted</h3>
+<ul>
+<li>( = 1%, 5%, 10% )</li>
+</ul>
+</section>
+<section id="var-model-classes-used-as-inputs-structures" class="level3">
+<h3 class="anchored" data-anchor-id="var-model-classes-used-as-inputs-structures">VaR model classes used as inputs / structures</h3>
+<p>They examine four VaR specifications: 1. <strong>GARCH(1,1)-style VaR</strong> 2. <strong>RiskMetrics</strong> 3. <strong>CAViaR symmetric absolute value (SV)</strong> 4. <strong>CAViaR asymmetric slope (ASV)</strong></p>
+<p>Then they build: - linear quantile versions - MIDAS versions - non-linear deep quantile versions - non-linear deep MIDAS versions</p>
+</section>
+<section id="what-is-important-here" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-important-here">What is important here</h3>
+<p>This is not a totally unconstrained “throw raw data into a neural net” paper.<br>
+The authors still organize the forecasting problem around <strong>well-known VaR structures</strong> from the econometrics literature. In that sense, the paper is trying to bridge: - classical risk econometrics, and - modern non-linear function approximation.</p>
+<p>That makes it much stronger than a purely black-box finance paper.</p>
+<hr>
+</section>
+</section>
+<section id="validation-strategy-predictions-explanations" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-explanations">6. Validation Strategy (Predictions &amp; Explanations)</h2>
+<section id="validating-the-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-predictions">Validating the predictions</h3>
+<p>They use several forecast-comparison tools: - <strong>Diebold–Mariano (DM) test</strong> - <strong>Giacomini–White (GW) test</strong> - <strong>quantile score test</strong> - <strong>conditional quantile forecast encompassing</strong> test (Giacomini and Komunjer framework)</p>
+</section>
+<section id="what-they-conclude-from-these-tests" class="level3">
+<h3 class="anchored" data-anchor-id="what-they-conclude-from-these-tests">What they conclude from these tests</h3>
+<ul>
+<li>The deep quantile estimator generally has <strong>higher forecasting accuracy</strong></li>
+<li>It often <strong>encompasses</strong> competing forecasts more often than the reverse</li>
+<li>In some cases, the encompassing tests are inconclusive, suggesting that <strong>forecast combinations</strong> may outperform any single model</li>
+</ul>
+</section>
+<section id="validating-the-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-explanations">Validating the explanations</h3>
+<p>This is much less rigorous.</p>
+<p>They compare: - <strong>SHAP values</strong> - <strong>partial derivatives</strong></p>
+<p>And judge them on: - interpretability - stability over time - computational cost - ability to reflect known stress periods like the <strong>2008 financial crisis</strong> and <strong>COVID-19</strong></p>
+<p>This is useful, but it is still mostly <strong>qualitative validation</strong> rather than a formal XAI evaluation framework.</p>
+<hr>
+</section>
+</section>
+<section id="explainability-contribution-what-did-xai-actually-do" class="level2">
+<h2 class="anchored" data-anchor-id="explainability-contribution-what-did-xai-actually-do">7. Explainability Contribution: What Did XAI Actually Do?</h2>
+<section id="their-two-interpretation-tools" class="level3">
+<h3 class="anchored" data-anchor-id="their-two-interpretation-tools">Their two interpretation tools</h3>
+<ol type="1">
+<li><strong>SHAP values</strong>
+<ul>
+<li>Used as a standard post-hoc feature attribution framework</li>
+</ul></li>
+<li><strong>Partial derivatives</strong>
+<ul>
+<li>Used to examine marginal sensitivity of the predicted quantile to each input</li>
+</ul></li>
+</ol>
+</section>
+<section id="their-main-interpretability-findings" class="level3">
+<h3 class="anchored" data-anchor-id="their-main-interpretability-findings">Their main interpretability findings</h3>
+<ul>
+<li>Partial derivatives are <strong>more stable over time</strong></li>
+<li>Partial derivatives are <strong>far cheaper computationally</strong> than SHAP</li>
+<li>The derivative-based interpretation fluctuates around the linear quantile estimate and can capture time variation linked to major market stress events</li>
+</ul>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why this matters</h3>
+<p>This is an interesting contribution because most finance explainability papers default to SHAP and stop there.<br>
+These authors ask whether a simpler structural sensitivity measure may actually be more practical.</p>
+</section>
+<section id="my-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="my-interpretation">My interpretation</h3>
+<p>The paper’s most interesting XAI insight is not that SHAP works, but that <strong>SHAP may not be the most useful interpretability tool in this setting</strong>.<br>
+For continuously differentiable models, partial derivatives can provide: - a faster, - more stable, - more directly sensitivity-based view of model behavior.</p>
+<p>That is a very useful takeaway for any forecasting paper where interpretability has to be repeated over many rolling windows or over long historical horizons.</p>
+<hr>
+</section>
+</section>
+<section id="main-strengths-of-the-paper" class="level2">
+<h2 class="anchored" data-anchor-id="main-strengths-of-the-paper">8. Main Strengths of the Paper</h2>
+<section id="strength-1-it-is-methodologically-balanced" class="level3">
+<h3 class="anchored" data-anchor-id="strength-1-it-is-methodologically-balanced">Strength 1: It is methodologically balanced</h3>
+<p>The paper combines: - theory motivation, - simulation evidence, - empirical forecasting, - and interpretability.</p>
+<p>That gives it a more complete arc than many ML-for-finance papers.</p>
+</section>
+<section id="strength-2-it-respects-time-series-structure" class="level3">
+<h3 class="anchored" data-anchor-id="strength-2-it-respects-time-series-structure">Strength 2: It respects time-series structure</h3>
+<p>Their use of: - time-series cross-validation, - proper out-of-sample design, - formal forecast comparison tests, makes the work much stronger than papers that only report in-sample fit or random train/test splits.</p>
+</section>
+<section id="strength-3-it-benchmarks-against-econometric-baselines" class="level3">
+<h3 class="anchored" data-anchor-id="strength-3-it-benchmarks-against-econometric-baselines">Strength 3: It benchmarks against econometric baselines</h3>
+<p>The authors do not compare only against strawman mean models.<br>
+They include: - linear quantile models, - MIDAS variants, - CAViaR-type structures, - and non-parametric alternatives.</p>
+</section>
+<section id="strength-4-it-gives-an-actual-interpretability-discussion" class="level3">
+<h3 class="anchored" data-anchor-id="strength-4-it-gives-an-actual-interpretability-discussion">Strength 4: It gives an actual interpretability discussion</h3>
+<p>Even if not fully rigorous, the paper takes the interpretability problem seriously and tests two different tools rather than treating explainability as an afterthought.</p>
+</section>
+<section id="strength-5-it-explicitly-studies-regularization" class="level3">
+<h3 class="anchored" data-anchor-id="strength-5-it-explicitly-studies-regularization">Strength 5: It explicitly studies regularization</h3>
+<p>The paper acknowledges that neural quantile estimators can overfit, and it studies how penalties change performance. That is a mature methodological move.</p>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">9. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<section id="criticism-1-the-paper-still-uses-a-fairly-narrow-input-structure" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-1-the-paper-still-uses-a-fairly-narrow-input-structure">Criticism 1: The paper still uses a fairly narrow input structure</h3>
+<p>Although the authors motivate high-dimensional flexibility, the actual VaR specifications remain relatively low-dimensional and structurally tied to traditional VaR equations.</p>
+<p>This is not necessarily bad, but it means the paper does <strong>not fully demonstrate</strong> how the method behaves in genuinely high-dimensional financial forecasting environments with many covariates, macro variables, realized measures, order-book features, or alternative data.</p>
+</section>
+<section id="criticism-2-the-interpretability-evaluation-is-still-mostly-qualitative" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-2-the-interpretability-evaluation-is-still-mostly-qualitative">Criticism 2: The interpretability evaluation is still mostly qualitative</h3>
+<p>The comparison between SHAP and partial derivatives is interesting, but it is not validated with: - faithfulness metrics, - stability metrics, - perturbation tests, - agreement under resampling, - or formal sensitivity benchmarks.</p>
+<p>So while the conclusion that partial derivatives are “better” is plausible and practically useful, it is not fully established in a rigorous XAI-evaluation sense.</p>
+</section>
+<section id="criticism-3-the-forecasting-victory-may-partly-reflect-flexible-function-approximation-rather-than-a-uniquely-finance-specific-insight" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-3-the-forecasting-victory-may-partly-reflect-flexible-function-approximation-rather-than-a-uniquely-finance-specific-insight">Criticism 3: The forecasting victory may partly reflect flexible function approximation rather than a uniquely finance-specific insight</h3>
+<p>The deep quantile model wins because it can represent non-linear conditional quantiles better than linear models.<br>
+That is a valid result, but it is also somewhat unsurprising.<br>
+The paper is stronger as a <strong>demonstration of the value of non-linear quantile function estimation</strong> than as a finance-theory breakthrough.</p>
+</section>
+<section id="criticism-4-the-deep-vs-shallow-message-is-awkward" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-4-the-deep-vs-shallow-message-is-awkward">Criticism 4: The deep-vs-shallow message is awkward</h3>
+<p>In Monte Carlo, shallow models often look better than deeper ones, yet the paper is framed around “deep” quantile regression. That does not invalidate the work, but it does weaken any simplistic narrative that <em>more depth is inherently better</em>.</p>
+</section>
+<section id="criticism-5-no-broader-uncertainty-discussion-beyond-quantiles" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-5-no-broader-uncertainty-discussion-beyond-quantiles">Criticism 5: No broader uncertainty discussion beyond quantiles</h3>
+<p>This paper is about quantile forecasting, not full probabilistic density estimation.<br>
+That is fine, but it means it does not engage with: - calibration of full predictive distributions, - tail dependence structures, - extreme value theory integration, - or whether the estimated quantiles remain coherent across levels.</p>
+</section>
+<section id="criticism-6-potential-monotonicity-quantile-crossing-issues-are-not-the-main-focus" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-6-potential-monotonicity-quantile-crossing-issues-are-not-the-main-focus">Criticism 6: Potential monotonicity / quantile crossing issues are not the main focus</h3>
+<p>Whenever multiple quantiles are estimated, one wants to know whether the resulting quantile curves are coherent and non-crossing.<br>
+This paper does not foreground that issue as a central methodological challenge.</p>
+</section>
+<section id="criticism-7-the-benchmark-set-is-respectable-but-not-modern-by-2026-standards" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-7-the-benchmark-set-is-respectable-but-not-modern-by-2026-standards">Criticism 7: The benchmark set is respectable, but not modern by 2026 standards</h3>
+<p>For historical context the benchmark suite is reasonable.<br>
+But by current standards, one would also want comparisons against: - quantile gradient boosting, - quantile random forests, - distributional boosting, - modern sequence models, - conformalized quantile methods, - and perhaps heavy-tail parametric or semi-parametric baselines.</p>
+<hr>
+</section>
+</section>
+<section id="what-this-paper-means-for-my-own-research" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-paper-means-for-my-own-research">10. What This Paper Means for My Own Research</h2>
+<section id="if-my-work-is-on-probabilistic-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="if-my-work-is-on-probabilistic-forecasting">If my work is on probabilistic forecasting</h3>
+<p>This paper is highly relevant because it provides a concrete example of: - replacing linear quantile structure with a neural quantile function, - validating it in simulation, - and comparing it with conventional baselines.</p>
+</section>
+<section id="if-my-work-is-on-explainable-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="if-my-work-is-on-explainable-forecasting">If my work is on explainable forecasting</h3>
+<p>The most useful takeaway may actually be the <strong>partial-derivative vs SHAP</strong> comparison.<br>
+That gives me a strong precedent for arguing that: - SHAP is not the only route to explainability, - and in some forecasting settings, derivative-based explanations may be more stable and computationally realistic.</p>
+</section>
+<section id="if-my-work-is-on-energy-forecasting-rather-than-finance" class="level3">
+<h3 class="anchored" data-anchor-id="if-my-work-is-on-energy-forecasting-rather-than-finance">If my work is on energy forecasting rather than finance</h3>
+<p>Even though the domain is financial VaR, the methodological structure is transferable: - tail-focused forecasting, - quantile loss, - neural non-linearity, - time-series CV, - benchmarking against linear and structured baselines, - and interpretability of conditional quantile dynamics.</p>
+<p>This is especially relevant if I want to forecast: - reserve requirements, - net-load risk, - renewable underproduction risk, - demand peaks, - or other lower/upper tail events.</p>
+<hr>
+</section>
+</section>
+<section id="how-i-would-position-this-paper-in-a-literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="how-i-would-position-this-paper-in-a-literature-review">11. How I Would Position This Paper in a Literature Review</h2>
+<section id="as-a-foundational-citation-for-neural-quantile-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="as-a-foundational-citation-for-neural-quantile-forecasting">As a foundational citation for neural quantile forecasting</h3>
+<p>I would cite it as evidence that: - neural networks can be used to estimate conditional quantiles directly, - and that doing so can materially improve tail-risk forecasting relative to linear quantile models.</p>
+</section>
+<section id="as-a-bridge-paper" class="level3">
+<h3 class="anchored" data-anchor-id="as-a-bridge-paper">As a bridge paper</h3>
+<p>It is best positioned as a bridge between: - classical econometric quantile/VaR methods, and - modern ML non-linear function approximation.</p>
+</section>
+<section id="as-an-explainability-citation" class="level3">
+<h3 class="anchored" data-anchor-id="as-an-explainability-citation">As an explainability citation</h3>
+<p>I would also use it when arguing that: - post-hoc explainability in probabilistic forecasting is possible, - but not all explainability tools are equally stable or practical.</p>
+</section>
+<section id="as-a-limitation-benchmark" class="level3">
+<h3 class="anchored" data-anchor-id="as-a-limitation-benchmark">As a limitation benchmark</h3>
+<p>I would contrast my own work against it by noting: - it focuses on VaR quantiles rather than full predictive distributions, - uses mostly qualitative explainability validation, - and does not fully explore modern high-dimensional or deep sequence architectures.</p>
+<hr>
+</section>
+</section>
+<section id="suggested-threat-level-to-my-work" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-threat-level-to-my-work">12. Suggested “Threat Level” to My Work</h2>
+<section id="why-it-is-a-threat" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-is-a-threat">Why it is a threat</h3>
+<ul>
+<li>It is published in a strong journal</li>
+<li>It addresses a serious forecasting problem</li>
+<li>It combines quantile prediction with explainability</li>
+<li>It reports large predictive gains over classical baselines</li>
+</ul>
+</section>
+<section id="why-it-is-not-a-complete-overlap" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-is-not-a-complete-overlap">Why it is not a complete overlap</h3>
+<ul>
+<li>It is in <strong>finance</strong>, not necessarily in energy systems or grid forecasting</li>
+<li>It focuses on <strong>VaR</strong>, not full probabilistic forecasting or multi-horizon distributional forecasting</li>
+<li>Its explainability validation is still relatively light</li>
+<li>Its model class is feed-forward quantile regression, not the full range of modern time-series architectures</li>
+</ul>
+</section>
+<section id="overall-threat-assessment" class="level3">
+<h3 class="anchored" data-anchor-id="overall-threat-assessment">Overall threat assessment</h3>
+<ul>
+<li><strong>Methodological threat:</strong> High</li>
+<li><strong>Domain-specific threat:</strong> Medium</li>
+<li><strong>Direct overlap threat:</strong> Medium unless my own work also centers on quantile neural networks with explainability</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">13. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper as a strong example of <strong>non-linear neural quantile regression</strong> outperforming linear quantile approaches in a real forecasting task.</label></li>
+<li><label><input type="checkbox">Use it to support the claim that <strong>tail-focused forecasting problems benefit from flexible conditional quantile models</strong>.</label></li>
+<li><label><input type="checkbox">Reference its Monte Carlo section when justifying the need to validate quantile estimators in controlled synthetic settings before applying them empirically.</label></li>
+<li><label><input type="checkbox">Use its interpretability discussion to motivate a comparison between <strong>SHAP</strong> and <strong>gradient / derivative-based explanations</strong> in my own work.</label></li>
+<li><label><input type="checkbox">Explicitly improve upon this paper by including <strong>formal XAI evaluation metrics</strong>, not only qualitative visual inspection.</label></li>
+<li><label><input type="checkbox">If relevant, extend beyond VaR-style quantiles to <strong>full predictive distributions</strong>, <strong>multi-horizon forecasting</strong>, or <strong>quantile coherence / crossing control</strong>.</label></li>
+<li><label><input type="checkbox">Consider benchmarking against this style of model if I want a finance-inspired but general-purpose non-linear quantile baseline.</label></li>
+</ul>
+<hr>
+</section>
+<section id="bottom-line-review" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line-review">14. Bottom-Line Review</h2>
+<p>This is a strong and thoughtful paper that does more than just apply a neural network to a finance problem.<br>
+Its main contribution is to show that <strong>direct neural quantile estimation</strong> can materially improve <strong>VaR forecasting</strong> when the conditional quantile function is non-linear, and that this can be studied in a reasonably disciplined way through simulation, out-of-sample testing, and interpretability analysis.</p>
+<p>Its most interesting conceptual contribution is not merely “deep learning beats linear models,” but rather: 1. <strong>conditional quantiles are often non-linear</strong>,<br>
+2. <strong>neural networks provide a practical estimator for them</strong>, and<br>
+3. <strong>partial-derivative-based explanations may be a more stable alternative to SHAP in this context</strong>.</p>
+<p>The paper’s main weaknesses are that the interpretability validation remains mostly qualitative, the input space is not especially high-dimensional in practice, and the benchmark set, while solid, is no longer exhaustive by modern standards.</p>
+<p>Still, as a literature-review source, it is highly useful and deserves to be treated as an important reference for any research sitting at the intersection of: - quantile forecasting, - tail-risk prediction, - neural non-linear regression, - and explainable probabilistic modeling.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="pagination-link" aria-label="Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="pagination-link" aria-label="High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques">
+        <span class="nav-page-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

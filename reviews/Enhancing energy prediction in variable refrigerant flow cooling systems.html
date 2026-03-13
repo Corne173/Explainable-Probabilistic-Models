@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of an Energy paper comparing black-box and hybrid grey-box XGBoost models for VRF compressor power prediction, with uncertainty quantification and SHAP-based interpretability.">
+
+<title>Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" rel="next">
+<link href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">HVAC</div>
+    <div class="quarto-category">Variable Refrigerant Flow</div>
+    <div class="quarto-category">Grey-box modelling</div>
+    <div class="quarto-category">Physics-informed machine learning</div>
+    <div class="quarto-category">XGBoost</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">SHAP</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of an Energy paper comparing black-box and hybrid grey-box XGBoost models for VRF compressor power prediction, with uncertainty quantification and SHAP-based interpretability.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Authors &amp; Year:</strong> Muhammad Reshaeel, Mohamed I. Hassan Ali (2026)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Energy</em><br>
+</li>
+<li><strong>DOI:</strong> <code>10.1016/j.energy.2025.139895</code></li>
+<li><strong>Primary Domain:</strong> HVAC / VRF system energy prediction</li>
+<li><strong>Core Modelling Family:</strong> XGBoost</li>
+<li><strong>Model Types Compared:</strong> Pure black-box ML vs hybrid grey-box ML</li>
+<li><strong>Interpretability Tool:</strong> SHAP, including SHAP interaction values</li>
+<li><strong>Uncertainty Treatment:</strong> Aleatoric and epistemic uncertainty quantification</li>
+<li><strong>Dataset Type:</strong> Limited experimental data from a VRF laboratory test bench</li>
+<li><strong>Proximity/Threat Level:</strong> High for any research involving interpretable, physics-informed HVAC or energy prediction under small-data conditions</li>
+<li><strong>Why this paper matters:</strong> It is one of the clearest demonstrations that embedding thermodynamic structure into a machine learning model can materially improve not only predictive accuracy, but also uncertainty behaviour and interpretability.</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="the-motivation" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation">The Motivation</h3>
+<p>The paper starts from a very practical energy systems problem: HVAC systems account for a major fraction of building energy use, and VRF systems are increasingly attractive because of their energy efficiency and part-load performance. However, to operate, optimize, diagnose, or control VRF systems well, one needs accurate energy prediction models. The authors argue that existing modelling approaches each have serious weaknesses: - <strong>White-box models</strong> are physically grounded and generalizable, but they require detailed system knowledge and are computationally intensive. - <strong>Black-box ML models</strong> can be accurate, but they depend heavily on rich, representative data and are often hard to interpret. - <strong>Existing grey-box models</strong> help bridge the gap, but the literature still lacks a model that is simultaneously accurate, robust, uncertainty-aware, and interpretable when trained on <strong>limited experimental data</strong>.</p>
+</section>
+<section id="their-main-research-gap" class="level3">
+<h3 class="anchored" data-anchor-id="their-main-research-gap">Their Main Research Gap</h3>
+<p>The paper identifies three specific gaps: 1. <strong>Small-data robustness</strong> in VRF prediction is still weak. 2. <strong>Comprehensive uncertainty quantification</strong> is rare in VRF energy prediction. 3. <strong>SHAP-based interpretability</strong> had not yet been explored in this VRF prediction context.</p>
+</section>
+<section id="their-claim-to-fame-novelty" class="level3">
+<h3 class="anchored" data-anchor-id="their-claim-to-fame-novelty">Their Claim to Fame / Novelty</h3>
+<p>The novelty is not just “use XGBoost for VRF prediction.” The real novelty is the <strong>comparison framework</strong>: - build a <strong>pure black-box XGBoost model</strong> using only operational variables, - build a <strong>hybrid grey-box XGBoost model</strong> using operational variables <strong>plus thermodynamic state variables and engineered thermodynamic features</strong>, - compare both on: - predictive accuracy, - residual behaviour, - robustness under distribution shift, - aleatoric uncertainty, - epistemic uncertainty, - interpretability via SHAP.</p>
+</section>
+<section id="why-the-grey-box-framing-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-grey-box-framing-matters">Why the Grey-Box Framing Matters</h3>
+<p>The hybrid model embeds <strong>VRF cycle domain knowledge</strong> into the learning pipeline. This is not done by replacing ML with physics, but by <strong>augmenting the feature space with physically meaningful quantities</strong> such as: - suction and discharge temperatures, - pressure ratio, - part-load ratio, - degrees of subcooling and superheating, - refrigerant mass flow rates.</p>
+<p>This is the key philosophical contribution of the paper:<br>
+<strong>the model remains data-driven, but the representation is physically informed.</strong></p>
+<hr>
+</section>
+</section>
+<section id="technical-setup-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="technical-setup-methodology">3. Technical Setup &amp; Methodology</h2>
+</section>
+<section id="experimental-testbed" class="level2">
+<h2 class="anchored" data-anchor-id="experimental-testbed">3.1 Experimental Testbed</h2>
+<p>The study uses a laboratory VRF test bench developed with LAB-TECH International. It includes: - two indoor units, - one outdoor unit, - an inverter-driven variable-speed compressor, - temperature, pressure, and refrigerant flow sensors, - a thermodynamic cycle simulation interface, - cooling-mode operation only.</p>
+<p>The system uses <strong>R410A refrigerant</strong> and has a rated cooling capacity of <strong>11.2 kW</strong>.</p>
+<section id="data-collection-context" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection-context">Data Collection Context</h3>
+<ul>
+<li>Location: Khalifa University, Abu Dhabi</li>
+<li>Duration: two days</li>
+<li>Time window: 8:30 a.m. to 7:30 p.m.</li>
+<li>Resolution: minute-wise measurements</li>
+<li>Raw data points: 1320</li>
+<li>Stable data points retained after cleaning: <strong>1080</strong></li>
+</ul>
+<p>The paper explicitly removes stabilization-period data, following HVAC testing recommendations.</p>
+<hr>
+</section>
+</section>
+<section id="feature-design" class="level2">
+<h2 class="anchored" data-anchor-id="feature-design">3.2 Feature Design</h2>
+<section id="black-box-model-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="black-box-model-inputs">Black-box Model Inputs</h3>
+<p>The pure black-box model uses only four operational features: - room temperature (<code>Troom</code>) - mean set-point temperature (<code>Tmean</code>) - ambient temperature (<code>Tamb</code>) - relative humidity (<code>RH</code>)</p>
+<p>These are essentially <strong>external/operational proxies</strong> for system behaviour.</p>
+</section>
+<section id="hybrid-grey-box-model-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-grey-box-model-inputs">Hybrid Grey-box Model Inputs</h3>
+<p>The hybrid model uses the above operational variables <strong>plus</strong> thermodynamic state and engineered features.</p>
+<section id="thermodynamic-state-features" class="level4">
+<h4 class="anchored" data-anchor-id="thermodynamic-state-features">Thermodynamic State Features</h4>
+<ul>
+<li>suction temperature (<code>Tsuc</code>)</li>
+<li>discharge temperature (<code>Tdis</code>)</li>
+</ul>
+</section>
+<section id="engineered-thermodynamic-features" class="level4">
+<h4 class="anchored" data-anchor-id="engineered-thermodynamic-features">Engineered Thermodynamic Features</h4>
+<ul>
+<li>pressure ratio (<code>PR</code>)</li>
+<li>part-load ratio (<code>PLR</code>)</li>
+<li>condenser subcooling (<code>DSC-cond</code>)</li>
+<li>liquid-line subcooling 1 and 2 (<code>DSC-L1</code>, <code>DSC-L2</code>)</li>
+<li>superheating in evaporator 1 and 2 (<code>DSH-E1</code>, <code>DSH-E2</code>)</li>
+<li>suction-line superheating (<code>DSH-suc</code>)</li>
+<li>refrigerant mass flow rates (<code>RF1</code>, <code>RF2</code>)</li>
+</ul>
+<p>These engineered variables are derived from measured pressures, temperatures, and refrigerant flow quantities through thermodynamic relations and energy balances.</p>
+</section>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>This is where the paper becomes much more than a standard ML application. The authors are effectively arguing that: - operational variables tell you <strong>what conditions the system sees</strong>, - thermodynamic variables tell you <strong>how the cycle is actually responding</strong>.</p>
+<p>That distinction becomes very important later in the accuracy, uncertainty, and SHAP results.</p>
+<hr>
+</section>
+</section>
+<section id="correlation-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-analysis">3.3 Correlation Analysis</h2>
+<p>The authors use <strong>Spearman correlation</strong> before model development.</p>
+<section id="black-box-correlation-findings" class="level3">
+<h3 class="anchored" data-anchor-id="black-box-correlation-findings">Black-box Correlation Findings</h3>
+<p>For the black-box dataset: - <code>Troom</code> is the strongest positive correlate with compressor input power, - <code>Tamb</code> is also positively related, - <code>Tmean</code> and <code>RH</code> are negatively related.</p>
+<p>The black-box model therefore relies heavily on indirect empirical trends.</p>
+</section>
+<section id="hybrid-correlation-findings" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-correlation-findings">Hybrid Correlation Findings</h3>
+<p>For the hybrid dataset, the dominant variables shift away from raw operating conditions toward: - <code>PLR</code> - <code>PR</code> - <code>Tdis</code> - <code>RF1</code> - <code>RF2</code> - <code>DSC-cond</code></p>
+<p>This is a major conceptual result. Once thermodynamic variables are introduced, the model no longer needs to rely mainly on environmental proxies. Instead, it can learn from variables that are much closer to the underlying physics of compressor workload.</p>
+</section>
+<section id="important-observation" class="level3">
+<h3 class="anchored" data-anchor-id="important-observation">Important Observation</h3>
+<p>The paper notes some collinearity, especially: - <code>DSC-L1</code> vs <code>DSC-L2</code> - <code>RF1</code> vs <code>RF2</code></p>
+<p>But the authors keep them because they encode distinct thermodynamic interactions.</p>
+<hr>
+</section>
+</section>
+<section id="learning-algorithm-training" class="level2">
+<h2 class="anchored" data-anchor-id="learning-algorithm-training">3.4 Learning Algorithm &amp; Training</h2>
+<p>Both models use <strong>XGBoost</strong> with the same overall pipeline. The main difference is only the feature set.</p>
+<section id="hyperparameter-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="hyperparameter-tuning">Hyperparameter Tuning</h3>
+<p>They tune hyperparameters using <strong>GridSearchCV</strong>.<br>
+Best values included: - learning rate = 0.1 for both - <code>max_depth = 3</code> for black-box, <code>6</code> for hybrid - <code>n_estimators = 75</code> for both - stronger regularization for the hybrid model (<code>reg_alpha = 0.5</code>, <code>reg_lambda = 2</code>)</p>
+<p>That stronger regularization in the hybrid model is interesting: even though the hybrid model has many more features, it still ends up performing substantially better, suggesting that the added variables are not just noise but genuinely informative structure.</p>
+<hr>
+</section>
+</section>
+<section id="validation-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy">4. Validation Strategy</h2>
+<section id="performance-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="performance-metrics">Performance Metrics</h3>
+<p>The paper evaluates models using: - <code>R²</code> - <code>RMSE</code> - <code>CV-RMSE</code></p>
+</section>
+<section id="validation-procedure" class="level3">
+<h3 class="anchored" data-anchor-id="validation-procedure">Validation Procedure</h3>
+<p>Because the dataset is small, the authors use <strong>k-fold cross-validation</strong> instead of a single fixed split, varying <code>k</code> from 2 to 10.</p>
+</section>
+<section id="additional-robustness-test" class="level3">
+<h3 class="anchored" data-anchor-id="additional-robustness-test">Additional Robustness Test</h3>
+<p>They also perform an <strong>out-of-distribution evaluation</strong> using a 4-hour operational dataset with significant distributional shift, quantified using <strong>Population Stability Index (PSI)</strong>.</p>
+<p>This is a strong aspect of the paper. Many small-data ML studies stop at cross-validation, but here the authors go a step further and explicitly test how the models behave under shifted conditions.</p>
+<hr>
+</section>
+</section>
+<section id="key-results" class="level2">
+<h2 class="anchored" data-anchor-id="key-results">5. Key Results</h2>
+</section>
+<section id="main-predictive-performance" class="level2">
+<h2 class="anchored" data-anchor-id="main-predictive-performance">5.1 Main Predictive Performance</h2>
+<p>Across cross-validation folds, the hybrid grey-box model outperforms the black-box model consistently.</p>
+<section id="average-gains-of-the-hybrid-model" class="level3">
+<h3 class="anchored" data-anchor-id="average-gains-of-the-hybrid-model">Average Gains of the Hybrid Model</h3>
+<ul>
+<li><strong>R² improvement:</strong> <strong>7.26%</strong></li>
+<li><strong>RMSE reduction:</strong> <strong>71.86%</strong></li>
+<li><strong>CV-RMSE reduction:</strong> <strong>71.87%</strong></li>
+</ul>
+</section>
+<section id="typical-metric-values" class="level3">
+<h3 class="anchored" data-anchor-id="typical-metric-values">Typical Metric Values</h3>
+<p>Black-box model: - <code>R² ≈ 0.924–0.930</code> - <code>RMSE ≈ 0.082–0.086 kW</code> - <code>CV-RMSE ≈ 6.74–7.02%</code></p>
+<p>Hybrid grey-box model: - <code>R² ≈ 0.993–0.995</code> - <code>RMSE ≈ 0.022–0.025 kW</code> - <code>CV-RMSE ≈ 1.82–2.05%</code></p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<p>This is a large gain, not a marginal one. The hybrid model is not just “a little better”; it is in a materially different regime of accuracy.</p>
+<p>The paper also explains why the percentage gain in <code>R²</code> looks modest relative to the dramatic drop in RMSE: - <code>R²</code> is bounded and variance-based, - RMSE and CV-RMSE reflect absolute and relative error magnitude.</p>
+<p>That explanation is sensible and technically correct.</p>
+<hr>
+</section>
+</section>
+<section id="actual-vs-predicted-scatter" class="level2">
+<h2 class="anchored" data-anchor-id="actual-vs-predicted-scatter">5.2 Actual-vs-Predicted Scatter</h2>
+<p>The hybrid model has: - <strong>98.33%</strong> of predictions within the ±10% error bounds.</p>
+<p>The black-box model has: - <strong>87.22%</strong> within the ±10% error bounds.</p>
+<p>This is a visually intuitive way of showing that the grey-box model is much more tightly aligned with true compressor input power.</p>
+<hr>
+</section>
+<section id="residual-behaviour" class="level2">
+<h2 class="anchored" data-anchor-id="residual-behaviour">5.3 Residual Behaviour</h2>
+<p>This is one of the strongest sections of the paper.</p>
+<section id="black-box-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="black-box-residuals">Black-box Residuals</h3>
+<ul>
+<li>residuals spread roughly from <strong>-0.80 to 0.30 kW</strong></li>
+<li>heteroscedastic pattern</li>
+<li>larger errors at higher predicted power</li>
+</ul>
+</section>
+<section id="hybrid-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-residuals">Hybrid Residuals</h3>
+<ul>
+<li>residuals roughly confined to <strong>-0.30 to 0.10 kW</strong></li>
+<li>much tighter spread</li>
+<li>more homoscedastic pattern</li>
+</ul>
+</section>
+<section id="why-this-matters-1" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-1">Why this matters</h3>
+<p>This indicates the hybrid model is not just more accurate on average, but also more <strong>stable across the operating range</strong>. That is especially important for control-oriented energy models.</p>
+<hr>
+</section>
+</section>
+<section id="robustness-under-distribution-shift" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-under-distribution-shift">5.4 Robustness Under Distribution Shift</h2>
+<p>This section significantly strengthens the paper.</p>
+<p>The authors freeze hyperparameters and evaluate both models on a new dataset with significant shift in many variables. PSI values indicate strong shift in features such as: - <code>Tdis</code> - <code>PR</code> - <code>PLR</code> - <code>DSC-cond</code> - <code>RF1</code> - <code>RF2</code> - <code>Troom</code> - <code>Tmean</code> - <code>Tamb</code> - <code>RH</code></p>
+<section id="shifted-data-performance" class="level3">
+<h3 class="anchored" data-anchor-id="shifted-data-performance">Shifted-Data Performance</h3>
+<p>Black-box: - <code>RMSE = 0.1753 kW</code> - <code>CV-RMSE = 17.13%</code> - <code>R² = 0.8017</code> - <strong>48.75%</strong> within ±10% error</p>
+<p>Hybrid grey-box: - <code>RMSE = 0.1130 kW</code> - <code>CV-RMSE = 11.04%</code> - <code>R² = 0.9176</code> - <strong>63.75%</strong> within ±10% error</p>
+</section>
+<section id="interpretation-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
+<p>Both models degrade under shift, which is expected. But the hybrid model degrades <strong>more gracefully</strong>. This is a strong result because it supports the core grey-box argument: <strong>physically informed representations generalize better when the operating distribution changes.</strong></p>
+<hr>
+</section>
+</section>
+<section id="uncertainty-quantification" class="level2">
+<h2 class="anchored" data-anchor-id="uncertainty-quantification">6. Uncertainty Quantification</h2>
+<p>This is one of the paper’s most valuable contributions.</p>
+</section>
+<section id="aleatoric-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="aleatoric-uncertainty">6.1 Aleatoric Uncertainty</h2>
+<p>The authors estimate aleatoric uncertainty in two stages: 1. train a model to estimate the median compressor power, 2. model the absolute residuals as a proxy for irreducible noise.</p>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>Black-box average aleatoric uncertainty: - <strong>0.0315 kW</strong></p>
+<p>Hybrid grey-box average aleatoric uncertainty: - <strong>0.0038 kW</strong></p>
+</section>
+<section id="reduction" class="level3">
+<h3 class="anchored" data-anchor-id="reduction">Reduction</h3>
+<ul>
+<li><strong>87.94% lower aleatoric uncertainty</strong></li>
+</ul>
+</section>
+<section id="interpretation-2" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
+<p>This is a striking result. Strictly speaking, aleatoric uncertainty is supposed to reflect irreducible noise, but in practice its estimated value depends on how well the model isolates signal from noise. The hybrid model’s lower estimated aleatoric uncertainty suggests that the thermodynamic features help explain variance that would otherwise be dumped into the residual/noise term.</p>
+<p>That is one of the central messages of the paper: <strong>better physics-aware features reduce what looks like “noise.”</strong></p>
+<hr>
+</section>
+</section>
+<section id="epistemic-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="epistemic-uncertainty">6.2 Epistemic Uncertainty</h2>
+<p>Because XGBoost does not provide epistemic uncertainty directly, the authors use an ensemble-based perturbation approach: - inject Gaussian noise into input features, - retrain multiple perturbed models, - compute variance in predictions.</p>
+<section id="results-1" class="level3">
+<h3 class="anchored" data-anchor-id="results-1">Results</h3>
+<p>Black-box average epistemic uncertainty: - <strong>0.0140 kW</strong></p>
+<p>Hybrid grey-box average epistemic uncertainty: - <strong>0.0080 kW</strong></p>
+</section>
+<section id="reduction-1" class="level3">
+<h3 class="anchored" data-anchor-id="reduction-1">Reduction</h3>
+<ul>
+<li><strong>42.86% lower epistemic uncertainty</strong></li>
+</ul>
+</section>
+<section id="noise-sensitivity-test" class="level3">
+<h3 class="anchored" data-anchor-id="noise-sensitivity-test">Noise Sensitivity Test</h3>
+<p>The hybrid model remains less sensitive to input perturbation across all tested noise levels. The authors report that the average percentage change in epistemic uncertainty across noise levels is <strong>20.45% lower</strong> for the hybrid model.</p>
+</section>
+<section id="interpretation-3" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-3">Interpretation</h3>
+<p>This is a very nice result because the hybrid model actually has <strong>more input features</strong>, so one might initially expect more perturbation sensitivity. Instead, the opposite happens. The paper’s explanation is that the thermodynamic variables act as <strong>structural constraints</strong> that stabilize the learned function.</p>
+<p>That is a convincing interpretation.</p>
+<hr>
+</section>
+</section>
+<section id="interpretability-shap-findings" class="level2">
+<h2 class="anchored" data-anchor-id="interpretability-shap-findings">7. Interpretability / SHAP Findings</h2>
+<p>The paper uses: - SHAP summary plots, - global importance plots, - dependency plots, - SHAP interaction plots.</p>
+</section>
+<section id="what-shap-shows-at-a-high-level" class="level2">
+<h2 class="anchored" data-anchor-id="what-shap-shows-at-a-high-level">7.1 What SHAP Shows at a High Level</h2>
+<p>The hybrid model’s SHAP results are more physically meaningful than those of the pure black-box model. In the hybrid model: - operational features become secondary, - thermodynamic variables dominate, - feature effects align much more clearly with VRF thermodynamics.</p>
+<p>This is exactly what you would hope to see in a genuinely useful grey-box model.</p>
+</section>
+<section id="key-physically-meaningful-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-physically-meaningful-findings">7.2 Key Physically Meaningful Findings</h2>
+<p>The SHAP dependency analysis shows: - higher <strong>PLR</strong> strongly increases predicted compressor power, - higher <strong>Tdis</strong> is associated with greater compressor workload, - higher <strong>PR</strong> is positively related to compressor power, - higher <strong>DSC-cond</strong> also shows a meaningful positive role under load.</p>
+<p>These are not arbitrary ML patterns. They line up with expected compressor-cycle behaviour: - more load leads to higher refrigerant throughput, - higher pressure ratio means harder compression, - higher discharge temperature accompanies harder compressor operation.</p>
+</section>
+<section id="interaction-effects" class="level2">
+<h2 class="anchored" data-anchor-id="interaction-effects">7.3 Interaction Effects</h2>
+<p>The SHAP interaction plots are particularly useful.</p>
+<section id="pr-plr" class="level3">
+<h3 class="anchored" data-anchor-id="pr-plr"><code>PR × PLR</code></h3>
+<ul>
+<li>negative interaction at low PR and low PLR,</li>
+<li>positive interaction in the mid-range,</li>
+<li>near-zero interaction at very high values where individual effects dominate.</li>
+</ul>
+</section>
+<section id="dsc-cond-plr" class="level3">
+<h3 class="anchored" data-anchor-id="dsc-cond-plr"><code>DSC-cond × PLR</code></h3>
+<ul>
+<li>slightly positive interaction at moderate load,</li>
+<li>mildly negative at low PLR,</li>
+<li>near-zero again at very high values.</li>
+</ul>
+</section>
+<section id="why-this-matters-2" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-2">Why this matters</h3>
+<p>This adds nuance that a simple ranked feature-importance chart cannot give. The paper is showing not only <strong>which</strong> thermodynamic variables matter, but <strong>how their joint influence changes across the operating envelope</strong>.</p>
+</section>
+</section>
+<section id="practical-value-of-the-shap-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="practical-value-of-the-shap-analysis">7.4 Practical Value of the SHAP Analysis</h2>
+<p>The authors argue that the hybrid model can give useful insight into VRF control strategy, particularly under changing cooling loads. I think this is one of the strongest parts of the paper. The SHAP analysis is not just decorative; it supports the claim that the hybrid model is more than a predictor, it is a partially interpretable operational tool.</p>
+<hr>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">8. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+</section>
+<section id="criticism-1-the-dataset-is-still-very-small" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-1-the-dataset-is-still-very-small">Criticism 1: The dataset is still very small</h2>
+<p>The study uses only <strong>1080 stable data points</strong> collected over <strong>two days</strong> from a <strong>single laboratory test bench</strong>. That is not trivial data, but it is still a very constrained setting. The results are promising, but one should be careful about calling the approach “state-of-the-art” in a broad field sense without wider external validation.</p>
+</section>
+<section id="criticism-2-cooling-only-operation-limits-generality" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-2-cooling-only-operation-limits-generality">Criticism 2: Cooling-only operation limits generality</h2>
+<p>The test bench operates in <strong>cooling mode only</strong>. VRF systems in practice often operate across cooling, heating, transition, and defrost conditions. So the learned relationships may not transfer cleanly across all practical modes.</p>
+</section>
+<section id="criticism-3-external-validity-is-asserted-more-than-demonstrated" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-3-external-validity-is-asserted-more-than-demonstrated">Criticism 3: External validity is asserted more than demonstrated</h2>
+<p>The authors make a reasonable argument that the thermodynamic features are manufacturer-agnostic and could transfer with limited recalibration. That is plausible. But at this stage, it remains a <strong>promising hypothesis</strong>, not a demonstrated result.</p>
+</section>
+<section id="criticism-4-uncertainty-quantification-is-useful-but-not-fully-bayesian" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-4-uncertainty-quantification-is-useful-but-not-fully-bayesian">Criticism 4: Uncertainty quantification is useful, but not fully Bayesian</h2>
+<p>Their aleatoric and epistemic pipelines are thoughtful and practical, but they are still <strong>approximation schemes</strong>, not principled probabilistic posterior inference. That is not a flaw per se, but it is important to keep in mind. The paper should be read as providing <strong>operational uncertainty indicators</strong>, not exact uncertainty decomposition in a formal Bayesian sense.</p>
+</section>
+<section id="criticism-5-no-comparison-against-stronger-temporal-models-in-equivalent-conditions" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-5-no-comparison-against-stronger-temporal-models-in-equivalent-conditions">Criticism 5: No comparison against stronger temporal models in equivalent conditions</h2>
+<p>The authors cite LSTM literature, but they do not benchmark directly against a strong temporal deep learning model on the same dataset. Their justification is understandable because the dataset is short, but it still leaves open the question: - how much of the gain comes from physics-informed features, - and how much could also be captured by a carefully regularized temporal model if longer histories were available?</p>
+</section>
+<section id="criticism-6-shap-is-used-persuasively-but-not-validated-formally" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-6-shap-is-used-persuasively-but-not-validated-formally">Criticism 6: SHAP is used persuasively, but not validated formally</h2>
+<p>The SHAP results are highly interpretable and physically sensible. But the validation remains qualitative: - “does this look thermodynamically reasonable?”</p>
+<p>That is a good start, but there is no explicit testing of: - explanation stability, - faithfulness, - robustness under perturbations, - agreement with independent physical sensitivity analysis.</p>
+</section>
+<section id="criticism-7-the-black-box-baseline-is-intentionally-weak-in-representation" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-7-the-black-box-baseline-is-intentionally-weak-in-representation">Criticism 7: The black-box baseline is intentionally weak in representation</h2>
+<p>This is perhaps the biggest scientific caveat. The black-box model uses only four operational variables. That creates a very stark contrast with the hybrid model, which has sixteen features including cycle-informed quantities. So the study convincingly proves: <strong>adding thermodynamic structure helps.</strong></p>
+<p>But it does <strong>not</strong> fully prove: <strong>grey-box learning is superior to all strong black-box alternatives</strong>,<br>
+because the “black-box” here is also deprived of potentially richer measured inputs.</p>
+<hr>
+</section>
+<section id="what-this-paper-really-tells-us" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-paper-really-tells-us">9. What This Paper Really Tells Us</h2>
+<p>The paper’s deepest contribution is not just a performance table. It shows that in small-data engineering settings: - feature design matters more than blindly increasing model complexity, - physics-informed variables can reduce both prediction error and estimated uncertainty, - interpretability improves when the feature space reflects the actual system physics, - robustness under shift improves when the model is grounded in physical state representation rather than only operational proxies.</p>
+<p>In other words:</p>
+<blockquote class="blockquote">
+<p>The paper argues, quite convincingly, that the real strength of hybrid grey-box modelling is not merely “better accuracy,” but a better <strong>representation of causally meaningful system behaviour</strong>.</p>
+</blockquote>
+<p>That is why the approach works.</p>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">10. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper in any literature review section discussing <strong>physics-informed or grey-box energy prediction</strong> for HVAC/VRF systems.</label></li>
+<li><label><input type="checkbox">Use it as a key reference when arguing that <strong>embedding thermodynamic state variables into ML models improves robustness and interpretability under limited data</strong>.</label></li>
+<li><label><input type="checkbox">Reuse its structure of comparing:</label>
+<ul>
+<li>prediction accuracy,</li>
+<li>residual behaviour,</li>
+<li>distribution-shift robustness,</li>
+<li>aleatoric uncertainty,</li>
+<li>epistemic uncertainty,</li>
+<li>SHAP interpretation.</li>
+</ul></li>
+<li><label><input type="checkbox">In my own work, consider whether engineered physics features are reducing what is currently being interpreted as “noise.”</label></li>
+<li><label><input type="checkbox">If I build a comparable model, include stronger external validation than this paper:</label>
+<ul>
+<li>multiple seasons,</li>
+<li>multiple modes,</li>
+<li>multiple systems/manufacturers,</li>
+<li>longer histories.</li>
+</ul></li>
+<li><label><input type="checkbox">Consider adding formal interpretability checks beyond visual SHAP plausibility.</label></li>
+<li><label><input type="checkbox">Position this paper as strong evidence that <strong>small-data, domain-informed ML can outperform purely empirical ML in engineered systems</strong>.</label></li>
+</ul>
+<hr>
+</section>
+<section id="one-paragraph-literature-review-summary" class="level2">
+<h2 class="anchored" data-anchor-id="one-paragraph-literature-review-summary">11. One-Paragraph Literature Review Summary</h2>
+<p>Reshaeel and Hassan Ali (2026) present a strong case for hybrid grey-box machine learning in VRF compressor power prediction by comparing a pure black-box XGBoost model trained on operational variables with a grey-box XGBoost model augmented by thermodynamic state and engineered cycle features. Using limited experimental data from a laboratory VRF test bench, the hybrid model substantially outperformed the black-box model, achieving a 7.26% improvement in R² and roughly 72% reductions in RMSE and CV-RMSE, while also exhibiting more stable residuals and stronger robustness under distribution shift. A major contribution of the study is its explicit uncertainty analysis, where the grey-box model reduced estimated aleatoric and epistemic uncertainty by 87.94% and 42.86%, respectively. SHAP analysis further showed that the hybrid model learned physically meaningful relationships centered on part-load ratio, pressure ratio, discharge temperature, and condenser subcooling, providing interpretable insight into VRF control behaviour. Although the study is limited by small-scale, cooling-only, single-system data, it offers compelling evidence that thermodynamic feature engineering can improve accuracy, reliability, and interpretability in small-data HVAC modelling.</p>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="pagination-link" aria-label="Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="pagination-link" aria-label="Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts">
+        <span class="nav-page-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

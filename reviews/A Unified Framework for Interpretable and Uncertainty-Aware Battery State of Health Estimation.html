@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of an APSIPA ASC 2025 paper proposing a unified XAI and uncertainty quantification framework for battery SOH estimation using deep neural networks.">
+
+<title>A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" rel="next">
+<link href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Battery state of health</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Lithium-ion batteries</div>
+    <div class="quarto-category">MC dropout</div>
+    <div class="quarto-category">Deep ensembles</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of an APSIPA ASC 2025 paper proposing a unified XAI and uncertainty quantification framework for battery SOH estimation using deep neural networks.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Paper Title:</strong> <em>A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</em></li>
+<li><strong>Authors &amp; Year:</strong> Elias Isaac Huai-En Lim and Nicholas Heng Loong Wong (2025)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>2025 Asia Pacific Signal and Information Processing Association Annual Summit and Conference (APSIPA ASC)</em></li>
+<li><strong>DOI:</strong> <code>10.1109/APSIPAASC65261.2025.11249263</code></li>
+<li><strong>Primary Topic/Concept:</strong> Integrating explainable AI (XAI) and uncertainty quantification (UQ) into deep neural network based battery state of health (SOH) estimation</li>
+<li><strong>Application Domain:</strong> Lithium-ion battery diagnostics for electric vehicles and battery management systems</li>
+<li><strong>Datasets Used:</strong> McMaster Battery Aging Dataset and Oxford Battery Degradation Dataset</li>
+<li><strong>Code/Data Available?:</strong> Public datasets are referenced; no dedicated code repository is explicitly provided in the paper</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High / Relevant methodological reference for trustworthy regression in energy systems</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="the-motivation-why-soh-estimation-matters" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-soh-estimation-matters">The Motivation (Why SOH Estimation Matters)</h3>
+<ul>
+<li>Accurate battery state of health estimation is critical for electric vehicles and renewable energy systems because it directly affects safety, reliability, performance, and battery longevity.</li>
+<li>Poor SOH estimation can lead to premature battery replacement, degraded operation, poor maintenance decisions, and in extreme cases, battery safety hazards such as thermal runaway.</li>
+<li>Deep neural networks are increasingly attractive for SOH estimation because they can model nonlinear degradation behavior from sensor data, but they are difficult to trust in deployment because they are black-box models.</li>
+</ul>
+</section>
+<section id="the-motivation-why-explainability-and-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-explainability-and-uncertainty">The Motivation (Why Explainability and Uncertainty?)</h3>
+<ul>
+<li>The authors argue that accurate predictions alone are not enough in safety-critical systems.</li>
+<li>A practical battery diagnostic model should answer two questions:
+<ol type="1">
+<li><strong>Why did the model predict this SOH value?</strong></li>
+<li><strong>How certain is the model about that prediction?</strong></li>
+</ol></li>
+<li>XAI is introduced to make model behavior interpretable, while UQ is introduced to provide confidence intervals around predictions so that operators can assess risk and act more cautiously when the model is uncertain.</li>
+</ul>
+</section>
+<section id="their-claim-to-fame-novelty" class="level3">
+<h3 class="anchored" data-anchor-id="their-claim-to-fame-novelty">Their Claim to Fame / Novelty</h3>
+<ul>
+<li>The paper proposes a <strong>unified framework</strong> that combines:
+<ul>
+<li><strong>SHAP</strong></li>
+<li><strong>LIME</strong></li>
+<li><strong>Integrated Gradients (IG)</strong></li>
+<li><strong>Counterfactual explanations</strong></li>
+<li><strong>Adaptive Confidence Intervals (ACI)</strong></li>
+<li><strong>MC dropout</strong></li>
+<li><strong>Deep ensembles</strong></li>
+</ul></li>
+<li>The novelty is not a brand-new backbone model, but rather the integration of interpretability and predictive uncertainty into a single SOH estimation pipeline.</li>
+<li>They position the work as filling a gap in the literature, namely the lack of frameworks that jointly address <strong>interpretability + uncertainty</strong> for <strong>regression-based, time-series, multivariate tabular battery data</strong>.</li>
+</ul>
+</section>
+<section id="the-value-derived-from-explainability" class="level3">
+<h3 class="anchored" data-anchor-id="the-value-derived-from-explainability">The Value Derived from Explainability</h3>
+<ul>
+<li>The explainability toolkit is used to identify which features drive SOH predictions globally and locally.</li>
+<li>It also allows layer-wise inspection of how feature importance changes through the depth of the network.</li>
+<li>The paper claims explainability improves transparency, helps interpret edge cases, and enables actionable analysis via counterfactuals.</li>
+</ul>
+</section>
+<section id="the-value-derived-from-uncertainty-quantification" class="level3">
+<h3 class="anchored" data-anchor-id="the-value-derived-from-uncertainty-quantification">The Value Derived from Uncertainty Quantification</h3>
+<ul>
+<li>Their UQ framework tries to capture both:
+<ul>
+<li><strong>Epistemic uncertainty</strong>: uncertainty due to model limitations or lack of knowledge</li>
+<li><strong>Aleatoric uncertainty</strong>: uncertainty due to measurement noise and inherent data variability</li>
+</ul></li>
+<li>Confidence intervals are used to communicate prediction reliability, which is especially important for deployment in battery management systems.</li>
+</ul>
+</section>
+<section id="their-ultimate-result" class="level3">
+<h3 class="anchored" data-anchor-id="their-ultimate-result">Their Ultimate Result</h3>
+<ul>
+<li>The framework achieves:
+<ul>
+<li><strong>RMSE = 0.01175</strong> on McMaster</li>
+<li><strong>RMSE = 0.01432</strong> on Oxford</li>
+<li><strong>PICP = 91.2%</strong> on McMaster</li>
+<li><strong>PICP = 89.8%</strong> on Oxford</li>
+<li><strong>MPIW = 0.2311</strong> on McMaster</li>
+<li><strong>MPIW = 0.2457</strong> on Oxford</li>
+</ul></li>
+<li>The authors interpret these results as evidence that the framework provides both accurate and informative SOH predictions.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="datasets-testbed" class="level3">
+<h3 class="anchored" data-anchor-id="datasets-testbed">Datasets / Testbed</h3>
+<p>The study uses two public lithium-ion battery datasets:</p>
+<ul>
+<li><strong>McMaster Battery Aging Dataset</strong></li>
+<li><strong>Oxford Battery Degradation Dataset</strong></li>
+</ul>
+<p>Both datasets contain time-series battery measurements over multiple charge-discharge cycles, including: - voltage - current - temperature - capacity</p>
+</section>
+<section id="preprocessing" class="level3">
+<h3 class="anchored" data-anchor-id="preprocessing">Preprocessing</h3>
+<p>The paper applies fairly standard preprocessing: - moving average smoothing for noisy readings - cycle-based feature extraction such as: - maximum voltage - mean temperature - z-score normalization - stratified <strong>80:20 train:test split</strong> across cells and cycles</p>
+</section>
+<section id="model-architectures" class="level3">
+<h3 class="anchored" data-anchor-id="model-architectures">Model Architectures</h3>
+<p>They replicate two previously published models:</p>
+<ol type="1">
+<li><strong>CNN architecture</strong>
+<ul>
+<li>Uses stacked 1D convolutional layers and global pooling</li>
+<li>Applied primarily to the McMaster dataset</li>
+<li>This appears to be the main model of focus</li>
+</ul></li>
+<li><strong>Bi-LSTM with attention</strong>
+<ul>
+<li>Uses interpolated time-series features</li>
+<li>Includes dropout and batch normalization</li>
+<li>Applied to the Oxford dataset</li>
+<li>Used more as a validation model than the central focus</li>
+</ul></li>
+</ol>
+</section>
+<section id="training-setup" class="level3">
+<h3 class="anchored" data-anchor-id="training-setup">Training Setup</h3>
+<ul>
+<li>Implemented in <strong>TensorFlow</strong></li>
+<li>Optimizer: <strong>Adam</strong></li>
+<li>Learning rate: <strong>0.001</strong></li>
+<li>Batch size: <strong>128</strong></li>
+<li>Early stopping patience: <strong>5</strong></li>
+<li>Loss function: <strong>Mean Squared Error (MSE)</strong></li>
+</ul>
+</section>
+<section id="explainability-framework" class="level3">
+<h3 class="anchored" data-anchor-id="explainability-framework">Explainability Framework</h3>
+<p>The interpretability component includes four methods:</p>
+<section id="shap" class="level4">
+<h4 class="anchored" data-anchor-id="shap">1. SHAP</h4>
+<ul>
+<li>Used to estimate feature contributions to predicted SOH</li>
+<li>Applied globally and locally</li>
+<li>Also used layer-wise</li>
+</ul>
+</section>
+<section id="lime" class="level4">
+<h4 class="anchored" data-anchor-id="lime">2. LIME</h4>
+<ul>
+<li>Used to fit local surrogate explanations around individual predictions</li>
+<li>Particularly emphasized for understanding edge cases</li>
+</ul>
+</section>
+<section id="integrated-gradients-ig" class="level4">
+<h4 class="anchored" data-anchor-id="integrated-gradients-ig">3. Integrated Gradients (IG)</h4>
+<ul>
+<li>Used to attribute importance via gradients accumulated from a baseline input to the actual input</li>
+<li>Intended to provide a more path-aware notion of feature influence</li>
+</ul>
+</section>
+<section id="counterfactual-explanations" class="level4">
+<h4 class="anchored" data-anchor-id="counterfactual-explanations">4. Counterfactual Explanations</h4>
+<ul>
+<li>Used to identify minimal input perturbations required to significantly change the predicted SOH</li>
+<li>Intended to provide actionable what-if style explanations</li>
+</ul>
+</section>
+</section>
+<section id="adaptive-confidence-interval-aci" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-confidence-interval-aci">Adaptive Confidence Interval (ACI)</h3>
+<p>This is the main UQ contribution.</p>
+<p>The ACI combines: - <strong>Epistemic uncertainty</strong> - estimated using <strong>MC dropout</strong> - and <strong>deep ensembles</strong> - <strong>Aleatoric uncertainty</strong> - estimated by injecting Gaussian noise into the input data - and examining predictive variability</p>
+<p>The total uncertainty is then combined into a confidence interval using pooled estimates of means and variances:</p>
+<p>[ CI = {n_{model} + n_{data}} z ]</p>
+<p>Where: - model terms represent epistemic uncertainty - data terms represent aleatoric uncertainty - (z) corresponds to the desired confidence level - they use: - (n_{model} = 50) - (n_{data} = 50) - 95% confidence level</p>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<p>They evaluate both predictive accuracy and interval quality.</p>
+<section id="predictive-accuracy" class="level4">
+<h4 class="anchored" data-anchor-id="predictive-accuracy">Predictive accuracy</h4>
+<ul>
+<li><strong>RMSE</strong></li>
+</ul>
+</section>
+<section id="uncertainty-quality" class="level4">
+<h4 class="anchored" data-anchor-id="uncertainty-quality">Uncertainty quality</h4>
+<ul>
+<li><strong>PICP</strong>: Prediction Interval Coverage Probability</li>
+<li><strong>MPIW</strong>: Mean Prediction Interval Width</li>
+</ul>
+<p>This is a sensible start, although still limited for a full UQ evaluation.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="validation-strategy-predictions-explanations" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-explanations">4. Validation Strategy (Predictions &amp; Explanations)</h2>
+<section id="validating-the-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-predictions">Validating the Predictions</h3>
+<p>The predictive side is evaluated using: - RMSE for point prediction error - PICP for coverage reliability - MPIW for interval compactness</p>
+<p>The framework is tested on both McMaster and Oxford datasets, and the paper claims consistent performance across both despite operating condition shifts.</p>
+</section>
+<section id="validating-the-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-explanations">Validating the Explanations</h3>
+<p>The explanation validation is mostly <strong>qualitative</strong>. The authors argue that: - SHAP and IG consistently identify SOC and voltage as the most influential features - LIME helps explain atypical degradation cases - layer-wise analysis shows different features becoming more or less important across network depth - counterfactual changes are broadly consistent with the attribution results</p>
+<p>In other words, the paper treats agreement across multiple XAI methods as a kind of internal consistency check.</p>
+</section>
+<section id="layer-wise-findings" class="level3">
+<h3 class="anchored" data-anchor-id="layer-wise-findings">Layer-Wise Findings</h3>
+<p>A particularly interesting point is that: - <strong>SOC dominates deeper convolutional layers</strong> - <strong>Current and voltage are more important in earlier layers</strong></p>
+<p>This suggests a hierarchical representation: - early layers extract more direct electrical signatures - deeper layers may encode more abstract health-related structure centered around SOC</p>
+<p>This is one of the more interesting interpretability observations in the paper.</p>
+<hr>
+</section>
+</section>
+<section id="main-results" class="level2">
+<h2 class="anchored" data-anchor-id="main-results">5. Main Results</h2>
+<section id="explainability-results" class="level3">
+<h3 class="anchored" data-anchor-id="explainability-results">Explainability Results</h3>
+<ul>
+<li>SHAP and IG consistently rank <strong>SOC</strong> and <strong>voltage</strong> as the dominant features</li>
+<li>LIME is helpful for local edge-case interpretation</li>
+<li>Counterfactuals identify minimal changes that alter SOH predictions in ways broadly aligned with SHAP and IG</li>
+<li>Layer-wise SHAP shows the representation of importance shifts across the network depth</li>
+</ul>
+</section>
+<section id="uncertainty-results" class="level3">
+<h3 class="anchored" data-anchor-id="uncertainty-results">Uncertainty Results</h3>
+<p>On the <strong>McMaster dataset</strong>: - <strong>RMSE:</strong> 0.01175 - <strong>PICP:</strong> 91.2% - <strong>MPIW:</strong> 0.2311</p>
+<p>On the <strong>Oxford dataset</strong>: - <strong>RMSE:</strong> 0.01432 - <strong>PICP:</strong> 89.8% - <strong>MPIW:</strong> 0.2457</p>
+</section>
+<section id="interpretation-of-the-results" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-the-results">Interpretation of the Results</h3>
+<p>The paper argues that these results indicate: - low prediction error - reasonably high coverage - compact enough intervals to remain informative - some degree of generalizability across datasets</p>
+<hr>
+</section>
+</section>
+<section id="strengths-of-the-study" class="level2">
+<h2 class="anchored" data-anchor-id="strengths-of-the-study">6. Strengths of the Study</h2>
+<section id="strength-1-joint-treatment-of-two-real-problems" class="level3">
+<h3 class="anchored" data-anchor-id="strength-1-joint-treatment-of-two-real-problems">Strength 1: Joint Treatment of Two Real Problems</h3>
+<p>A major strength is that the paper does not treat explainability and uncertainty as separate optional add-ons. It directly addresses two deployment bottlenecks of black-box SOH models: - lack of interpretability - lack of calibrated confidence</p>
+<p>That is valuable because most papers address only one of the two.</p>
+</section>
+<section id="strength-2-multi-method-explainability" class="level3">
+<h3 class="anchored" data-anchor-id="strength-2-multi-method-explainability">Strength 2: Multi-Method Explainability</h3>
+<p>Using SHAP, LIME, IG, and counterfactuals together gives the framework some triangulation value. Even if no formal faithfulness tests are used, comparing multiple explanation methods is still more convincing than relying on only one.</p>
+</section>
+<section id="strength-3-distinction-between-epistemic-and-aleatoric-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="strength-3-distinction-between-epistemic-and-aleatoric-uncertainty">Strength 3: Distinction Between Epistemic and Aleatoric Uncertainty</h3>
+<p>The paper explicitly acknowledges that not all uncertainty is the same. That conceptual distinction is important and often missing in applied engineering papers.</p>
+</section>
+<section id="strength-4-cross-dataset-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="strength-4-cross-dataset-evaluation">Strength 4: Cross-Dataset Evaluation</h3>
+<p>Using both McMaster and Oxford datasets is a good design choice. It provides at least some evidence that the framework is not tied to a single dataset.</p>
+</section>
+<section id="strength-5-practical-framing" class="level3">
+<h3 class="anchored" data-anchor-id="strength-5-practical-framing">Strength 5: Practical Framing</h3>
+<p>The paper keeps the discussion tied to battery management relevance: - safety - real-time deployment - confidence-aware diagnostics - actionable outputs</p>
+<p>That practical framing makes the paper useful even if some methodological pieces are still immature.</p>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">7. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<section id="criticism-1-the-paper-overstates-the-strength-of-its-uncertainty-results" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-1-the-paper-overstates-the-strength-of-its-uncertainty-results">Criticism 1: The Paper Overstates the Strength of Its Uncertainty Results</h3>
+<p>There appears to be a serious inconsistency between the abstract and the main results table.</p>
+<ul>
+<li>In the <strong>abstract</strong>, the paper reports:
+<ul>
+<li><strong>PICP = 0.6288</strong>, meaning only <strong>62.88%</strong> of ground truth values fell within the intervals</li>
+</ul></li>
+<li>But in the <strong>results section and Table I</strong>, it reports:
+<ul>
+<li><strong>PICP = 91.2%</strong> on McMaster</li>
+<li><strong>PICP = 89.8%</strong> on Oxford</li>
+</ul></li>
+</ul>
+<p>These are drastically different conclusions. A PICP of 62.88% would indicate poor interval calibration for nominal 95% intervals. A PICP near 90% is still imperfect, but far more acceptable.</p>
+<p>This inconsistency is not minor. It materially affects how trustworthy the uncertainty framework really is. At minimum, it suggests reporting or methodological confusion that should have been clarified.</p>
+</section>
+<section id="criticism-2-interval-metrics-alone-are-not-enough-for-uq-validation" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-2-interval-metrics-alone-are-not-enough-for-uq-validation">Criticism 2: Interval Metrics Alone Are Not Enough for UQ Validation</h3>
+<p>The framework only evaluates uncertainty using: - PICP - MPIW</p>
+<p>These are useful, but incomplete. They do <strong>not</strong> tell us whether uncertainty increases when the model is more likely to be wrong. A model can produce broad or narrow intervals with acceptable average coverage while still ranking risky predictions badly.</p>
+<p>The paper itself partially acknowledges this and suggests future inclusion of: - Spearman correlation between uncertainty and residuals - Negative log-likelihood (NLL) - Brier score</p>
+<p>This is a good admission, but it also means the current uncertainty evaluation is underdeveloped.</p>
+</section>
+<section id="criticism-3-the-proposed-aci-is-more-engineering-heuristic-than-principled-probabilistic-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-3-the-proposed-aci-is-more-engineering-heuristic-than-principled-probabilistic-modeling">Criticism 3: The Proposed ACI Is More Engineering Heuristic Than Principled Probabilistic Modeling</h3>
+<p>The adaptive confidence interval formulation pools estimates from model and data uncertainty in a fairly ad hoc way. It is practical, but it is not the same as learning a full predictive distribution. There is no rigorous derivation showing that this pooled CI is statistically calibrated under the nonlinear dependencies of the model.</p>
+<p>So while the framework is uncertainty-aware, it is not necessarily a fully principled uncertainty model. It is closer to an uncertainty engineering wrapper around point predictors.</p>
+</section>
+<section id="criticism-4-the-explainability-validation-is-almost-entirely-qualitative" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-4-the-explainability-validation-is-almost-entirely-qualitative">Criticism 4: The Explainability Validation Is Almost Entirely Qualitative</h3>
+<p>The explainability claims are based on: - intuitive agreement with domain expectations - agreement across methods - plausible feature rankings</p>
+<p>That is better than nothing, but it is still weak. The paper does not test: - explanation robustness - explanation stability under perturbation - explanation fidelity - sensitivity to correlated inputs - reproducibility of attributions across retraining runs</p>
+<p>This is especially important because battery features like voltage, current, temperature, and SOC are often strongly correlated.</p>
+</section>
+<section id="criticism-5-model-agnostic-is-used-a-bit-too-generously" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-5-model-agnostic-is-used-a-bit-too-generously">Criticism 5: “Model-Agnostic” Is Used a Bit Too Generously</h3>
+<p>The paper describes the framework as model-agnostic, but several components are not uniformly lightweight or architecture-independent in practice. For example: - layer-wise analysis depends on network internals - IG is gradient-based and tied to differentiable models - counterfactuals may depend heavily on optimization details and feature realism constraints</p>
+<p>So the system is not purely model-agnostic in the strictest sense.</p>
+</section>
+<section id="criticism-6-counterfactuals-are-underdeveloped" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-6-counterfactuals-are-underdeveloped">Criticism 6: Counterfactuals Are Underdeveloped</h3>
+<p>The paper includes counterfactual explanations, but only at the input level. That means they identify minimal feature changes, but they do not really explain internal reasoning pathways. The authors admit this and suggest future use of r-counterfactuals or internal-layer counterfactuals.</p>
+<p>This is important because input-level counterfactuals on sensor data can easily become unrealistic or physically implausible unless constrained properly.</p>
+</section>
+<section id="criticism-7-computational-cost-is-acknowledged-but-not-quantified" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-7-computational-cost-is-acknowledged-but-not-quantified">Criticism 7: Computational Cost Is Acknowledged but Not Quantified</h3>
+<p>The paper repeatedly mentions runtime overhead from: - MC dropout - layer-wise explainability - counterfactual generation</p>
+<p>But it does not actually benchmark: - latency - memory - deployment cost - scalability across hardware</p>
+<p>That weakens the claim of practical deployment readiness.</p>
+</section>
+<section id="criticism-8-baseline-comparison-is-weak" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-8-baseline-comparison-is-weak">Criticism 8: Baseline Comparison Is Weak</h3>
+<p>The paper mainly demonstrates that the framework works, but it does not perform a strong comparative study against: - simpler neural baselines without XAI/UQ - probabilistic neural baselines - Bayesian deep learning baselines - conformal prediction approaches - quantile regression methods - heteroscedastic regression models</p>
+<p>The authors state this will be future work, but without such comparisons it is difficult to isolate the val</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="pagination-link" aria-label="A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="pagination-link" aria-label="An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction">
+        <span class="nav-page-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

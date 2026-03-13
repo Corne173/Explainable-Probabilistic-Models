@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-11-12">
+<meta name="description" content="Review of a 2025 Systems paper proposing a Boruta-BiTCN-Informer framework with SHAP interpretability and Monte Carlo dropout for interval carbon price forecasting.">
+
+<title>An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" rel="next">
+<link href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Carbon price forecasting</div>
+    <div class="quarto-category">Time series forecasting</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Hybrid deep learning</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">SHAP</div>
+    <div class="quarto-category">Informer</div>
+    <div class="quarto-category">TCN</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of a 2025 Systems paper proposing a Boruta-BiTCN-Informer framework with SHAP interpretability and Monte Carlo dropout for interval carbon price forecasting.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 12, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Authors &amp; Year:</strong> Pei Du, Xuankai Zhang, Tingting Chen, and Wendong Yang (2025)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Systems</em> (MDPI)</li>
+<li><strong>DOI:</strong> <a href="https://doi.org/10.3390/systems13111011">10.3390/systems13111011</a></li>
+<li><strong>Paper Title:</strong> <em>An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction</em></li>
+<li><strong>Primary Topic/Concept:</strong> Hybrid deep learning for carbon price forecasting with feature selection, interpretability, and interval prediction</li>
+<li><strong>Core Methods:</strong> Boruta, BiTCN, Informer, SHAP, Monte Carlo Dropout</li>
+<li><strong>Markets Studied:</strong> Guangdong and Shanghai carbon markets, with additional robustness tests on EU carbon prices and U.S. Henry Hub natural gas</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
+<li><strong>Proximity/Threat Level:</strong> Moderate to High, especially if your work also combines multivariate hybrid forecasting with explainability and uncertainty quantification</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="the-motivation-why-this-problem-matters" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-this-problem-matters">The Motivation (Why this problem matters)</h3>
+<p>Carbon price forecasting matters because carbon prices sit at the center of emissions trading systems and affect both policy design and enterprise compliance decisions. The authors argue that the carbon market is nonlinear, complex, and influenced by many external drivers, so simple historical or deterministic forecasting approaches are inadequate.</p>
+</section>
+<section id="the-motivation-why-a-hybrid-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-a-hybrid-model">The Motivation (Why a hybrid model?)</h3>
+<p>The paper argues that a single model is often not flexible enough to capture all the components of carbon price dynamics. Carbon prices are influenced by multiple heterogeneous drivers, and different architectures may be better at extracting different structures in the data. Their proposed solution is therefore a staged hybrid architecture: - <strong>BiTCN</strong> for local spatio-temporal dependence and bidirectional feature extraction - <strong>Informer</strong> for long-sequence global dependency modeling using sparse attention</p>
+</section>
+<section id="the-motivation-why-explainability" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-explainability">The Motivation (Why explainability?)</h3>
+<p>The paper is explicitly positioned against the black-box nature of many deep forecasting systems. The authors want not only better prediction accuracy, but also: - insight into <strong>which drivers matter most</strong>, - understanding of <strong>regional heterogeneity</strong> across markets, - and a more decision-useful model for governments and firms.</p>
+</section>
+<section id="the-motivation-why-interval-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-interval-prediction">The Motivation (Why interval prediction?)</h3>
+<p>The authors make the very sensible point that point predictions alone are often insufficient in real decision settings. Decision-makers need uncertainty bounds, not just a single predicted value. They therefore add <strong>Monte Carlo dropout</strong> to obtain prediction intervals.</p>
+</section>
+<section id="their-claim-to-fame-novelty" class="level3">
+<h3 class="anchored" data-anchor-id="their-claim-to-fame-novelty">Their claim to fame / novelty</h3>
+<p>The paper’s novelty is not a single new algorithm, but rather the integration of several components into one interpretable system: 1. <strong>Multi-source feature integration</strong>, including structured and unstructured variables, 2. <strong>Boruta-based feature selection</strong> over 21 candidate factors, 3. <strong>BiTCN-Informer hybridization</strong> for staged feature extraction, 4. <strong>SHAP-based interpretability</strong> for both global and local driver analysis, 5. <strong>Monte Carlo dropout</strong> for interval prediction, 6. <strong>Cross-market validation</strong> beyond the two core Chinese datasets.</p>
+</section>
+<section id="what-the-xai-actually-did" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-xai-actually-did">What the XAI actually did</h3>
+<p>SHAP was used not just decoratively, but to produce market-specific driver rankings and regional comparisons: - In <strong>Guangdong</strong>, the <strong>EU-ETS carbon price</strong> was the most influential driver. - In <strong>Shanghai</strong>, <strong>energy and financial variables</strong> such as crude oil, natural gas, and USD/CNY were more dominant.</p>
+<p>This is important because the explainability output is tied directly to an economic interpretation rather than presented as generic feature-importance plots.</p>
+<hr>
+</section>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="overall-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="overall-pipeline">Overall pipeline</h3>
+<p>The framework has four major stages: 1. <strong>Data collection</strong> 2. <strong>Feature selection with Boruta</strong> 3. <strong>Hybrid model construction</strong> 4. <strong>Further validation and application</strong>, including DM tests, extra datasets, SHAP, and interval prediction</p>
+</section>
+<section id="data" class="level3">
+<h3 class="anchored" data-anchor-id="data">Data</h3>
+<p>The main empirical datasets are: - <strong>Guangdong carbon market (GD)</strong> - <strong>Shanghai carbon market (SH)</strong></p>
+<p>Both span: - <strong>1 August 2017 to 31 March 2024</strong> - first <strong>80%</strong> used for training, - remaining <strong>20%</strong> used for testing.</p>
+</section>
+<section id="candidate-features" class="level3">
+<h3 class="anchored" data-anchor-id="candidate-features">Candidate features</h3>
+<p>The study begins with <strong>21 candidate variables</strong> across five dimensions:</p>
+<section id="environmental-indicators" class="level4">
+<h4 class="anchored" data-anchor-id="environmental-indicators">Environmental indicators</h4>
+<ul>
+<li>Temperature</li>
+<li>AQI</li>
+<li>PM2.5</li>
+<li>PM10</li>
+</ul>
+</section>
+<section id="energy-markets" class="level4">
+<h4 class="anchored" data-anchor-id="energy-markets">Energy markets</h4>
+<ul>
+<li>EU-ETS carbon price</li>
+<li>International natural gas price</li>
+<li>International crude oil price</li>
+<li>International gasoline price</li>
+</ul>
+</section>
+<section id="financial-market-indicators" class="level4">
+<h4 class="anchored" data-anchor-id="financial-market-indicators">Financial market indicators</h4>
+<ul>
+<li>China Treasury Bond 1-year</li>
+<li>China Treasury Bond 5-year</li>
+<li>China Treasury Bond 10-year</li>
+<li>USD/CNY</li>
+<li>EUR/CNY</li>
+<li>Shanghai Stock Exchange Index</li>
+<li>Shanghai Stock Exchange Energy Sector Index</li>
+<li>CSI1000</li>
+<li>S&amp;P500</li>
+<li>HS300</li>
+<li>DJI</li>
+</ul>
+</section>
+<section id="geopolitical-risk" class="level4">
+<h4 class="anchored" data-anchor-id="geopolitical-risk">Geopolitical risk</h4>
+<ul>
+<li>Geopolitical Risk Index</li>
+</ul>
+</section>
+<section id="unstructured-data" class="level4">
+<h4 class="anchored" data-anchor-id="unstructured-data">Unstructured data</h4>
+<ul>
+<li><strong>Baidu Index</strong>, obtained from 30 carbon-related keywords and reduced via PCA into a daily time series</li>
+</ul>
+</section>
+</section>
+<section id="feature-selection" class="level3">
+<h3 class="anchored" data-anchor-id="feature-selection">Feature selection</h3>
+<p>Boruta is used as a wrapper feature-selection method around random forests. The key logic is: - create <strong>shadow features</strong> by shuffling originals, - compare real feature importance against shadow features, - iteratively classify features as important or unimportant.</p>
+<p>After Boruta: - <strong>16 important features</strong> are retained for each dataset-plus-price-series input setup. - Some features are rejected in both markets, especially AQI, PM2.5, and PM10. - There is <strong>market heterogeneity</strong> in selected variables: - <strong>TEM</strong> is confirmed in GD but rejected in SH, - <strong>CTB1</strong> is confirmed in GD but rejected in SH, - <strong>GPRI</strong> and <strong>BDI</strong> are rejected in GD but confirmed in SH.</p>
+<p>This is already an interesting substantive finding, because it suggests the relevance of exogenous factors depends strongly on market structure.</p>
+</section>
+<section id="model-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="model-architecture">Model architecture</h3>
+<p>The proposed model is <strong>Boruta-BiTCN-Informer</strong>.</p>
+<section id="bitcn-component" class="level4">
+<h4 class="anchored" data-anchor-id="bitcn-component">BiTCN component</h4>
+<p>BiTCN introduces: - forward and backward dilated convolutions, - a feature fusion layer, - residual connections.</p>
+<p>Its purpose is to capture <strong>local bidirectional temporal dependencies</strong> and reduce feature loss.</p>
+</section>
+<section id="informer-component" class="level4">
+<h4 class="anchored" data-anchor-id="informer-component">Informer component</h4>
+<p>Informer is used because standard Transformer attention has quadratic complexity. Informer improves this with: - <strong>ProbSparse self-attention</strong> - <strong>self-attention distilling</strong> - <strong>non-autoregressive generative decoder</strong></p>
+<p>Its purpose is to capture <strong>global long-range dependencies</strong> efficiently.</p>
+</section>
+<section id="hybrid-connection-mechanism" class="level4">
+<h4 class="anchored" data-anchor-id="hybrid-connection-mechanism">Hybrid connection mechanism</h4>
+<p>The output of BiTCN is linearly projected to Informer’s input dimension and then fused with Informer features. Conceptually, this is a staged extraction pipeline: - BiTCN does local/bidirectional feature mining first, - Informer then performs long-range global modeling on these enriched features.</p>
+</section>
+</section>
+<section id="interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="interpretability">Interpretability</h3>
+<p>The model is interpreted with <strong>SHAP</strong>, using Shapley values to estimate the average marginal contribution of each feature.</p>
+</section>
+<section id="uncertainty-quantification" class="level3">
+<h3 class="anchored" data-anchor-id="uncertainty-quantification">Uncertainty quantification</h3>
+<p>For interval prediction, the paper uses <strong>Monte Carlo dropout</strong>: - dropout remains active at inference, - multiple stochastic forward passes approximate a predictive distribution, - mean and variance across samples define the interval.</p>
+<p>The interval is then given by:</p>
+<p>[ = z ]</p>
+<p>with ( z = 1.96 ) for a 95% confidence level.</p>
+</section>
+<section id="hyperparameters" class="level3">
+<h3 class="anchored" data-anchor-id="hyperparameters">Hyperparameters</h3>
+<p>The paper reports: - kernel size = 3 - channels = [64, 64] - dropout = 0.1 - encoder layers = 2 - decoder layers = 1 - dmodel = 4 - feedforward = 64 - multi-heads = 4 - activation = GELU - optimizer = Adam - learning rate = 0.0005 - epochs = 100 - batch size = 64</p>
+<hr>
+</section>
+</section>
+<section id="validation-strategy-predictions-uncertainty-and-statistical-testing" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-uncertainty-and-statistical-testing">4. Validation Strategy (Predictions, Uncertainty, and Statistical Testing)</h2>
+<section id="point-prediction-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="point-prediction-metrics">Point prediction metrics</h3>
+<p>The point forecasts are evaluated using: - <strong>MAE</strong> - <strong>MAPE</strong> - <strong>RMSE</strong> - <strong>TIC</strong> (Theil inequality coefficient)</p>
+</section>
+<section id="interval-prediction-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="interval-prediction-metrics">Interval prediction metrics</h3>
+<p>The interval forecasts are evaluated using: - <strong>PICP</strong>: Prediction Interval Coverage Probability - <strong>PINAW</strong>: Prediction Interval Normalized Average Width - <strong>CWC</strong>: Coverage Width-Based Criterion</p>
+<p>This is a decent set of interval metrics because it captures both: - whether intervals contain the truth enough times, - and whether those intervals are too wide.</p>
+</section>
+<section id="experimental-design" class="level3">
+<h3 class="anchored" data-anchor-id="experimental-design">Experimental design</h3>
+<p>The study runs <strong>three major point-prediction experiments</strong>:</p>
+<section id="experiment-i" class="level4">
+<h4 class="anchored" data-anchor-id="experiment-i">Experiment I</h4>
+<p>Compares standard models with: - all variables, - versus Boruta-selected variables.</p>
+<p>This tests whether feature selection actually helps.</p>
+</section>
+<section id="experiment-ii" class="level4">
+<h4 class="anchored" data-anchor-id="experiment-ii">Experiment II</h4>
+<p>Compares Boruta-based single models: - LSTM - GRU - TCN - BiLSTM - BiGRU - BiTCN - Transformer - Informer</p>
+<p>This identifies the strongest single model.</p>
+</section>
+<section id="experiment-iii" class="level4">
+<h4 class="anchored" data-anchor-id="experiment-iii">Experiment III</h4>
+<p>Builds hybrid models by combining bidirectional architectures with Informer or Transformer: - BiLSTM-Informer - BiGRU-Informer - BiTCN-Informer - BiLSTM-Transformer - BiGRU-Transformer - BiTCN-Transformer</p>
+<p>This tests whether staged hybridization improves performance further.</p>
+</section>
+</section>
+<section id="statistical-validation" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-validation">Statistical validation</h3>
+<p>The paper uses the <strong>Diebold-Mariano (DM) test</strong> to check whether the forecast improvements are statistically significant.</p>
+</section>
+<section id="robustness-validation" class="level3">
+<h3 class="anchored" data-anchor-id="robustness-validation">Robustness validation</h3>
+<p>The proposed model is also tested on: - <strong>EU carbon trading price</strong> - <strong>Henry Hub natural gas price</strong></p>
+<p>This is meant to show broader applicability beyond the two main Chinese carbon markets.</p>
+</section>
+<section id="xai-validation" class="level3">
+<h3 class="anchored" data-anchor-id="xai-validation">XAI validation</h3>
+<p>The paper does <strong>not</strong> use formal explanation evaluation metrics such as: - fidelity, - stability, - robustness, - infidelity, - or sensitivity.</p>
+<p>Instead, SHAP is validated through <strong>economic plausibility and interpretive usefulness</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="results-summary" class="level2">
+<h2 class="anchored" data-anchor-id="results-summary">5. Results Summary</h2>
+</section>
+<section id="experiment-i-does-boruta-help" class="level2">
+<h2 class="anchored" data-anchor-id="experiment-i-does-boruta-help">5.1 Experiment I: Does Boruta help?</h2>
+<p>Yes, mostly.</p>
+<p>For the <strong>GD dataset</strong>, Boruta improves nearly every benchmark model relative to using all variables.<br>
+For example: - <strong>ALL-LSTM</strong>: MAE = 2.4261 - <strong>Boruta-LSTM</strong>: MAE = 1.9362</p>
+<p>The improvement is especially strong for: - <strong>Transformer</strong> - ALL-Transformer: MAE = 1.8817 - Boruta-Transformer: MAE = 1.3523</p>
+<p>For the <strong>SH dataset</strong>, Boruta again improves most models: - <strong>ALL-LSTM</strong>: MAE = 2.3988 - <strong>Boruta-LSTM</strong>: MAE = 2.0081</p>
+<p>This supports the authors’ claim that redundant features interfere with learning and that Boruta improves accuracy by removing weakly informative variables.</p>
+<section id="main-takeaway" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway">Main takeaway</h3>
+<p>Feature selection is not just preprocessing here; it materially improves performance and likely reduces noise in a high-dimensional multivariate forecasting setup.</p>
+<hr>
+</section>
+</section>
+<section id="experiment-ii-which-single-model-works-best" class="level2">
+<h2 class="anchored" data-anchor-id="experiment-ii-which-single-model-works-best">5.2 Experiment II: Which single model works best?</h2>
+<p>Among the Boruta-based single models, <strong>Informer</strong> performs best overall.</p>
+<section id="guangdong" class="level3">
+<h3 class="anchored" data-anchor-id="guangdong">Guangdong</h3>
+<ul>
+<li><strong>Boruta-Informer</strong>
+<ul>
+<li>MAE = 1.3171</li>
+<li>RMSE = 1.7904</li>
+<li>MAPE = 0.0352</li>
+<li>TIC = 0.0181</li>
+</ul></li>
+</ul>
+<p>It outperforms: - Boruta-LSTM - Boruta-GRU - Boruta-TCN - Boruta-BiLSTM - Boruta-BiGRU - Boruta-BiTCN - Boruta-Transformer</p>
+</section>
+<section id="shanghai" class="level3">
+<h3 class="anchored" data-anchor-id="shanghai">Shanghai</h3>
+<ul>
+<li><strong>Boruta-Informer</strong>
+<ul>
+<li>MAE = 1.7424</li>
+<li>RMSE = 2.5141</li>
+<li>MAPE = 0.0365</li>
+<li>TIC = 0.0256</li>
+</ul></li>
+</ul>
+<p>The runner-up is generally <strong>Boruta-BiTCN</strong>.</p>
+</section>
+<section id="bidirectional-effect" class="level3">
+<h3 class="anchored" data-anchor-id="bidirectional-effect">Bidirectional effect</h3>
+<p>The paper also shows that bidirectional variants often outperform their unidirectional counterparts. That is plausible because carbon price sequences likely benefit from richer contextual extraction.</p>
+</section>
+<section id="main-takeaway-1" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-1">Main takeaway</h3>
+<p>Before hybridization, <strong>Informer is the strongest single architecture</strong>, and <strong>BiTCN is the strongest local/bidirectional complement</strong>. This sets up the logic for combining them.</p>
+<hr>
+</section>
+</section>
+<section id="experiment-iii-do-hybrid-models-improve-performance" class="level2">
+<h2 class="anchored" data-anchor-id="experiment-iii-do-hybrid-models-improve-performance">5.3 Experiment III: Do hybrid models improve performance?</h2>
+<p>Yes, clearly.</p>
+<p>The proposed <strong>Boruta-BiTCN-Informer</strong> is the best overall model.</p>
+<section id="guangdong-1" class="level3">
+<h3 class="anchored" data-anchor-id="guangdong-1">Guangdong</h3>
+<ul>
+<li><strong>Boruta-BiTCN-Informer</strong>
+<ul>
+<li>MAE = 0.9642</li>
+<li>RMSE = 1.3788</li>
+<li>MAPE = 0.0284</li>
+<li>TIC = 0.0142</li>
+</ul></li>
+</ul>
+<p>Compare this to: - <strong>Boruta-Informer</strong> - MAE = 1.3171 - RMSE = 1.7904 - MAPE = 0.0352 - TIC = 0.0182 - <strong>Boruta-BiTCN</strong> - MAE = 1.5041 - RMSE = 1.9718 - MAPE = 0.0431 - TIC = 0.0201</p>
+</section>
+<section id="shanghai-1" class="level3">
+<h3 class="anchored" data-anchor-id="shanghai-1">Shanghai</h3>
+<ul>
+<li><strong>Boruta-BiTCN-Informer</strong>
+<ul>
+<li>MAE = 1.4213</li>
+<li>RMSE = 2.0154</li>
+<li>MAPE = 0.0320</li>
+<li>TIC = 0.0204</li>
+</ul></li>
+</ul>
+<p>Again, this beats both: - Boruta-Informer - Boruta-BiTCN</p>
+</section>
+<section id="informer-hybrids-vs-transformer-hybrids" class="level3">
+<h3 class="anchored" data-anchor-id="informer-hybrids-vs-transformer-hybrids">Informer hybrids vs Transformer hybrids</h3>
+<p>Across matched hybrid pairings, the <strong>Informer-based hybrids</strong> generally outperform <strong>Transformer-based hybrids</strong>.</p>
+</section>
+<section id="main-takeaway-2" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-2">Main takeaway</h3>
+<p>The results support the intended architectural story: - BiTCN adds useful local bidirectional structure extraction, - Informer handles long-range dependencies better than Transformer in this setup, - their combination is stronger than either alone.</p>
+<hr>
+</section>
+</section>
+<section id="interval-prediction-results" class="level2">
+<h2 class="anchored" data-anchor-id="interval-prediction-results">5.4 Interval prediction results</h2>
+<p>The interval prediction results are actually quite strong on paper.</p>
+<section id="guangdong-2" class="level3">
+<h3 class="anchored" data-anchor-id="guangdong-2">Guangdong</h3>
+<ul>
+<li><strong>95% level:</strong> PICP = 0.9693, PINAW = 0.0918</li>
+<li><strong>90% level:</strong> PICP = 0.9201, PINAW = 0.0922</li>
+<li><strong>85% level:</strong> PICP = 0.8775, PINAW = 0.0830</li>
+</ul>
+</section>
+<section id="shanghai-2" class="level3">
+<h3 class="anchored" data-anchor-id="shanghai-2">Shanghai</h3>
+<ul>
+<li><strong>95% level:</strong> PICP = 0.9553, PINAW = 0.1252</li>
+<li><strong>90% level:</strong> PICP = 0.9137, PINAW = 0.0905</li>
+<li><strong>85% level:</strong> PICP = 0.8690, PINAW = 0.0856</li>
+</ul>
+<p>The reported PICPs exceed the nominal confidence levels while keeping PINAW relatively low, which the authors interpret as evidence of effective interval prediction.</p>
+</section>
+<section id="main-takeaway-3" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-3">Main takeaway</h3>
+<p>The uncertainty module appears practically useful, at least under the paper’s own evaluation framework.</p>
+<hr>
+</section>
+</section>
+<section id="dm-test-results" class="level2">
+<h2 class="anchored" data-anchor-id="dm-test-results">5.5 DM test results</h2>
+<p>The DM test mostly supports the superiority of the proposed model.</p>
+<p>According to the paper: - almost all DM values exceed the 0.05 critical threshold, - most also exceed the 0.01 threshold, - the main exception is <strong>Boruta-BiLSTM-Informer</strong> on GD, where significance is not established.</p>
+<section id="main-takeaway-4" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-4">Main takeaway</h3>
+<p>This is a strength of the paper. Many forecasting papers stop at raw metric comparisons. Here, the authors at least attempt statistical confirmation that the gains are not just incidental.</p>
+<hr>
+</section>
+</section>
+<section id="robustness-on-other-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-on-other-datasets">5.6 Robustness on other datasets</h2>
+<p>The model is additionally tested on: - <strong>EU carbon price</strong> - <strong>Henry Hub natural gas</strong></p>
+<p>The paper concludes that the proposed model remains strong in both settings: - in the <strong>EU market</strong>, it reports an MAE of <strong>1.6336</strong>, which is an <strong>11.0240% reduction</strong> relative to Boruta-Informer, - in the <strong>natural gas market</strong>, the MAE improvement over Boruta-Informer is reported as <strong>30.7937%</strong>.</p>
+<section id="main-takeaway-5" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-5">Main takeaway</h3>
+<p>This broadens the paper from being just a two-market case study to a more general multivariate commodity forecasting architecture.</p>
+<hr>
+</section>
+</section>
+<section id="interpretability-findings" class="level2">
+<h2 class="anchored" data-anchor-id="interpretability-findings">6. Interpretability Findings</h2>
+<section id="global-driver-rankings" class="level3">
+<h3 class="anchored" data-anchor-id="global-driver-rankings">Global driver rankings</h3>
+<p>The SHAP analysis reveals distinct market-specific drivers.</p>
+<section id="guangdong-3" class="level4">
+<h4 class="anchored" data-anchor-id="guangdong-3">Guangdong</h4>
+<p>Top drivers include: 1. <strong>EU-ETS carbon price</strong> 2. China Treasury Bond 10-year 3. International crude oil price 4. China Treasury Bond 5-year 5. Dow Jones Index</p>
+<p>The paper argues that Guangdong’s export-oriented industrial base makes it more exposed to <strong>EU policy spillovers</strong>, especially through mechanisms like the Carbon Border Adjustment Mechanism.</p>
+</section>
+<section id="shanghai-3" class="level4">
+<h4 class="anchored" data-anchor-id="shanghai-3">Shanghai</h4>
+<p>Top drivers include: 1. <strong>International crude oil price</strong> 2. International natural gas price 3. <strong>USD/CNY</strong> 4. S&amp;P 500 5. China Treasury Bond 5-year</p>
+<p>The paper interprets this as consistent with Shanghai’s stronger exposure to <strong>global financial and energy market dynamics</strong>.</p>
+</section>
+</section>
+<section id="regional-heterogeneity" class="level3">
+<h3 class="anchored" data-anchor-id="regional-heterogeneity">Regional heterogeneity</h3>
+<p>One of the more interesting SHAP findings is that the effect of <strong>EUR/CNY</strong> differs across markets: - in <strong>Shanghai</strong>, higher EUR/CNY corresponds to positive SHAP values, - in <strong>Guangdong</strong>, higher EUR/CNY corresponds to negative SHAP values.</p>
+<p>This is one of the better parts of the paper because it shows SHAP being used to uncover heterogeneity, not just to produce a single universal ranking.</p>
+</section>
+<section id="practical-recommendations-from-shap" class="level3">
+<h3 class="anchored" data-anchor-id="practical-recommendations-from-shap">Practical recommendations from SHAP</h3>
+<p>The authors go beyond explanation and suggest decision rules, for example: - Guangdong firms monitoring <strong>EUCP SHAP contributions</strong> for advance quota procurement, - Shanghai firms monitoring <strong>INGP</strong> and <strong>USD/CNY</strong> to inform production and allowance holdings, - regulators assigning different regional weights instead of using uniform national rules.</p>
+</section>
+<section id="main-takeaway-6" class="level3">
+<h3 class="anchored" data-anchor-id="main-takeaway-6">Main takeaway</h3>
+<p>SHAP is used in a fairly applied, decision-oriented way. Whether one agrees with all the policy extrapolations, the interpretability section is more substantive than the usual “here is a summary plot” treatment.</p>
+<hr>
+</section>
+</section>
+<section id="strengths" class="level2">
+<h2 class="anchored" data-anchor-id="strengths">7. Strengths</h2>
+<section id="strength-1-clear-systems-level-integration" class="level3">
+<h3 class="anchored" data-anchor-id="strength-1-clear-systems-level-integration">Strength 1: Clear systems-level integration</h3>
+<p>The study combines: - feature selection, - hybrid deep learning, - interpretability, - and interval prediction</p>
+<p>into one coherent pipeline.</p>
+</section>
+<section id="strength-2-multisource-feature-design" class="level3">
+<h3 class="anchored" data-anchor-id="strength-2-multisource-feature-design">Strength 2: Multisource feature design</h3>
+<p>Using structured and unstructured features is a real strength. The inclusion of the <strong>Baidu Index</strong> acknowledges that market attention and public sentiment may matter.</p>
+</section>
+<section id="strength-3-sensible-architectural-pairing" class="level3">
+<h3 class="anchored" data-anchor-id="strength-3-sensible-architectural-pairing">Strength 3: Sensible architectural pairing</h3>
+<p>BiTCN + Informer is not a random mashup. The pairing has a clear rationale: - local bidirectional temporal extraction first, - long-range sparse-attention modeling second.</p>
+</section>
+<section id="strength-4-strong-empirical-benchmarking" class="level3">
+<h3 class="anchored" data-anchor-id="strength-4-strong-empirical-benchmarking">Strength 4: Strong empirical benchmarking</h3>
+<p>The study runs multiple experiments, across two main markets and two auxiliary datasets, and includes both metric comparisons and DM tests.</p>
+</section>
+<section id="strength-5-shap-used-for-heterogeneity-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="strength-5-shap-used-for-heterogeneity-analysis">Strength 5: SHAP used for heterogeneity analysis</h3>
+<p>The interpretability section gives market-specific insights rather than generic feature rankings.</p>
+</section>
+<section id="strength-6-interval-prediction-included" class="level3">
+<h3 class="anchored" data-anchor-id="strength-6-interval-prediction-included">Strength 6: Interval prediction included</h3>
+<p>This is an important practical addition and makes the study more useful than point-only forecasting papers.</p>
+<hr>
+</section>
+</section>
+<section id="criticisms-limitations-unstated-weaknesses" class="level2">
+<h2 class="anchored" data-anchor-id="criticisms-limitations-unstated-weaknesses">8. Criticisms, Limitations &amp; Unstated Weaknesses</h2>
+<section id="criticism-1-the-paper-is-still-mostly-an-accuracy-paper-wearing-an-interpretability-layer" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-1-the-paper-is-still-mostly-an-accuracy-paper-wearing-an-interpretability-layer">Criticism 1: The paper is still mostly an accuracy paper wearing an interpretability layer</h3>
+<p>Even though SHAP is used, the core scientific validation remains forecasting accuracy. The interpretability part is meaningful, but it is not rigorously evaluated.</p>
+</section>
+<section id="criticism-2-no-formal-xai-validation" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-2-no-formal-xai-validation">Criticism 2: No formal XAI validation</h3>
+<p>The paper does not evaluate: - fidelity, - robustness, - sensitivity, - stability, - or consistency of SHAP explanations.</p>
+<p>So while the SHAP outputs are plausible, they are not formally validated.</p>
+</section>
+<section id="criticism-3-monte-carlo-dropout-is-a-convenient-uncertainty-proxy-not-deep-uncertainty-rigor" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-3-monte-carlo-dropout-is-a-convenient-uncertainty-proxy-not-deep-uncertainty-rigor">Criticism 3: Monte Carlo dropout is a convenient uncertainty proxy, not deep uncertainty rigor</h3>
+<p>MC dropout is practical, but it is still an approximation. The paper does not compare it against: - deep ensembles, - conformal prediction, - Bayesian RNN/Transformer variants, - or quantile-based interval methods.</p>
+<p>So the uncertainty section is useful, but not especially state-of-the-art.</p>
+</section>
+<section id="criticism-4-no-comparison-to-stronger-modern-probabilistic-baselines" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-4-no-comparison-to-stronger-modern-probabilistic-baselines">Criticism 4: No comparison to stronger modern probabilistic baselines</h3>
+<p>The interval prediction is assessed internally, but there is no head-to-head comparison with: - quantile regression networks, - conformal forecasting, - NGBoost-type probabilistic methods, - distributional deep forecasting models.</p>
+<p>That weakens the paper’s claims about uncertainty quantification.</p>
+</section>
+<section id="criticism-5-the-hybrid-model-may-be-overengineered-relative-to-the-evidence" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-5-the-hybrid-model-may-be-overengineered-relative-to-the-evidence">Criticism 5: The hybrid model may be overengineered relative to the evidence</h3>
+<p>The architecture is more complex than any single baseline, but the paper does not really analyze: - computational cost, - training time, - memory demand, - or deployment practicality.</p>
+<p>A production-oriented user would want this.</p>
+</section>
+<section id="criticism-6-no-ablation-study-on-shap-and-mc-dropout-interaction" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-6-no-ablation-study-on-shap-and-mc-dropout-interaction">Criticism 6: No ablation study on SHAP and MC dropout interaction</h3>
+<p>The paper treats explainability and uncertainty as add-ons after forecasting, but it does not ask whether the uncertainty mechanism affects explanation quality, or whether explanations differ across stochastic forward passes.</p>
+</section>
+<section id="criticism-7-limited-temporal-validation-design" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-7-limited-temporal-validation-design">Criticism 7: Limited temporal validation design</h3>
+<p>The data split is an 80/20 train-test split. For financial and market forecasting, a more rigorous rolling-origin or walk-forward evaluation would usually be more convincing.</p>
+</section>
+<section id="criticism-8-some-interpretive-claims-may-be-stronger-than-the-evidence-supports" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-8-some-interpretive-claims-may-be-stronger-than-the-evidence-supports">Criticism 8: Some interpretive claims may be stronger than the evidence supports</h3>
+<p>SHAP identifies associations in model behavior, not causal effects in the underlying market. Some of the paper’s policy and enterprise recommendations lean a little too close to causal language.</p>
+<hr>
+</section>
+</section>
+<section id="my-overall-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="my-overall-interpretation">9. My Overall Interpretation</h2>
+<p>This is a strong <strong>engineering-style hybrid forecasting paper</strong> with three real contributions: 1. it shows that <strong>Boruta helps</strong> in a multisource carbon-price setting, 2. it shows that <strong>BiTCN + Informer</strong> is an effective architectural pairing, 3. it turns the resulting black box into something more usable through <strong>SHAP</strong> and interval forecasts.</p>
+<p>Its biggest weakness is that it presents interpretability and uncertainty quantification as if they are fully validated, when in reality they are only partially demonstrated: - SHAP is economically plausible, but not rigorously tested, - MC dropout intervals look good, but are not benchmarked against stronger UQ alternatives.</p>
+<p>So I would describe the paper as: - <strong>methodologically solid for applied forecasting,</strong> - <strong>strong on hybrid modeling and empirical results,</strong> - <strong>good but not definitive on explainability,</strong> - <strong>useful but not exhaustive on uncertainty quantification.</strong></p>
+<hr>
+</section>
+<section id="action-items-integration-into-my-own-work" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration-into-my-own-work">10. Action Items &amp; Integration into My Own Work</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper as a recent example of a <strong>hybrid deep learning + SHAP + interval prediction</strong> framework in carbon/energy-related forecasting.</label></li>
+<li><label><input type="checkbox">Use it to support the argument that <strong>single models are often insufficient</strong> for complex market forecasting tasks.</label></li>
+<li><label><input type="checkbox">Note Boruta as a useful <strong>wrapper-based feature selection baseline</strong> for multivariate forecasting with heterogeneous drivers.</label></li>
+<li><label><input type="checkbox">Compare its <strong>MC dropout interval strategy</strong> against stronger alternatives such as conformal prediction, deep ensembles, or probabilistic boosting methods.</label></li>
+<li><label><input type="checkbox">In my literature review, explicitly mention that the paper provides <strong>regional heterogeneity insights</strong> rather than only aggregate feature importance.</label></li>
+<li><label><input type="checkbox">Use this paper as an example of why <strong>formal XAI validation</strong> is still needed even when SHAP plots look persuasive.</label></li>
+<li><label><input type="checkbox">If I build a similar pipeline, include an <strong>ablation study</strong> showing the incremental contribution of:</label>
+<ul>
+<li>Boruta,</li>
+<li>BiTCN,</li>
+<li>Informer,</li>
+<li>SHAP,</li>
+<li>and the uncertainty layer.</li>
+</ul></li>
+<li><label><input type="checkbox">Position my work as stronger if I can provide:</label>
+<ul>
+<li>rolling-origin validation,</li>
+<li>more rigorous probabilistic baselines,</li>
+<li>formal explanation-quality metrics,</li>
+<li>and computational complexity comparisons.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="one-paragraph-literature-positioning-summary" class="level2">
+<h2 class="anchored" data-anchor-id="one-paragraph-literature-positioning-summary">11. One-Paragraph Literature Positioning Summary</h2>
+<p>This paper presents a modern, applied hybrid forecasting framework for carbon price prediction that integrates Boruta-based feature selection, BiTCN local bidirectional feature extraction, Informer long-range sequence modeling, SHAP interpretability, and Monte Carlo dropout interval prediction. Its strongest contribution lies in showing that staged hybrid modeling with carefully filtered multisource features can materially improve carbon price forecasting performance across multiple markets. The SHAP analysis adds real value by revealing region-specific driver heterogeneity, especially the stronger influence of EU-ETS prices in Guangdong and energy-financial variables in Shanghai. However, the paper remains more convincing as an applied forecasting study than as a definitive contribution to explainability or uncertainty quantification, because it does not formally validate explanation quality or compare its uncertainty estimates against stronger contemporary probabilistic baselines.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="pagination-link" aria-label="A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="pagination-link" aria-label="An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting">
+        <span class="nav-page-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

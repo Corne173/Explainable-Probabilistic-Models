@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-05-18">
+<meta name="description" content="Review of a 2025 study proposing SHAP-based explanations for conformal classification outputs, especially class-wise p-values, set inclusion, confidence, and credibility.">
+
+<title>Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" rel="next">
+<link href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Explaining Set-Valued Predictions.html">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Explaining Set-Valued Predictions.html">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Conformal prediction</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">Classification</div>
+    <div class="quarto-category">SHAP</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of a 2025 study proposing SHAP-based explanations for conformal classification outputs, especially class-wise p-values, set inclusion, confidence, and credibility.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 18, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Authors &amp; Year:</strong> Ulf Johansson, Aicha Maalej, Cecilia Sönströd (2025)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Proceedings of Machine Learning Research (PMLR 266), Conformal and Probabilistic Prediction with Applications</em></li>
+<li><strong>Paper Title:</strong> <em>Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</em></li>
+<li><strong>Primary Topic:</strong> Interpreting conformal classification outputs using SHAP</li>
+<li><strong>Core Methods:</strong> Class-conditional conformal prediction, Random Forest, Tree SHAP</li>
+<li><strong>Application Domain:</strong> Benchmark classification datasets (Iris, Wisconsin Breast Cancer, Pima Diabetes)</li>
+<li><strong>Code/Data Available?:</strong> Not emphasized as a core contribution in the paper</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High / Conceptually relevant if working on interpretable uncertainty or explanation of uncertainty-aware outputs</li>
+<li><strong>Date Reviewed:</strong> 2024-05-18</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (Why Conformal Prediction?):</strong>
+<ul>
+<li>Standard classifiers usually return a single label, and probabilistic models return normalized probabilities, but neither necessarily communicates uncertainty in a cautious, decision-support-oriented way.</li>
+<li>Conformal classification instead outputs a <strong>prediction set</strong> with formal error control, allowing the model to say that multiple labels are plausible, or in rare cases that no label is plausible enough.</li>
+</ul></li>
+<li><strong>The Motivation (Why Explainability?):</strong>
+<ul>
+<li>Even though conformal predictors provide stronger uncertainty quantification than ordinary classifiers, their outputs can still be hard for users to interpret, especially when the prediction set is non-trivial, such as:
+<ul>
+<li>multiple labels included,</li>
+<li>a surprising label excluded,</li>
+<li>or an empty prediction set.</li>
+</ul></li>
+<li>The authors argue that practical usefulness depends not only on calibrated uncertainty, but also on understanding <strong>why</strong> labels were included or rejected.</li>
+</ul></li>
+<li><strong>Their claim to fame / Novelty:</strong>
+<ul>
+<li>The paper argues that previous work mostly used conformal methods to quantify uncertainty <strong>in explanations</strong>, not to explain <strong>conformal predictions themselves</strong>.</li>
+<li>Their key novelty is to apply SHAP directly to <strong>class-wise conformal p-values</strong>, treating each p-value as an explainable output.</li>
+<li>This creates <strong>class-specific, asymmetric explanations</strong>, which is a major departure from ordinary probabilistic classifiers where class probabilities are coupled by the sum-to-one constraint.</li>
+</ul></li>
+<li><strong>The central conceptual contribution:</strong>
+<ul>
+<li>SHAP is not limited to explaining raw model scores.</li>
+<li>By defining different target functions, the same SHAP framework can explain:
+<ul>
+<li>class-wise p-values,</li>
+<li>class inclusion or exclusion,</li>
+<li>the full prediction set,</li>
+<li>confidence,</li>
+<li>credibility.</li>
+</ul></li>
+</ul></li>
+<li><strong>The value derived from explainability (What did XAI actually do?):</strong>
+<ul>
+<li>It reveals why specific labels are included or excluded from the conformal set.</li>
+<li>It allows the analyst to identify <strong>ambiguity</strong>, <strong>atypicality</strong>, and possible <strong>out-of-distribution-like behavior</strong>.</li>
+<li>It provides both <strong>local explanations</strong> for individual uncertain predictions and <strong>global explanations</strong> of how features influence class-wise conformal behavior across the dataset.</li>
+<li>It gives a more faithful picture of uncertainty reasoning than standard softmax explanations, because each class p-value is explained independently.</li>
+</ul></li>
+<li><strong>Their ultimate result:</strong>
+<ul>
+<li>The paper is a <strong>proof-of-concept</strong>, not a benchmarking paper focused on predictive superiority.</li>
+<li>Its main result is conceptual and interpretive: SHAP-enhanced conformal classification can make set-valued predictions much more transparent and decision-useful.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="overall-framework" class="level3">
+<h3 class="anchored" data-anchor-id="overall-framework">3.1 Overall framework</h3>
+<p>The paper combines: 1. an underlying classifier, 2. class-conditional conformal calibration, 3. SHAP explanations applied to conformal outputs.</p>
+<p>The base learner is a <strong>Random Forest classifier with 300 trees</strong>, and explanations are computed using <strong>Tree SHAP</strong>.</p>
+</section>
+<section id="conformal-classification-setup" class="level3">
+<h3 class="anchored" data-anchor-id="conformal-classification-setup">3.2 Conformal classification setup</h3>
+<ul>
+<li>The study uses <strong>inductive conformal prediction (ICP)</strong>.</li>
+<li>A trained classifier first produces class probabilities.</li>
+<li>These probabilities are transformed into <strong>nonconformity scores</strong> using a hinge-loss-style definition: [ = 1 - _h( x_i) ]</li>
+<li>For each candidate label, a conformal <strong>p-value</strong> is computed by comparing the test nonconformity score against calibration nonconformity scores.</li>
+<li>Labels with ( p_y(x) &lt; ) are rejected, and the remaining labels form the prediction set.</li>
+</ul>
+</section>
+<section id="class-conditional-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="class-conditional-calibration">3.3 Class-conditional calibration</h3>
+<ul>
+<li>The conformal predictors are calibrated in a <strong>class-conditional</strong> manner.</li>
+<li>That matters because it provides more label-aware validity and makes the p-values especially suitable for class-wise interpretation.</li>
+</ul>
+</section>
+<section id="confidence-and-credibility" class="level3">
+<h3 class="anchored" data-anchor-id="confidence-and-credibility">3.4 Confidence and credibility</h3>
+<p>The study also emphasizes two derived conformal quantities:</p>
+<ul>
+<li><strong>Credibility</strong>:
+<ul>
+<li>the largest p-value across all labels,</li>
+<li>interpreted as how well the instance conforms to the most plausible class.</li>
+</ul></li>
+<li><strong>Confidence</strong>:
+<ul>
+<li>one minus the second-largest p-value,</li>
+<li>interpreted as how decisively the most plausible class stands apart from the runner-up.</li>
+</ul></li>
+</ul>
+<p>This distinction is important: - a prediction can be <strong>confident but not credible</strong>, meaning the model is decisive, but the instance is still atypical; - or <strong>credible but not confident</strong>, meaning multiple classes look plausible.</p>
+</section>
+<section id="what-exactly-is-explained-with-shap" class="level3">
+<h3 class="anchored" data-anchor-id="what-exactly-is-explained-with-shap">3.5 What exactly is explained with SHAP?</h3>
+<p>The strongest methodological point in the paper is that <strong>the object being explained is determined by the prediction function</strong> passed into SHAP.</p>
+<p>Their main choice is: - for each class ( y ), define ( f_y(x) = p_y(x) )</p>
+<p>This lets SHAP explain how each feature pushes a class’s conformal p-value up or down.</p>
+<p>They then outline four additional explainable targets:</p>
+<ol type="1">
+<li><p><strong>Class inclusion</strong><br>
+[ f_y(x) = [p_y(x) &gt; ] ] Explains why a class crossed the inclusion threshold.</p></li>
+<li><p><strong>Full prediction set as structured output</strong><br>
+Encodes the entire set of included labels and explains why that set was returned.</p></li>
+<li><p><strong>Confidence</strong><br>
+Explains why the model is decisive or indecisive.</p></li>
+<li><p><strong>Credibility</strong><br>
+Explains why an instance is typical or atypical relative to calibration data.</p></li>
+</ol>
+</section>
+<section id="datasets-testbed" class="level3">
+<h3 class="anchored" data-anchor-id="datasets-testbed">3.6 Datasets / Testbed</h3>
+<p>The experiments use three standard benchmark datasets:</p>
+<ul>
+<li><strong>Iris</strong></li>
+<li><strong>Wisconsin Breast Cancer</strong></li>
+<li><strong>Pima Indian Diabetes</strong></li>
+</ul>
+<p>These were likely chosen because: - the features are understandable, - the problems are familiar, - and local explanations are easy to narrate.</p>
+</section>
+<section id="train-calibration-test-split" class="level3">
+<h3 class="anchored" data-anchor-id="train-calibration-test-split">3.7 Train / calibration / test split</h3>
+<p>The paper uses a simple <strong>stratified hold-out</strong> split: - 60% training - 30% calibration - 10% testing</p>
+<p>This is important because the work is positioned as a <strong>demonstration study</strong>, not a large-scale statistical evaluation.</p>
+<hr>
+</section>
+</section>
+<section id="validation-strategy-predictions-explanations" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-explanations">4. Validation Strategy (Predictions &amp; Explanations)</h2>
+<section id="validating-the-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-predictions">4.1 Validating the predictions</h3>
+<p>The paper does <strong>not</strong> primarily validate predictive performance against a strong set of SOTA baselines. Instead, the focus is on: - constructing conformal predictors correctly, - showing realistic conformal outputs, - and demonstrating how SHAP can interpret them.</p>
+<p>So this is more of an <strong>interpretability-method paper</strong> than a predictive benchmarking paper.</p>
+</section>
+<section id="validating-the-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="validating-the-explanations">4.2 Validating the explanations</h3>
+<p>The explanations are validated mainly through: - <strong>qualitative consistency checks</strong>, - <strong>dataset semantics</strong>, - and <strong>human interpretability</strong>.</p>
+<p>Examples include: - In <strong>Iris</strong>, petal width and petal length behave in ways consistent with known class geometry. - In <strong>Breast Cancer</strong>, high-risk cellular features support malignancy while also revealing more nuanced effects on credibility. - In <strong>Diabetes</strong>, the explanations reveal that a case can still be uncertain even when confidence might initially look moderately high.</p>
+</section>
+<section id="local-and-global-explanation-modes" class="level3">
+<h3 class="anchored" data-anchor-id="local-and-global-explanation-modes">4.3 Local and global explanation modes</h3>
+<p>The study uses: - <strong>waterfall plots</strong> for local explanations, - <strong>beeswarm plots</strong> for global explanations.</p>
+<p>This is a good design choice because the method aims to explain both: - why a particular instance produced a certain set-valued prediction, - and how features generally influence conformal p-values across the population.</p>
+<hr>
+</section>
+</section>
+<section id="main-findings-interpretive-insights" class="level2">
+<h2 class="anchored" data-anchor-id="main-findings-interpretive-insights">5. Main Findings &amp; Interpretive Insights</h2>
+<section id="explaining-p-values-is-richer-than-explaining-probabilities" class="level3">
+<h3 class="anchored" data-anchor-id="explaining-p-values-is-richer-than-explaining-probabilities">5.1 Explaining p-values is richer than explaining probabilities</h3>
+<p>A central insight is that explaining class-wise conformal p-values gives more flexibility than explaining ordinary class probabilities.</p>
+<p>Why? - Probabilities must sum to one. - P-values for different classes are not locked into that zero-sum structure.</p>
+<p>That means: - the same feature can lower both classes’ plausibility, - or support one class without acting as a simple mirror image for another.</p>
+<p>This is one of the strongest conceptual contributions in the paper.</p>
+</section>
+<section id="it-supports-asymmetric-class-specific-reasoning" class="level3">
+<h3 class="anchored" data-anchor-id="it-supports-asymmetric-class-specific-reasoning">5.2 It supports asymmetric, class-specific reasoning</h3>
+<p>In binary and multiclass settings, SHAP on p-values allows: - a separate rationale for why class A was included, - and a different rationale for why class B was excluded.</p>
+<p>That is especially valuable in high-stakes settings like diagnosis or triage, where the reason a dangerous class was rejected may matter just as much as the reason another class was selected.</p>
+</section>
+<section id="it-helps-interpret-ambiguous-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="it-helps-interpret-ambiguous-predictions">5.3 It helps interpret ambiguous predictions</h3>
+<p>The framework is particularly useful when: - multiple labels remain in the prediction set, - credibility is low, - or the instance looks atypical.</p>
+<p>The method helps make uncertainty <strong>diagnostic</strong>, not just descriptive.</p>
+</section>
+<section id="it-may-help-flag-out-of-distribution-like-cases" class="level3">
+<h3 class="anchored" data-anchor-id="it-may-help-flag-out-of-distribution-like-cases">5.4 It may help flag out-of-distribution-like cases</h3>
+<p>The authors explicitly note that empty prediction sets or very low credibility can indicate: - out-of-distribution behavior, - extreme uncertainty, - or corrupted/unusual inputs.</p>
+<p>Their SHAP framework then offers a way to inspect which features caused that breakdown in conformity.</p>
+</section>
+<section id="threshold-aware-explanations-are-different-from-p-value-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="threshold-aware-explanations-are-different-from-p-value-explanations">5.5 Threshold-aware explanations are different from p-value explanations</h3>
+<p>One subtle and useful insight appears in the explanation of <strong>set inclusion</strong>: - a feature that lowers a p-value can still have a positive contribution to inclusion if the class remains above the threshold.</p>
+<p>This is an important distinction. It means the semantics of the explanation change depending on the target: - explaining the p-value, - versus explaining threshold crossing.</p>
+<p>That is a sophisticated point, and one of the paper’s most practically useful methodological clarifications.</p>
+<hr>
+</section>
+</section>
+<section id="dataset-specific-results" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-specific-results">6. Dataset-Specific Results</h2>
+<section id="iris" class="level3">
+<h3 class="anchored" data-anchor-id="iris">6.1 Iris</h3>
+<ul>
+<li>The method shows that SHAP explanations align well with known Iris class structure.</li>
+<li>In one case, <strong>Virginica</strong> receives a high conformal p-value and strong confidence/credibility, with petal width, petal length, and sepal length supporting the result.</li>
+<li>In another case, the conformal predictor shifts the prediction from <strong>Versicolor</strong> to <strong>Virginica</strong>, and SHAP explains why the p-values justify that change.</li>
+<li>The global beeswarm plot shows class-specific patterns that match known geometry of the dataset.</li>
+</ul>
+<p><strong>Why this matters:</strong><br>
+It demonstrates that the method is not merely mathematically possible, but also semantically sensible.</p>
+</section>
+<section id="wisconsin-breast-cancer" class="level3">
+<h3 class="anchored" data-anchor-id="wisconsin-breast-cancer">6.2 Wisconsin Breast Cancer</h3>
+<ul>
+<li>A malignant case receives high confidence but lower credibility.</li>
+<li>SHAP shows that some features strongly support exclusion of the benign class.</li>
+<li>At the same time, for the malignant class, some features raise the p-value while others lower it.</li>
+<li>The credibility explanation highlights that some features make the case somewhat atypical relative to calibration data.</li>
+<li>The set inclusion explanation shows how threshold-based explanations differ from raw p-value explanations.</li>
+</ul>
+<p><strong>Why this matters:</strong><br>
+This is probably the cleanest demonstration that the framework can separate: - plausibility of a class, - atypicality of the instance, - and threshold-based inclusion logic.</p>
+</section>
+<section id="pima-diabetes" class="level3">
+<h3 class="anchored" data-anchor-id="pima-diabetes">6.3 Pima Diabetes</h3>
+<ul>
+<li>The base classifier leans toward <strong>Non-Diabetic</strong>, but conformal calibration shifts the output toward <strong>Diabetic</strong>, which is correct.</li>
+<li>However, neither class can be strongly rejected at modest significance thresholds, so the case is genuinely uncertain.</li>
+<li>SHAP reveals which features reduce or increase the p-values for each class.</li>
+<li>The confidence explanation shows that even a confidence value that looks decent in isolation can still represent substantial uncertainty relative to the rest of the dataset.</li>
+<li>The full set explanation shows why the returned prediction set contains both labels.</li>
+</ul>
+<p><strong>Why this matters:</strong><br>
+This is a strong example of conformal prediction correcting or reframing a conventional classifier output, while SHAP explains the resulting uncertainty structure.</p>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">7. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<section id="criticism-1-this-is-a-proof-of-concept-not-a-rigorous-empirical-benchmark" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-1-this-is-a-proof-of-concept-not-a-rigorous-empirical-benchmark">Criticism 1: This is a proof-of-concept, not a rigorous empirical benchmark</h3>
+<p>The paper is explicitly a proof-of-concept. That is fair, but it means the empirical claims should be interpreted cautiously. The method is shown to be plausible and interesting, not comprehensively validated.</p>
+</section>
+<section id="criticism-2-there-is-no-formal-evaluation-of-explanation-quality" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-2-there-is-no-formal-evaluation-of-explanation-quality">Criticism 2: There is no formal evaluation of explanation quality</h3>
+<p>The paper does not use rigorous XAI evaluation criteria such as: - faithfulness, - stability, - robustness, - consistency under perturbation, - or human-centered utility studies.</p>
+<p>That is a major gap, especially because the paper’s core contribution is interpretability.</p>
+</section>
+<section id="criticism-3-small-benchmark-datasets-make-the-examples-readable-but-limit-external-validity" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-3-small-benchmark-datasets-make-the-examples-readable-but-limit-external-validity">Criticism 3: Small benchmark datasets make the examples readable but limit external validity</h3>
+<p>Iris, WBC, and Pima are pedagogically useful, but they are relatively small and familiar. This makes the examples easy to understand, but it also means the study does not yet prove that the method scales well to: - high-dimensional tabular data, - sparse features, - image or text domains, - or modern deep classifiers.</p>
+</section>
+<section id="criticism-4-random-forest-tree-shap-is-a-comfortable-setting" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-4-random-forest-tree-shap-is-a-comfortable-setting">Criticism 4: Random Forest + Tree SHAP is a comfortable setting</h3>
+<p>The underlying model is a Random Forest, and the explanation engine is Tree SHAP, which is one of the most mature and convenient SHAP settings. That makes sense for a first study, but it leaves open the harder question: - how well does this framework behave with deep models, approximate explainers, or more unstable p-value structures?</p>
+</section>
+<section id="criticism-5-the-method-explains-outputs-derived-from-calibration-not-just-the-base-model" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-5-the-method-explains-outputs-derived-from-calibration-not-just-the-base-model">Criticism 5: The method explains outputs derived from calibration, not just the base model</h3>
+<p>This is conceptually powerful, but it also complicates interpretation. SHAP is not explaining the base classifier directly; it is explaining a downstream conformal quantity. That means the explanation now blends: - model behavior, - calibration effects, - dataset structure, - and thresholding logic.</p>
+<p>This is not a flaw, but it means practitioners may overinterpret the explanations as “why the model predicted class Y,” when the true target is subtler: “why the conformal system assigned this p-value / inclusion status / confidence / credibility.”</p>
+</section>
+<section id="criticism-6-ood-detection-is-suggested-more-than-proven" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-6-ood-detection-is-suggested-more-than-proven">Criticism 6: OOD detection is suggested more than proven</h3>
+<p>The authors mention that empty sets or low credibility may support detection of out-of-distribution or anomalous cases. That is a compelling idea, but the paper does not perform a dedicated OOD experiment. So at this stage, OOD usefulness remains more of a conceptual promise than an empirically established result.</p>
+</section>
+<section id="criticism-7-the-paper-does-not-compare-against-other-explanation-strategies-for-conformal-outputs" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-7-the-paper-does-not-compare-against-other-explanation-strategies-for-conformal-outputs">Criticism 7: The paper does not compare against other explanation strategies for conformal outputs</h3>
+<p>The paper presents SHAP as the explanation mechanism, but does not compare it against: - LIME, - Integrated Gradients, - counterfactual explanations, - prototype-based methods, - or dedicated conformal explanation techniques.</p>
+<p>So we do not yet know whether SHAP is best, merely that it works and is flexible.</p>
+<hr>
+</section>
+</section>
+<section id="research-value-for-my-own-work" class="level2">
+<h2 class="anchored" data-anchor-id="research-value-for-my-own-work">8. Research Value for My Own Work</h2>
+<ul>
+<li><strong>Why this paper matters conceptually:</strong>
+<ul>
+<li>It strengthens the idea that uncertainty-aware model outputs themselves can be the target of explanation, not only raw model predictions.</li>
+<li>That is highly relevant if I want to explain:
+<ul>
+<li>uncertainty scores,</li>
+<li>quantile behavior,</li>
+<li>interval inclusion,</li>
+<li>or calibration-derived outputs in my own forecasting work.</li>
+</ul></li>
+</ul></li>
+<li><strong>Direct methodological takeaway:</strong>
+<ul>
+<li>SHAP can explain <strong>any deterministic function of the model</strong>, not just the original prediction.</li>
+<li>That opens a major design space for explaining:
+<ul>
+<li>interval width,</li>
+<li>conformal coverage decisions,</li>
+<li>anomaly scores,</li>
+<li>forecast sharpness,</li>
+<li>quantile crossing corrections,</li>
+<li>or custom uncertainty metrics.</li>
+</ul></li>
+</ul></li>
+<li><strong>Important conceptual insight for probabilistic forecasting:</strong>
+<ul>
+<li>The paper shows the value of explaining outputs that are <strong>not forced into normalized competition</strong>.</li>
+<li>This is highly relevant if I am thinking about explaining multiple uncertainty quantities independently rather than relying only on probability-simplex outputs.</li>
+</ul></li>
+<li><strong>Potential relevance to my literature review:</strong>
+<ul>
+<li>This paper is useful for a section on:
+<ul>
+<li>explainability of uncertainty-aware prediction systems,</li>
+<li>explanation of set-valued or structured outputs,</li>
+<li>and post-hoc interpretation of conformal prediction.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">9. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper in my literature review as an example of <strong>explaining uncertainty-aware outputs rather than only raw model outputs</strong>.</label></li>
+<li><label><input type="checkbox">Use it to support the methodological point that <strong>SHAP can explain any derived deterministic target function</strong>, including calibrated or uncertainty-related quantities.</label></li>
+<li><label><input type="checkbox">Contrast its proof-of-concept nature with the need for <strong>formal evaluation of explanation quality</strong>.</label></li>
+<li><label><input type="checkbox">Consider whether a similar framework could be used in my own work to explain:</label>
+<ul>
+<li>interval width,</li>
+<li>prediction interval membership,</li>
+<li>conformalized quantiles,</li>
+<li>or other reliability metrics.</li>
+</ul></li>
+<li><label><input type="checkbox">Highlight its key conceptual advantage: <strong>class-specific conformal p-value explanations avoid the zero-sum constraint of softmax probabilities</strong>.</label></li>
+<li><label><input type="checkbox">Note the paper as a useful bridge between:</label>
+<ul>
+<li>conformal prediction,</li>
+<li>SHAP,</li>
+<li>decision support,</li>
+<li>and interpretable uncertainty.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="final-verdict" class="level2">
+<h2 class="anchored" data-anchor-id="final-verdict">10. Final Verdict</h2>
+<p>This is a <strong>clever, original, and conceptually important</strong> paper, even though it is still an early-stage demonstration rather than a full empirical validation study.</p>
+<p>Its biggest strength is not predictive novelty, but interpretive reframing: it shows that conformal prediction outputs, especially class-wise p-values, can be treated as first-class explainable objects.</p>
+<p>That move is important.</p>
+<p>Instead of merely saying: - “here is the predicted set,”</p>
+<p>the method can now say: - “here is why this label was almost included,” - “here is why that one was excluded,” - “here is why the instance is atypical,” - and “here is why the model is uncertain.”</p>
+<p>For anyone working on explainable uncertainty quantification, this paper is highly relevant. Its limitations are mostly about evaluation depth, scale, and empirical breadth, not about the originality of the idea itself.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="pagination-link" aria-label="Explaining Predictive Uncertainty with Information Theoretic Shapley Values">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="pagination-link" aria-label="Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift">
+        <span class="nav-page-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

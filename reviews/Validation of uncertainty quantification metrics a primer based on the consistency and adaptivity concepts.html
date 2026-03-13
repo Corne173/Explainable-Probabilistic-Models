@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-05-18">
+<meta name="description" content="Review of Pascal Pernot’s framework for validating uncertainty quantification using calibration, consistency, and adaptivity.">
+
+<title>Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" rel="next">
+<link href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Uncertainty Quantification</div>
+    <div class="quarto-category">Calibration</div>
+    <div class="quarto-category">Adaptivity</div>
+    <div class="quarto-category">Consistency</div>
+    <div class="quarto-category">Probabilistic Forecasting</div>
+    <div class="quarto-category">Explainable AI</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of Pascal Pernot’s framework for validating uncertainty quantification using calibration, consistency, and adaptivity.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 18, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Paper Title:</strong> Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts<br>
+</li>
+<li><strong>Authors &amp; Year:</strong> Pascal Pernot (2023)<br>
+</li>
+<li><strong>Venue (Journal/Conference):</strong> Methodological primer / review-style article on uncertainty quantification validation<br>
+</li>
+<li><strong>Primary Topic:</strong> Validation frameworks for uncertainty quantification (UQ) in machine learning models<br>
+</li>
+<li><strong>Domain:</strong> Physico-chemical modelling and materials science ML, but methodology generalises to probabilistic ML models in any domain<br>
+</li>
+<li><strong>Code/Data Available?:</strong> No primary implementation focus; paper mainly introduces conceptual evaluation framework<br>
+</li>
+<li><strong>Proximity / Threat Level:</strong> Medium relevance / methodological support paper rather than a competing forecasting model<br>
+</li>
+<li><strong>Date Reviewed:</strong> 2024-05-18</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="motivation-why-uncertainty-validation-matters" class="level3">
+<h3 class="anchored" data-anchor-id="motivation-why-uncertainty-validation-matters">Motivation: Why Uncertainty Validation Matters</h3>
+<p>Many modern machine learning models provide <strong>uncertainty estimates</strong> alongside predictions. These may come from:</p>
+<ul>
+<li>Bayesian neural networks<br>
+</li>
+<li>Gaussian processes<br>
+</li>
+<li>ensemble models<br>
+</li>
+<li>quantile regression<br>
+</li>
+<li>probabilistic boosting methods</li>
+</ul>
+<p>However, simply producing uncertainty estimates does <strong>not guarantee they are reliable</strong>. A model might output uncertainty values that appear reasonable but <strong>do not correspond to the actual prediction errors</strong>.</p>
+<p>The paper argues that existing validation approaches mostly test <strong>average calibration</strong>, which checks whether uncertainties are correct <em>on average</em>. However, average correctness does <strong>not guarantee local reliability</strong>.</p>
+<p>For safety-critical applications such as energy forecasting, autonomous systems, or scientific modelling, uncertainty estimates must be reliable <strong>for individual predictions and across the input space</strong>, not just globally.</p>
+<hr>
+</section>
+<section id="main-conceptual-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="main-conceptual-contribution">Main Conceptual Contribution</h3>
+<p>The paper introduces a <strong>three-component framework for validating uncertainty quantification</strong>:</p>
+<ol type="1">
+<li><strong>Average Calibration</strong></li>
+<li><strong>Consistency</strong></li>
+<li><strong>Adaptivity</strong></li>
+</ol>
+<p>These three concepts together provide a <strong>much more complete validation framework</strong> for probabilistic models.</p>
+<hr>
+</section>
+<section id="average-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="average-calibration">Average Calibration</h3>
+<p>Average calibration tests whether the predicted uncertainty magnitude matches the <strong>overall error dispersion</strong>.</p>
+<p>For variance-based uncertainty models, this typically means:</p>
+<p>[ Var(E) u_E^2 ]</p>
+<p>Where:</p>
+<ul>
+<li>(E) = prediction error<br>
+</li>
+<li>(u_E) = predicted uncertainty</li>
+</ul>
+<p>If a model is well calibrated, then the <strong>variance of the errors should match the average predicted uncertainty variance</strong>.</p>
+<p>However, this check alone is insufficient because <strong>overestimation in some regions and underestimation in others can cancel out</strong>.</p>
+<hr>
+</section>
+<section id="consistency" class="level3">
+<h3 class="anchored" data-anchor-id="consistency">Consistency</h3>
+<p>Consistency tests whether uncertainties remain correct <strong>across different levels of predicted uncertainty</strong>.</p>
+<p>In other words:</p>
+<blockquote class="blockquote">
+<p>If the model says uncertainty is high, do we actually observe larger errors?</p>
+</blockquote>
+<p>Mathematically this is expressed through conditional calibration:</p>
+<p>[ Var(Z u_E = ) ]</p>
+<p>Where</p>
+<p>[ Z = ]</p>
+<p>This ensures that uncertainty estimates are <strong>correctly scaled across different uncertainty magnitudes</strong>.</p>
+<hr>
+</section>
+<section id="adaptivity" class="level3">
+<h3 class="anchored" data-anchor-id="adaptivity">Adaptivity</h3>
+<p>Adaptivity is the paper’s most important conceptual contribution.</p>
+<p>Adaptivity tests whether uncertainties remain reliable <strong>across the input space</strong>.</p>
+<p>Instead of conditioning on predicted uncertainty, the analysis conditions on <strong>input features</strong>:</p>
+<p>[ Var(Z X = x) ]</p>
+<p>This evaluates whether uncertainty estimates remain valid in <strong>different regions of the data distribution</strong>.</p>
+<p>Example:</p>
+<p>A solar power forecasting model might produce correct uncertainty on average but fail during:</p>
+<ul>
+<li>cloudy conditions<br>
+</li>
+<li>winter months<br>
+</li>
+<li>high irradiance periods</li>
+</ul>
+<p>Adaptivity analysis would reveal these failures.</p>
+<hr>
+</section>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="variance-based-uq-framework" class="level3">
+<h3 class="anchored" data-anchor-id="variance-based-uq-framework">Variance-Based UQ Framework</h3>
+<p>For variance-based uncertainty predictions, the paper defines the minimal validation dataset as:</p>
+<p>[ C = {E, u_E} ]</p>
+<p>Where:</p>
+<ul>
+<li>(E = R - V)<br>
+</li>
+<li>(R) = reference value<br>
+</li>
+<li>(V) = predicted value</li>
+</ul>
+<p>Total uncertainty combines prediction uncertainty and measurement uncertainty:</p>
+<p>[ u_E = ]</p>
+<p>Where:</p>
+<ul>
+<li>(u_R) = reference uncertainty<br>
+</li>
+<li>(u_V) = predicted uncertainty</li>
+</ul>
+<hr>
+</section>
+<section id="standardised-error-z-score" class="level3">
+<h3 class="anchored" data-anchor-id="standardised-error-z-score">Standardised Error (Z-Score)</h3>
+<p>The standardized error is defined as:</p>
+<p>[ Z = ]</p>
+<p>If uncertainties are correctly estimated, then:</p>
+<p>[ Var(Z) ]</p>
+<p>This metric is central to many UQ validation diagnostics.</p>
+<hr>
+</section>
+<section id="interval-based-uq" class="level3">
+<h3 class="anchored" data-anchor-id="interval-based-uq">Interval-Based UQ</h3>
+<p>For prediction interval models (e.g., quantile regression or conformal prediction), the primary metric is:</p>
+<p><strong>Prediction Interval Coverage Probability (PICP)</strong></p>
+<p>This measures the proportion of observations that fall within the predicted interval.</p>
+<p>Example:</p>
+<p>If a model predicts <strong>95% intervals</strong>, then approximately <strong>95% of observations should fall inside those intervals</strong>.</p>
+<p>However, similar to variance-based UQ, this must also be validated <strong>locally</strong>, not only globally.</p>
+<hr>
+</section>
+</section>
+<section id="validation-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy">4. Validation Strategy</h2>
+<p>The paper validates its framework using two approaches:</p>
+<section id="synthetic-case-studies" class="level3">
+<h3 class="anchored" data-anchor-id="synthetic-case-studies">Synthetic Case Studies</h3>
+<p>Six synthetic datasets are constructed to represent different failure modes.</p>
+<p>These include cases where models are:</p>
+<ul>
+<li>fully calibrated and adaptive<br>
+</li>
+<li>calibrated but inconsistent<br>
+</li>
+<li>calibrated but not adaptive<br>
+</li>
+<li>completely miscalibrated</li>
+</ul>
+<p>This allows the author to demonstrate how different diagnostic tools respond to known ground truth.</p>
+<hr>
+</section>
+<section id="reanalysis-of-existing-ml-studies" class="level3">
+<h3 class="anchored" data-anchor-id="reanalysis-of-existing-ml-studies">Reanalysis of Existing ML Studies</h3>
+<p>The framework is also applied to previously published uncertainty quantification studies.</p>
+<p>This reanalysis shows that many published models that appear well-calibrated actually exhibit:</p>
+<ul>
+<li>local miscalibration</li>
+<li>inconsistent uncertainty scaling</li>
+<li>lack of adaptivity across feature space</li>
+</ul>
+<p>Thus the standard validation methods used in prior literature may <strong>overestimate model reliability</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="diagnostic-tools-evaluated" class="level2">
+<h2 class="anchored" data-anchor-id="diagnostic-tools-evaluated">5. Diagnostic Tools Evaluated</h2>
+<p>The paper evaluates several common UQ validation tools.</p>
+<section id="calibration-curves" class="level3">
+<h3 class="anchored" data-anchor-id="calibration-curves">Calibration Curves</h3>
+<p>Calibration curves compare predicted uncertainty with observed error.</p>
+<p>These are useful but mainly test <strong>average calibration</strong>.</p>
+<hr>
+</section>
+<section id="reliability-diagrams" class="level3">
+<h3 class="anchored" data-anchor-id="reliability-diagrams">Reliability Diagrams</h3>
+<p>Reliability diagrams evaluate calibration across different uncertainty bins.</p>
+<p>They test <strong>consistency</strong>, but are sensitive to:</p>
+<ul>
+<li>bin size<br>
+</li>
+<li>sample size<br>
+</li>
+<li>data distribution</li>
+</ul>
+<hr>
+</section>
+<section id="confidence-curves" class="level3">
+<h3 class="anchored" data-anchor-id="confidence-curves">Confidence Curves</h3>
+<p>Confidence curves measure model error as predictions are filtered by uncertainty ranking.</p>
+<p>However, the paper argues that <strong>oracle-based confidence curves are misleading</strong>, because they do not test calibration directly.</p>
+<p>Instead, the paper proposes <strong>probabilistic reference curves</strong>.</p>
+<hr>
+</section>
+<section id="local-z-variance-diagnostics" class="level3">
+<h3 class="anchored" data-anchor-id="local-z-variance-diagnostics">Local Z-Variance Diagnostics</h3>
+<p>The paper proposes analysing <strong>local variance of standardized errors</strong>.</p>
+<p>This allows detection of:</p>
+<ul>
+<li>local over-confidence</li>
+<li>local under-confidence</li>
+</ul>
+<hr>
+</section>
+<section id="local-coverage-probability" class="level3">
+<h3 class="anchored" data-anchor-id="local-coverage-probability">Local Coverage Probability</h3>
+<p>For interval predictions, local coverage probability evaluates whether predicted intervals remain valid across:</p>
+<ul>
+<li>uncertainty levels</li>
+<li>input features</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="key-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-findings">6. Key Findings</h2>
+<section id="average-calibration-is-insufficient" class="level3">
+<h3 class="anchored" data-anchor-id="average-calibration-is-insufficient">Average Calibration is Insufficient</h3>
+<p>A model can appear perfectly calibrated globally while being <strong>locally unreliable</strong>.</p>
+<hr>
+</section>
+<section id="adaptivity-is-often-ignored" class="level3">
+<h3 class="anchored" data-anchor-id="adaptivity-is-often-ignored">Adaptivity is Often Ignored</h3>
+<p>Most prior work evaluates calibration and consistency but does not evaluate adaptivity.</p>
+<p>This means uncertainty models may fail under certain conditions without detection.</p>
+<hr>
+</section>
+<section id="many-standard-metrics-are-weak" class="level3">
+<h3 class="anchored" data-anchor-id="many-standard-metrics-are-weak">Many Standard Metrics Are Weak</h3>
+<p>Common scalar metrics such as:</p>
+<ul>
+<li>ENCE<br>
+</li>
+<li>AUCO</li>
+</ul>
+<p>do not guarantee consistency or adaptivity.</p>
+<p>They should not be used as the sole evidence of reliable uncertainty.</p>
+<hr>
+</section>
+<section id="reliability-diagrams-depend-on-binning" class="level3">
+<h3 class="anchored" data-anchor-id="reliability-diagrams-depend-on-binning">Reliability Diagrams Depend on Binning</h3>
+<p>Improper binning can hide important uncertainty failures.</p>
+<p>Careful bin selection is necessary.</p>
+<hr>
+</section>
+</section>
+<section id="limitations-of-the-study" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-of-the-study">7. Limitations of the Study</h2>
+<section id="framework-requires-expert-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="framework-requires-expert-interpretation">Framework Requires Expert Interpretation</h3>
+<p>The methodology relies heavily on diagnostic plots rather than automated metrics.</p>
+<p>Practitioners must interpret results carefully.</p>
+<hr>
+</section>
+<section id="feature-selection-for-adaptivity-is-non-trivial" class="level3">
+<h3 class="anchored" data-anchor-id="feature-selection-for-adaptivity-is-non-trivial">Feature Selection for Adaptivity is Non-Trivial</h3>
+<p>Choosing the right feature dimension to analyse adaptivity requires domain knowledge.</p>
+<p>In high-dimensional models this can be difficult.</p>
+<hr>
+</section>
+<section id="focus-on-diagnosis-rather-than-correction" class="level3">
+<h3 class="anchored" data-anchor-id="focus-on-diagnosis-rather-than-correction">Focus on Diagnosis Rather Than Correction</h3>
+<p>The paper provides tools for identifying problems but does not propose new algorithms to fix them.</p>
+<hr>
+</section>
+</section>
+<section id="relevance-to-probabilistic-forecasting-research" class="level2">
+<h2 class="anchored" data-anchor-id="relevance-to-probabilistic-forecasting-research">8. Relevance to Probabilistic Forecasting Research</h2>
+<p>This framework is highly relevant for validating uncertainty estimates in:</p>
+<ul>
+<li>solar power forecasting<br>
+</li>
+<li>load forecasting<br>
+</li>
+<li>wind forecasting<br>
+</li>
+<li>probabilistic demand prediction</li>
+</ul>
+<p>It highlights the importance of validating uncertainty across:</p>
+<ul>
+<li>time of day<br>
+</li>
+<li>weather regimes<br>
+</li>
+<li>seasonal variation<br>
+</li>
+<li>demand levels</li>
+</ul>
+<p>This is particularly important for <strong>grid operations</strong>, where uncertainty estimates influence:</p>
+<ul>
+<li>reserve scheduling<br>
+</li>
+<li>trading decisions<br>
+</li>
+<li>system stability planning.</li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">9. Action Items &amp; Integration</h2>
+<ul>
+<li>Evaluate probabilistic forecasting models using <strong>three criteria</strong>:
+<ul>
+<li>calibration</li>
+<li>consistency</li>
+<li>adaptivity</li>
+</ul></li>
+<li>Include diagnostics such as:
+<ul>
+<li>reliability diagrams</li>
+<li>local coverage analysis</li>
+<li>standardized error variance tests</li>
+</ul></li>
+<li>Analyse uncertainty reliability across <strong>key domain features</strong>, such as:
+<ul>
+<li>irradiance level</li>
+<li>forecast horizon</li>
+<li>temperature</li>
+<li>season</li>
+</ul></li>
+<li>Avoid relying solely on scalar calibration metrics.</li>
+</ul>
+<hr>
+</section>
+<section id="bottom-line" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line">10. Bottom Line</h2>
+<p>The paper provides a <strong>conceptual framework for validating uncertainty quantification</strong> that goes beyond standard calibration tests.</p>
+<p>It argues that reliable uncertainty estimates must satisfy three properties:</p>
+<ol type="1">
+<li><strong>Calibration</strong> — correct on average<br>
+</li>
+<li><strong>Consistency</strong> — correct across uncertainty levels<br>
+</li>
+<li><strong>Adaptivity</strong> — correct across the input space</li>
+</ol>
+<p>Many existing studies only validate the first property.</p>
+<p>Therefore, rigorous uncertainty validation must evaluate <strong>all three dimensions</strong> to ensure that uncertainty estimates remain trustworthy in real-world applications.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="pagination-link" aria-label="Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="pagination-link" aria-label="Weighted residual clustering-based building load prediction interval estimation">
+        <span class="nav-page-text">Weighted residual clustering-based building load prediction interval estimation</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

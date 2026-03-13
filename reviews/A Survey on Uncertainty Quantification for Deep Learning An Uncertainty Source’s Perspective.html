@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Detailed literature review of a survey paper that organizes deep learning uncertainty quantification methods by uncertainty source rather than by model family alone.">
+
+<title>A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" rel="next">
+<link href="../about.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Reviewed</div>
+    <div class="quarto-category">Uncertainty Quantification</div>
+    <div class="quarto-category">Deep Learning</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Trustworthy AI</div>
+    <div class="quarto-category">Bayesian Neural Networks</div>
+    <div class="quarto-category">Out-of-Distribution Detection</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Detailed literature review of a survey paper that organizes deep learning uncertainty quantification methods by uncertainty source rather than by model family alone.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Authors &amp; Year:</strong> Wenchong He, Zhe Jiang (2023; arXiv version updated 2024)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>ACM Computing Surveys</em><br>
+</li>
+<li><strong>Paper Type:</strong> Survey / Taxonomy paper</li>
+<li><strong>Primary Topic:</strong> Uncertainty Quantification (UQ) for Deep Neural Networks</li>
+<li><strong>Core Perspective:</strong> Categorization of UQ methods by <strong>uncertainty source</strong></li>
+<li><strong>Link/DOI:</strong> ACM Computing Surveys article; arXiv preprint version noted in the paper</li>
+<li><strong>Code/Data Available?:</strong> No central code contribution; this is a conceptual and methodological survey</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High / Foundational framing paper</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (Why this survey matters):</strong>
+<ul>
+<li>Deep neural networks often achieve excellent predictive accuracy, but they can still make incorrect predictions with unjustifiably high confidence. This is dangerous in high-stakes domains such as medical diagnosis, autonomous driving, disaster response, and other safety-critical systems. The paper argues that predictive accuracy alone is insufficient; models also need to know <em>when they do not know</em>. :contentReference<span data-index="1">oaicite:1</span></li>
+<li>The authors position uncertainty quantification (UQ) as the mechanism for assigning confidence to predictions beyond conventional accuracy metrics. They emphasize that uncertainty is not monolithic: it arises from different sources, and understanding those sources is essential for selecting the right method. :contentReference<span data-index="2">oaicite:2</span></li>
+</ul></li>
+<li><strong>Their claim to fame / Novelty:</strong>
+<ul>
+<li>The central novelty is not a new UQ algorithm, but a <strong>new taxonomy</strong>. Existing surveys, according to the authors, mainly categorize UQ methods either:
+<ol type="1">
+<li>by neural network architecture, or</li>
+<li>by Bayesian vs non-Bayesian viewpoint.</li>
+</ol></li>
+<li>This survey instead organizes methods by <strong>uncertainty source</strong>, specifically:
+<ul>
+<li><strong>Data uncertainty</strong>,</li>
+<li><strong>Model uncertainty</strong>, and</li>
+<li><strong>Combined data + model uncertainty</strong>.<br>
+</li>
+</ul></li>
+<li>The authors argue this is practically more useful, because in real problems one type of uncertainty may dominate, and method selection should be driven by that reality rather than by model family labels alone. :contentReference<span data-index="3">oaicite:3</span></li>
+</ul></li>
+<li><strong>The conceptual contribution:</strong>
+<ul>
+<li>The paper clearly distinguishes:
+<ul>
+<li><strong>Data uncertainty (aleatoric)</strong> as randomness/noise intrinsic to the data and often irreducible,</li>
+<li><strong>Model uncertainty (epistemic)</strong> as lack of knowledge due to limited data, suboptimal architecture/parameters, or distribution shift, which is often reducible. :contentReference<span data-index="4">oaicite:4</span></li>
+</ul></li>
+<li>It then maps major UQ approaches to these uncertainty types, creating a more decision-oriented view of the literature. :contentReference<span data-index="5">oaicite:5</span></li>
+</ul></li>
+<li><strong>The practical value of the survey:</strong>
+<ul>
+<li>The taxonomy is linked to real deployment contexts such as:
+<ul>
+<li>out-of-distribution detection,</li>
+<li>active learning,</li>
+<li>robustness,</li>
+<li>reinforcement learning,</li>
+<li>medical applications,</li>
+<li>geoscience,</li>
+<li>transportation,</li>
+<li>biochemical engineering.<br>
+</li>
+</ul></li>
+<li>This makes the survey more than a catalog; it acts as a method-selection framework.</li>
+</ul></li>
+<li><strong>Their ultimate message:</strong>
+<ul>
+<li>No single UQ method is universally best.</li>
+<li>The right UQ choice depends on:
+<ul>
+<li>what kind of uncertainty dominates,</li>
+<li>whether calibration, interpretability, computational tractability, or OOD awareness matters most,</li>
+<li>and what deployment environment the model must survive in.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-framing" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-framing">3. Methodology &amp; Technical Framing</h2>
+<ul>
+<li><strong>Problem formulation:</strong>
+<ul>
+<li>The survey defines a learning setup where a model predicts both:
+<ul>
+<li>the target, and</li>
+<li>an associated uncertainty score.</li>
+</ul></li>
+<li>The paper frames UQ as optimizing not only empirical prediction loss, but also calibration-related behaviour through expected calibration error (ECE). In other words, a good UQ model should not merely be accurate; its confidence should align with its actual error rate. :contentReference<span data-index="8">oaicite:8</span></li>
+</ul></li>
+<li><strong>Two-source uncertainty formulation:</strong>
+<ul>
+<li><strong>Data uncertainty</strong> arises from noisy measurement, ambiguity in labels, overlap in class distributions, imperfect sampling, transmission errors, representation limitations, and heterogeneous noise levels. The paper emphasizes that for classification this can be understood through conditional entropy, while for regression it is tied to observation noise, especially heteroscedastic noise. :contentReference<span data-index="9">oaicite:9</span></li>
+<li><strong>Model uncertainty</strong> arises from imperfect parameter estimation, architecture misspecification, and training/test distribution mismatch, including OOD cases. The paper stresses that this is often the type of uncertainty you hope to reduce with more data or better modelling choices. :contentReference<span data-index="10">oaicite:10</span></li>
+</ul></li>
+<li><strong>Their master taxonomy:</strong>
+<ul>
+<li>The survey groups UQ methods into three main branches:
+<ol type="1">
+<li><strong>Model uncertainty methods</strong></li>
+<li><strong>Data uncertainty methods</strong></li>
+<li><strong>Combined model + data uncertainty methods</strong><br>
+</li>
+</ol></li>
+<li>This top-level taxonomy is arguably the main intellectual contribution of the paper. :contentReference<span data-index="11">oaicite:11</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="detailed-taxonomy-of-uq-methods" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-taxonomy-of-uq-methods">4. Detailed Taxonomy of UQ Methods</h2>
+<section id="model-uncertainty-methods" class="level3">
+<h3 class="anchored" data-anchor-id="model-uncertainty-methods">4.1 Model Uncertainty Methods</h3>
+<p>The survey divides model uncertainty methods into three main subfamilies.</p>
+<section id="a.-bayesian-neural-networks-bnns" class="level4">
+<h4 class="anchored" data-anchor-id="a.-bayesian-neural-networks-bnns">A. Bayesian Neural Networks (BNNs)</h4>
+<ul>
+<li>The Bayesian view places a prior over network parameters and seeks a posterior distribution over weights instead of a single point estimate. Uncertainty is then reflected in the predictive distribution obtained by integrating over parameter uncertainty. :contentReference<span data-index="12">oaicite:12</span></li>
+<li>The paper reviews several approximations because exact posterior inference is intractable in modern DNNs:
+<ul>
+<li><strong>Variational Inference (VI):</strong>
+<ul>
+<li>Approximates the posterior with a tractable family, often Gaussian.</li>
+<li>Advantage: principled and flexible.</li>
+<li>Limitation: capturing full covariance is computationally expensive, and simplifying covariance structure can reduce fidelity. :contentReference<span data-index="13">oaicite:13</span></li>
+</ul></li>
+<li><strong>Laplace Approximation:</strong>
+<ul>
+<li>Approximates the posterior locally around the MAP estimate using a Gaussian based on the Hessian.</li>
+<li>Advantage: can be applied post hoc to a trained model.</li>
+<li>Limitation: local approximation, difficulty handling multimodal posteriors, Hessian inversion issues, and calibration challenges. :contentReference<span data-index="14">oaicite:14</span></li>
+</ul></li>
+<li><strong>MCMC-based approximations:</strong>
+<ul>
+<li>Theoretically attractive because they can converge to the exact posterior with enough samples.</li>
+<li>Limitation: prohibitively expensive and often slow to converge in high-dimensional DNN settings. :contentReference<span data-index="15">oaicite:15</span></li>
+</ul></li>
+<li><strong>MC Dropout:</strong>
+<ul>
+<li>Included as a practical approximation to BNN-style uncertainty.</li>
+<li>Advantage: easy to implement with minimal architecture changes.</li>
+<li>Limitation: often less calibrated than stronger baselines, despite its popularity. :contentReference<span data-index="16">oaicite:16</span></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="b.-ensemble-methods" class="level4">
+<h4 class="anchored" data-anchor-id="b.-ensemble-methods">B. Ensemble Methods</h4>
+<ul>
+<li>Ensembles estimate uncertainty from variation across multiple independently trained models. The survey treats them as capturing uncertainty from architecture choice, parameter initialization, data sampling, and training hyperparameters. :contentReference<span data-index="17">oaicite:17</span></li>
+<li>Variants include:
+<ul>
+<li><strong>Bootstrap ensembles</strong></li>
+<li><strong>Architecture ensembles</strong></li>
+<li><strong>Hyperensembles</strong><br>
+</li>
+</ul></li>
+<li>Strengths:
+<ul>
+<li>Simple idea,</li>
+<li>Scalable conceptually,</li>
+<li>Can capture several dimensions of model uncertainty.<br>
+</li>
+</ul></li>
+<li>Weaknesses:
+<ul>
+<li>High computation and memory cost,</li>
+<li>Dependence on model diversity; if ensemble members collapse to similar solutions, uncertainty estimates weaken. :contentReference<span data-index="18">oaicite:18</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="c.-sample-density-aware-methods" class="level4">
+<h4 class="anchored" data-anchor-id="c.-sample-density-aware-methods">C. Sample-density-aware Methods</h4>
+<ul>
+<li>The survey argues that BNNs and ensembles do not automatically solve uncertainty under low sample density or dataset shift. A model can still be overconfident far from the training support. :contentReference<span data-index="19">oaicite:19</span></li>
+<li>This leads to:
+<ul>
+<li><strong>Gaussian Process (GP) hybrids</strong></li>
+<li><strong>Deep kernel learning</strong></li>
+<li><strong>Deep Gaussian processes</strong></li>
+<li><strong>Distance-aware neural networks</strong><br>
+</li>
+</ul></li>
+<li>The central intuition is that uncertainty should increase when a test point lies far from known training regions. GP-inspired approaches naturally express this, but classical GP methods struggle with computational scaling and kernel design in high-dimensional settings. Hybrid methods try to combine DNN representation learning with GP uncertainty behaviour. :contentReference<span data-index="20">oaicite:20</span></li>
+<li>Distance-aware DNNs try to enforce meaningful latent distances so that OOD points do not collapse into in-distribution-looking representations. This is appealing for robust uncertainty estimation, but the paper notes these methods are difficult to enforce properly, especially when using Lipschitz-style constraints. :contentReference<span data-index="21">oaicite:21</span></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="data-uncertainty-methods" class="level3">
+<h3 class="anchored" data-anchor-id="data-uncertainty-methods">4.2 Data Uncertainty Methods</h3>
+<p>The survey next reviews methods aimed at capturing irreducible or observation-related uncertainty.</p>
+<section id="a.-deep-discriminative-models" class="level4">
+<h4 class="anchored" data-anchor-id="a.-deep-discriminative-models">A. Deep Discriminative Models</h4>
+<p>These directly model predictive uncertainty in supervised learning.</p>
+<ul>
+<li><strong>Parametric predictive distributions</strong>
+<ul>
+<li>For classification, output distributions are often categorical.</li>
+<li>For regression, models frequently assume Gaussian noise with mean and variance predicted by the network, giving heteroscedastic regression.</li>
+<li>Mixture density networks extend this to multimodal outputs.<br>
+</li>
+</ul></li>
+<li>Strength:
+<ul>
+<li>Direct and intuitive.</li>
+<li>Naturally suited to heteroscedastic regression problems.</li>
+</ul></li>
+<li>Limitation:
+<ul>
+<li>Requires choosing a parametric family, which may not match the true data-generating uncertainty.<br>
+The survey is careful to note that distribution choice matters greatly. :contentReference<span data-index="22">oaicite:22</span></li>
+</ul></li>
+<li><strong>Non-parametric prediction interval methods</strong>
+<ul>
+<li>These avoid committing to an explicit distributional form and instead estimate intervals directly.</li>
+<li>The survey discusses methods such as lower-upper bound estimation and constrained optimization views of interval learning, including the trade-off between interval width and coverage probability. :contentReference<span data-index="23">oaicite:23</span></li>
+</ul></li>
+<li>Strength:
+<ul>
+<li>More flexible when the true distribution is hard to specify.</li>
+</ul></li>
+<li>Limitation:
+<ul>
+<li>Often harder to optimize well, and interval-based uncertainty may provide less full information than a full predictive density. :contentReference<span data-index="24">oaicite:24</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="b.-deep-generative-models" class="level4">
+<h4 class="anchored" data-anchor-id="b.-deep-generative-models">B. Deep Generative Models</h4>
+<ul>
+<li>The survey then covers deep generative approaches that learn complex predictive distributions in high-dimensional spaces, especially via conditional deep generative models. :contentReference<span data-index="25">oaicite:25</span></li>
+<li>These methods use latent variables to represent predictive variability and can generate multiple outputs for the same input, from which uncertainty can be derived.</li>
+<li>Broadly, the survey positions them as attractive when:
+<ul>
+<li>the predictive distribution is highly complex,</li>
+<li>a simple Gaussian or interval assumption is too restrictive,</li>
+<li>and one wants richer uncertainty structure.</li>
+</ul></li>
+<li>But these methods also bring their own practical burdens:
+<ul>
+<li>training complexity,</li>
+<li>stability concerns,</li>
+<li>and more difficult interpretation. :contentReference<span data-index="26">oaicite:26</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="combined-model-data-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="combined-model-data-uncertainty">4.3 Combined Model + Data Uncertainty</h3>
+<ul>
+<li>The survey emphasizes that many real-world problems require capturing both data and model uncertainty simultaneously. :contentReference<span data-index="27">oaicite:27</span></li>
+<li>One route is simply to combine a model-uncertainty method with a data-uncertainty method, but this increases computation and storage demands.</li>
+<li>Another route is <strong>evidential deep learning</strong>, which the paper highlights as a more efficient single-network framework for representing total uncertainty. :contentReference<span data-index="28">oaicite:28</span></li>
+<li>This part of the survey is important conceptually because it recognizes that real deployment does not neatly separate aleatoric and epistemic effects.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="application-domains-why-they-matter" class="level2">
+<h2 class="anchored" data-anchor-id="application-domains-why-they-matter">5. Application Domains &amp; Why They Matter</h2>
+<p>A strong feature of the paper is that it does not stay purely abstract. It grounds the taxonomy in application domains.</p>
+<ul>
+<li><strong>Medical diagnosis</strong>
+<ul>
+<li>Both uncertainty types are critical.</li>
+<li>Data uncertainty appears through ambiguous labels, noisy measurements, and registration errors.</li>
+<li>Model uncertainty appears when patient populations are not well represented in training data.</li>
+<li>The survey also points out that interpretability of uncertainty is especially important here. :contentReference<span data-index="29">oaicite:29</span></li>
+</ul></li>
+<li><strong>Geoscience</strong>
+<ul>
+<li>Spatiotemporal data bring sensor noise, registration uncertainty, heterogeneous distributions across space and time, and sparse observations.</li>
+<li>This domain strongly illustrates why dataset shift and sample density matter. :contentReference<span data-index="30">oaicite:30</span></li>
+</ul></li>
+<li><strong>Transportation</strong>
+<ul>
+<li>Traffic and autonomous driving problems contain temporal dynamics, measurement loss, environmental perturbations, and safety-critical decisions.</li>
+<li>This domain nicely motivates both stochastic uncertainty and robustness under unusual events. :contentReference<span data-index="31">oaicite:31</span></li>
+</ul></li>
+<li><strong>Biochemical engineering</strong>
+<ul>
+<li>Here the survey highlights partial scientific knowledge, biological heterogeneity, and uncertain mechanistic relationships.</li>
+<li>This is relevant to your kind of research mindset, because it shows UQ is not only about model performance but about supporting scientific decision-making where domain knowledge is incomplete. :contentReference<span data-index="32">oaicite:32</span></li>
+</ul></li>
+<li><strong>Deep reinforcement learning</strong>
+<ul>
+<li>The paper later shows how both data uncertainty and model uncertainty matter in RL:
+<ul>
+<li>stochastic rewards/transitions imply data uncertainty,</li>
+<li>limited state-space coverage implies model uncertainty.</li>
+</ul></li>
+<li>This matters for exploration, policy learning, and safe decision-making. :contentReference<span data-index="33">oaicite:33</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="validation-strategy-how-the-survey-judges-methods" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-how-the-survey-judges-methods">6. Validation Strategy / How the Survey Judges Methods</h2>
+<ul>
+<li><strong>This is a survey, not a benchmark paper.</strong>
+<ul>
+<li>It does not perform one unified empirical benchmark across all methods.</li>
+<li>Instead, its “validation” is conceptual and comparative:
+<ul>
+<li>defining uncertainty sources,</li>
+<li>mapping methods to those sources,</li>
+<li>listing strengths and weaknesses,</li>
+<li>and discussing how these methods relate to application needs.</li>
+</ul></li>
+</ul></li>
+<li><strong>What it does well:</strong>
+<ul>
+<li>It provides a clear framework for method selection.</li>
+<li>It avoids treating all UQ techniques as interchangeable.</li>
+<li>It makes the literature easier to reason about from a deployment perspective. :contentReference<span data-index="35">oaicite:35</span></li>
+</ul></li>
+<li><strong>What it does not do:</strong>
+<ul>
+<li>It does not empirically establish which family is best under standardized tasks.</li>
+<li>It does not provide a unified quantitative benchmark of calibration, sharpness, OOD detection, or computational burden across all methods.</li>
+<li>So its value is primarily taxonomic and interpretive, not experimental.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="thoughts-criticisms-unstated-limitations">7. Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<ul>
+<li><strong>Criticism 1 (AI): Strong conceptual framing, but not a comparative benchmark</strong>
+<ul>
+<li>The taxonomy is genuinely useful, but the paper stops short of giving a rigorous cross-method empirical benchmark. That means a reader still has to do substantial downstream work to decide which UQ method is best for a given forecasting problem.</li>
+</ul></li>
+<li><strong>Criticism 2 (AI): The survey is broad, but less deep on forecasting-specific metrics</strong>
+<ul>
+<li>Since this is a general DNN UQ survey, it does not deeply specialize in forecasting metrics such as CRPS, interval score decomposition, coverage-width trade-offs in operational forecasting, calibration under temporal dependence, or multi-horizon uncertainty quality.</li>
+<li>For your work in probabilistic forecasting, this paper is better as a conceptual scaffold than as a forecasting-methods playbook.</li>
+</ul></li>
+<li><strong>Criticism 3 (AI): Some sections prioritize categorization over deployment nuance</strong>
+<ul>
+<li>The taxonomy is clean, but in practice many methods blur boundaries.</li>
+<li>For example, ensembles can partially reflect data effects indirectly, and some generative approaches can capture both uncertainty families depending on training design.</li>
+<li>The categories are useful, but reality is messier than the diagram.</li>
+</ul></li>
+<li><strong>Criticism 4 (AI): Limited treatment of explanation-quality evaluation</strong>
+<ul>
+<li>The future directions note that combining UQ and explainability is important, which is excellent, but the survey does not yet give a concrete framework for evaluating that interaction.</li>
+<li>This is especially relevant if one wants not just calibrated uncertainty, but interpretable uncertainty attribution. :contentReference<span data-index="36">oaicite:36</span></li>
+</ul></li>
+<li><strong>Criticism 5 (AI): Computational practicality remains a central unresolved problem</strong>
+<ul>
+<li>The survey repeatedly acknowledges that many theoretically attractive methods, especially BNNs, MCMC, GP hybrids, and combinations of model and data uncertainty, are computationally expensive or difficult to scale. :contentReference<span data-index="37">oaicite:37</span></li>
+<li>This is important because the “best” UQ method on paper may still be unusable in large operational settings.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="relevance-to-my-research-why-this-paper-matters-for-me" class="level2">
+<h2 class="anchored" data-anchor-id="relevance-to-my-research-why-this-paper-matters-for-me">8. Relevance to My Research / Why This Paper Matters for Me</h2>
+<ul>
+<li><strong>Why this paper is useful for probabilistic energy forecasting:</strong>
+<ul>
+<li>It gives a strong theoretical basis for distinguishing:
+<ul>
+<li>irreducible uncertainty in the data generating process,</li>
+<li>from reducible uncertainty caused by limited coverage, model misspecification, or distribution shift.</li>
+</ul></li>
+<li>That distinction is extremely relevant in electricity, load, and renewable forecasting, where weather-driven stochasticity and OOD operating regimes coexist.</li>
+</ul></li>
+<li><strong>How I can use it in my literature review:</strong>
+<ul>
+<li>I can cite this paper to justify why uncertainty should not be treated as one scalar concept.</li>
+<li>I can use its taxonomy to structure my review section:
+<ol type="1">
+<li>data uncertainty methods,</li>
+<li>model uncertainty methods,</li>
+<li>joint methods,</li>
+<li>application-driven method choice.</li>
+</ol></li>
+</ul></li>
+<li><strong>How it helps position my work:</strong>
+<ul>
+<li>If I am developing a forecasting model for real-world deployment, this paper supports the argument that:
+<ul>
+<li>calibration alone is not enough,</li>
+<li>model family alone is not enough,</li>
+<li>and uncertainty-method choice must align with the dominant uncertainty source in the operational setting.</li>
+</ul></li>
+</ul></li>
+<li><strong>Why it matters for OOD and shift-aware forecasting:</strong>
+<ul>
+<li>The survey explicitly recognizes dataset shift and low sample density as sources of model uncertainty.</li>
+<li>That directly supports research directions involving:
+<ul>
+<li>OOD detection,</li>
+<li>epistemic uncertainty,</li>
+<li>ensemble disagreement,</li>
+<li>density-aware representations,</li>
+<li>and robustness under temporal or climatic regime shift. :contentReference<span data-index="39">oaicite:39</span></li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="future-directions-highlighted-by-the-paper" class="level2">
+<h2 class="anchored" data-anchor-id="future-directions-highlighted-by-the-paper">9. Future Directions Highlighted by the Paper</h2>
+<p>One of the most useful parts of the survey is that it explicitly identifies open gaps.</p>
+<ul>
+<li><strong>Combine UQ with DNN explainability</strong>
+<ul>
+<li>The paper argues that uncertainty quantification and explanation are both central to trustworthy AI, but are still mostly treated separately.</li>
+<li>It suggests that combining them could produce more robust and trustworthy systems. This is a particularly important insight for XAI-driven forecasting research. :contentReference<span data-index="40">oaicite:40</span></li>
+</ul></li>
+<li><strong>Methodological gaps</strong>
+<ul>
+<li>Although not all future directions are fully elaborated in the snippets retrieved, the paper clearly frames open issues around:
+<ul>
+<li>calibration,</li>
+<li>scalability,</li>
+<li>trustworthy deployment,</li>
+<li>handling multiple uncertainty sources coherently,</li>
+<li>and application-specific method selection.</li>
+</ul></li>
+</ul></li>
+<li><strong>My interpretation of the most important unresolved challenge:</strong>
+<ul>
+<li>The field still lacks a clean, scalable, interpretable, and empirically robust framework that simultaneously:
+<ul>
+<li>separates aleatoric and epistemic uncertainty,</li>
+<li>handles OOD data well,</li>
+<li>scales to modern deep learning,</li>
+<li>and is understandable enough for operators in high-stakes domains.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../about.html" class="pagination-link" aria-label="About">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">About</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="pagination-link" aria-label="A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks">
+        <span class="nav-page-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

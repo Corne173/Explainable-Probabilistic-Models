@@ -1,0 +1,37 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html",
+      "/reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html",
+      "/reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html",
+      "/reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html",
+      "/reviews/Explainable deeply-fused nets electricity demand prediction model.html",
+      "/reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html",
+      "/reviews/High-resolution probabilistic load forecasting.html",
+      "/reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html",
+      "/reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html",
+      "/reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html",
+      "/reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html",
+      "/reviews/High-resolution energy consumption forecasting of a university campus power plant.html",
+      "/reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html",
+      "/reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html",
+      "/reviews/Uncertainty-aware optimization of zeolite particle size.html",
+      "/reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html",
+      "/reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html",
+      "/reviews/Explaining Set-Valued Predictions.html",
+      "/reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html",
+      "/reviews/Preventing dataset shift from breaking machine-learning biomarkers.html",
+      "/reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html",
+      "/reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html",
+      "/reviews/Hybrid model for robust and accurate forecasting building electricity demand.html",
+      "/reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html",
+      "/reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html",
+      "/reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html",
+      "/reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html",
+      "/reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html",
+      "/reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html",
+      "/reviews/Weighted residual clustering-based building load prediction interval estimation.html"
+    ]
+  }
+]

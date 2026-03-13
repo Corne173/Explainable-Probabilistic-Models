@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of a 2023 Journal of the Franklin Institute paper proposing a nonlinear learning ensemble for high-resolution probabilistic load forecasting, with theoretical guarantees and Shapley-based model contribution analysis.">
+
+<title>High-resolution probabilistic load forecasting: A learning ensemble approach – Review Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" rel="next">
+<link href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-33e2a9f0fc0ae52af8a9c36b5e402c51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Review Articles</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/High-resolution probabilistic load forecasting.html">High-resolution probabilistic load forecasting: A learning ensemble approach</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Review Articles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">All Reviews</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Explaining Set-Valued Predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/High-resolution probabilistic load forecasting.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">High-resolution probabilistic load forecasting: A learning ensemble approach</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable building energy performance prediction using XGBoost Quantile Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tier 2 Research Review: Theory &amp; Justification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Uncertainty-aware optimization of zeolite particle size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted residual clustering-based building load prediction interval estimation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/High-resolution probabilistic load forecasting.html">High-resolution probabilistic load forecasting: A learning ensemble approach</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">High-resolution probabilistic load forecasting: A learning ensemble approach</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Probabilistic forecasting</div>
+    <div class="quarto-category">Load forecasting</div>
+    <div class="quarto-category">Ensemble learning</div>
+    <div class="quarto-category">Shapley value</div>
+    <div class="quarto-category">Deep learning</div>
+    <div class="quarto-category">Quantile forecasting</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Review of a 2023 Journal of the Franklin Institute paper proposing a nonlinear learning ensemble for high-resolution probabilistic load forecasting, with theoretical guarantees and Shapley-based model contribution analysis.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
+<ul>
+<li><strong>Authors &amp; Year:</strong> Chenbei Lu, Jinhao Liang, Wenqian Jiang, Jiaye Teng, Chenye Wu (2023)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Journal of the Franklin Institute</em></li>
+<li><strong>DOI:</strong> 10.1016/j.jfranklin.2023.02.010</li>
+<li><strong>Primary Topic:</strong> High-resolution probabilistic load forecasting using a nonlinear ensemble learner</li>
+<li><strong>Core Technical Theme:</strong> Replacing conventional linear ensemble rules with a learned nonlinear combiner, then using Shapley values to quantify how much each base model contributes</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
+<li><strong>Proximity / Threat Level:</strong> Moderate to high, especially if my work involves probabilistic forecasting, ensemble design, or SHAP/Shapley-based interpretation of model contributions</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="the-motivation-why-probabilistic-load-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-probabilistic-load-forecasting">The Motivation (Why probabilistic load forecasting?)</h3>
+<p>The paper starts from the standard but important argument that deterministic forecasts are not enough for power-system operations. Operators need uncertainty-aware forecasts to support dispatch, planning, and investment, especially under increasing renewable penetration. The authors argue that <strong>high-resolution probabilistic forecasting</strong> is especially useful because it captures both short-term dynamics and uncertainty structure more comprehensively than coarser or point-only approaches.</p>
+</section>
+<section id="the-motivation-why-ensemble-learning" class="level3">
+<h3 class="anchored" data-anchor-id="the-motivation-why-ensemble-learning">The Motivation (Why ensemble learning?)</h3>
+<p>Their central motivation is that <strong>no single forecasting model performs best on every dataset</strong>, so model combination is attractive for improving robustness and generalization. However, they argue that most existing ensemble methods in load forecasting are still essentially <strong>linear combinations</strong> of base-model outputs, such as: - mean value ensemble, - median value ensemble, - weighted average ensemble, and - quantile regression combination.</p>
+<p>Their key complaint is that these linear rules are too restrictive and cannot fully exploit complementary strengths across heterogeneous base learners.</p>
+</section>
+<section id="their-main-novelty-claim-to-fame" class="level3">
+<h3 class="anchored" data-anchor-id="their-main-novelty-claim-to-fame">Their main novelty / claim to fame</h3>
+<p>The paper makes three main claims: 1. <strong>A learning ensemble framework</strong> for probabilistic load forecasting, where a machine learning model learns the nonlinear mapping from the predictions of several base models to the final probabilistic forecast. 2. <strong>A theoretical argument</strong> that nonlinear learning-based ensemble methods can overcome a fundamental limitation of linear ensembles. 3. <strong>A Shapley value-based contribution analysis</strong> to quantify the value of each base forecaster inside the ensemble.</p>
+</section>
+<section id="what-is-actually-novel-here" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-actually-novel-here">What is actually novel here?</h3>
+<p>The most important novelty is <strong>not</strong> simply “using an ensemble,” since ensembles are already common. The real novelty is the argument that: - prior probabilistic load-forecast ensembles are mostly linear, - nonlinear ensemble learning can do better, - and this is supported by both <strong>theoretical results</strong> and <strong>empirical experiments</strong>.</p>
+<p>This theoretical layer is important because many papers propose hybrid or stacked models purely as an engineering heuristic. Here, the authors try to give the nonlinear ensemble idea a formal foundation.</p>
+</section>
+<section id="their-ultimate-result" class="level3">
+<h3 class="anchored" data-anchor-id="their-ultimate-result">Their ultimate result</h3>
+<p>The learning ensemble, especially the <strong>DNN-based</strong> and <strong>LSTM-based</strong> versions, outperformed conventional ensemble methods across multiple forecasting horizons. Compared with the average single model, improvements approached <strong>50%</strong> in some settings, and even compared with the <strong>best single model</strong>, the learning ensemble still achieved around <strong>10% to 20%</strong> improvement. The paper also found that <strong>FCDNN and LSTM models contributed the most</strong> to the ensemble according to Shapley-value analysis.</p>
+<hr>
+</section>
+</section>
+<section id="problem-formulation-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="problem-formulation-methodology">3. Problem Formulation &amp; Methodology</h2>
+</section>
+<section id="forecasting-formulation" class="level2">
+<h2 class="anchored" data-anchor-id="forecasting-formulation">3.1 Forecasting formulation</h2>
+<p>The paper frames the task as <strong>quantile-based probabilistic forecasting</strong> rather than directly predicting full parametric distributions. This is sensible because: - quantile forecasting is flexible, - it avoids assuming a specific output distribution family, - and it can be evaluated using <strong>pinball loss</strong>.</p>
+<p>The forecasting model receives: - historical load, - day-type information, - weather and temperature-related variables,</p>
+<p>and predicts future load quantiles over multiple time horizons.</p>
+<section id="loss-function" class="level3">
+<h3 class="anchored" data-anchor-id="loss-function">Loss function</h3>
+<p>The paper uses the <strong>pinball loss</strong> as the core optimization and evaluation objective for probabilistic forecasts. This is a standard and defensible choice for quantile prediction.</p>
+<hr>
+</section>
+</section>
+<section id="data-splitting-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="data-splitting-strategy">3.2 Data splitting strategy</h2>
+<p>A slightly unusual but important part of the methodology is the dataset partitioning: - one half is used to train/validate the base models, - the other half is split into: - an <strong>ensemble training set</strong> (S), and - a <strong>final evaluation set</strong> (E).</p>
+<p>So the workflow is:</p>
+<ol type="1">
+<li>Train multiple base forecasting models,</li>
+<li>collect their predictions on the ensemble-training subset,</li>
+<li>train the ensemble combiner on those predictions,</li>
+<li>evaluate the final ensemble on a held-out test subset.</li>
+</ol>
+<p>This is conceptually clean because it avoids training the meta-learner on the same data used to fit the base models.</p>
+<hr>
+</section>
+<section id="base-forecasting-models" class="level2">
+<h2 class="anchored" data-anchor-id="base-forecasting-models">3.3 Base forecasting models</h2>
+<p>The ensemble is built from four model families:</p>
+<section id="fcdnn" class="level3">
+<h3 class="anchored" data-anchor-id="fcdnn">1. FCDNN</h3>
+<p>A fully connected deep neural network trained with pinball loss plus regularization.</p>
+</section>
+<section id="lstm" class="level3">
+<h3 class="anchored" data-anchor-id="lstm">2. LSTM</h3>
+<p>A recurrent neural model intended to capture temporal dependencies in load time series.</p>
+</section>
+<section id="rfqr" class="level3">
+<h3 class="anchored" data-anchor-id="rfqr">3. RFQR</h3>
+<p>Random Forest Quantile Regression, which derives predictive quantiles from the distribution of tree outputs.</p>
+</section>
+<section id="lightgbm" class="level3">
+<h3 class="anchored" data-anchor-id="lightgbm">4. LightGBM</h3>
+<p>A gradient-boosted tree model adapted for the forecasting task.</p>
+</section>
+<section id="why-this-model-set-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-model-set-matters">Why this model set matters</h3>
+<p>This is a reasonably diverse base-model library: - neural networks for flexible nonlinear function approximation, - LSTM for temporal dependence, - tree ensembles for structured nonlinearities and robustness.</p>
+<p>That diversity is exactly what makes ensemble learning potentially useful.</p>
+<hr>
+</section>
+</section>
+<section id="conventional-ensembles-they-compare-against" class="level2">
+<h2 class="anchored" data-anchor-id="conventional-ensembles-they-compare-against">3.4 Conventional ensembles they compare against</h2>
+<p>They benchmark the learning ensemble against four conventional combination rules:</p>
+<ul>
+<li><strong>MVE</strong>: Mean Value Ensemble</li>
+<li><strong>MdVE</strong>: Median Value Ensemble</li>
+<li><strong>WAE</strong>: Weighted Average Ensemble</li>
+<li><strong>QR</strong>: Quantile Regression ensemble</li>
+</ul>
+<p>This comparison is important because the paper is not asking whether ensembles help at all. It is asking whether <strong>learned nonlinear combination</strong> helps more than <strong>standard linear aggregation</strong>.</p>
+<hr>
+</section>
+<section id="their-proposed-learning-ensemble" class="level2">
+<h2 class="anchored" data-anchor-id="their-proposed-learning-ensemble">3.5 Their proposed learning ensemble</h2>
+<p>The proposed learning ensemble takes the outputs of all trained base models as inputs and learns a nonlinear mapping:</p>
+<ul>
+<li>base predictions go in,</li>
+<li>final probabilistic forecast comes out,</li>
+<li>training is performed by minimizing <strong>pinball loss</strong> on the ensemble-training set.</li>
+</ul>
+<p>They test three neural meta-learners for this role: - <strong>DNN</strong> - <strong>LSTM</strong> - <strong>CNN</strong></p>
+<p>So the paper is really about <strong>stacked nonlinear probabilistic forecasting</strong>, with a neural combiner on top of heterogeneous base predictors.</p>
+<hr>
+</section>
+<section id="theoretical-contribution" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-contribution">4. Theoretical Contribution</h2>
+<p>This is the most distinctive part of the paper.</p>
+<section id="critique-of-linear-ensembles" class="level3">
+<h3 class="anchored" data-anchor-id="critique-of-linear-ensembles">4.1 Critique of linear ensembles</h3>
+<p>The authors derive expressions for the mean and variance of the error of a linear ensemble. They then show that the expected pinball loss of a linear ensemble remains <strong>strictly larger than zero</strong>, which they interpret as evidence of a systematic approximation gap between a linear ensemble and the true forecasting function.</p>
+</section>
+<section id="approximation-argument-for-nonlinear-ensemble" class="level3">
+<h3 class="anchored" data-anchor-id="approximation-argument-for-nonlinear-ensemble">4.2 Approximation argument for nonlinear ensemble</h3>
+<p>They then argue that a neural network can approximate the ideal nonlinear mapping from base predictions to the true target arbitrarily well under certain assumptions, including: - the existence of an injective Lipschitz-continuous mapping from base predictions to the true output, - and enough model capacity.</p>
+<p>They first show this for a simple two-layer network, then extend it to a deeper multi-model setting.</p>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why this matters</h3>
+<p>Whether or not one accepts every assumption literally, the theoretical message is clear:</p>
+<blockquote class="blockquote">
+<p>linear combination is fundamentally restrictive, while nonlinear learned combination is expressive enough to approximate a much richer class of mappings.</p>
+</blockquote>
+<p>That is the real conceptual backbone of the paper.</p>
+<hr>
+</section>
+</section>
+<section id="shapley-value-component" class="level2">
+<h2 class="anchored" data-anchor-id="shapley-value-component">5. Shapley Value Component</h2>
+<p>A second important contribution is the <strong>Shapley value-based evaluation of base-model contributions</strong>.</p>
+<section id="what-they-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-they-do">What they do</h3>
+<p>For each subset of candidate forecasting models, they: 1. train the corresponding ensemble, 2. evaluate its pinball loss, 3. compute marginal contributions across coalitions, 4. aggregate those marginal contributions into Shapley values.</p>
+</section>
+<section id="why-this-is-useful" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-useful">Why this is useful</h3>
+<p>This is not feature attribution in the usual SHAP sense. Instead, it is <strong>model-level contribution attribution</strong>: - Which base forecasters are most useful to the ensemble? - Which ones actually reduce loss meaningfully? - Which ones are mostly redundant?</p>
+<p>This is a useful perspective because it helps interpret <strong>the ensemble architecture itself</strong>, not only the forecasted outputs.</p>
+<hr>
+</section>
+</section>
+<section id="experimental-setup" class="level2">
+<h2 class="anchored" data-anchor-id="experimental-setup">6. Experimental Setup</h2>
+</section>
+<section id="dataset-testbed" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-testbed">6.1 Dataset / testbed</h2>
+<p>The study uses aggregated load data from a <strong>coastal industrial city in Guangdong, China</strong>, with <strong>5-minute resolution</strong> data from <strong>January 2019 to June 2022</strong>.</p>
+<section id="inputs" class="level3">
+<h3 class="anchored" data-anchor-id="inputs">Inputs</h3>
+<p>The input features include: - previous two days of 5-minute load history, - day type, - date information, - future temperature, - future apparent temperature.</p>
+</section>
+<section id="outputs" class="level3">
+<h3 class="anchored" data-anchor-id="outputs">Outputs</h3>
+<p>The model predicts probabilistic forecasts at quantiles: - <strong>20%</strong> - <strong>50%</strong> - <strong>80%</strong></p>
+<p>for horizons: - <strong>1 hour</strong> - <strong>3 hours</strong> - <strong>6 hours</strong> - <strong>12 hours</strong> - <strong>24 hours</strong></p>
+<p>This is a genuinely high-resolution setting, and the multi-horizon design makes the evaluation more convincing.</p>
+<hr>
+</section>
+</section>
+<section id="training-details" class="level2">
+<h2 class="anchored" data-anchor-id="training-details">6.2 Training details</h2>
+<p>For the meta-learners, the paper uses: - random search for hyperparameters, - Adam optimizer, - early stopping, - ReLU as the general activation function.</p>
+<p>This is standard and reasonable, although not especially exhaustive.</p>
+<hr>
+</section>
+<section id="key-results" class="level2">
+<h2 class="anchored" data-anchor-id="key-results">7. Key Results</h2>
+</section>
+<section id="single-model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="single-model-performance">7.1 Single-model performance</h2>
+<p>Among the 40 single models tested, <strong>FCDNN</strong> and <strong>LSTM</strong> perform significantly better than <strong>LightGBM</strong> and <strong>RFQR</strong> overall. Performance worsens as the forecast horizon increases, which is exactly what one would expect.</p>
+<p>An interesting observation is that the deep learning models are more sensitive to hyperparameter choices than the more conventional tree-based models.</p>
+<hr>
+</section>
+<section id="ensemble-performance" class="level2">
+<h2 class="anchored" data-anchor-id="ensemble-performance">7.2 Ensemble performance</h2>
+<p>This is where the paper’s main claim is supported.</p>
+<section id="compared-with-the-average-single-model" class="level3">
+<h3 class="anchored" data-anchor-id="compared-with-the-average-single-model">Compared with the average single model</h3>
+<p>Even simple mean ensembling improves over the average single model by more than <strong>20%</strong>.</p>
+</section>
+<section id="compared-with-conventional-ensemble-methods" class="level3">
+<h3 class="anchored" data-anchor-id="compared-with-conventional-ensemble-methods">Compared with conventional ensemble methods</h3>
+<p>The learning ensemble methods outperform all four conventional linear ensemble approaches across all forecast windows.</p>
+</section>
+<section id="best-performing-meta-ensembles" class="level3">
+<h3 class="anchored" data-anchor-id="best-performing-meta-ensembles">Best-performing meta-ensembles</h3>
+<p>The strongest performance comes from: - <strong>LE (DNN)</strong> - <strong>LE (LSTM)</strong></p>
+<p>The DNN-based learning ensemble can achieve improvements approaching <strong>50%</strong> relative to the average single model.</p>
+</section>
+<section id="compared-with-the-best-single-model" class="level3">
+<h3 class="anchored" data-anchor-id="compared-with-the-best-single-model">Compared with the best single model</h3>
+<p>This is the more meaningful comparison. Conventional ensemble methods sometimes fail to improve over the best single model. In contrast, the learning ensemble still shows <strong>10%–20%</strong> gains.</p>
+<p>This is probably the most practically relevant empirical result in the paper.</p>
+<hr>
+</section>
+</section>
+<section id="robustness-checks" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-checks">7.3 Robustness checks</h2>
+<p>The authors shuffle the dataset five times to produce different training/validation/ensemble/evaluation splits. The learning ensemble maintains similar performance across these shuffled datasets.</p>
+<p>This is not a very deep robustness test, but it does at least suggest that the gains are not due to one lucky split.</p>
+<hr>
+</section>
+<section id="temporal-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-behavior">7.4 Temporal behavior</h2>
+<p>In their week-long visualization, the probabilistic forecasts track the real load closely. The paper notes that: - 1-hour forecasts have small average loss but larger fluctuation, - and larger forecast errors tend to occur from <strong>13:00 to 20:00</strong>.</p>
+<p>This kind of time-localized error analysis is useful because it hints at structural difficulty in certain daily operating periods.</p>
+<hr>
+</section>
+<section id="shapley-results" class="level2">
+<h2 class="anchored" data-anchor-id="shapley-results">7.5 Shapley results</h2>
+<p>The Shapley-value analysis shows: - <strong>FCDNN</strong> and <strong>LSTM</strong> contribute much more than <strong>LightGBM</strong> and <strong>RFQR</strong>, - their contributions increase with forecasting difficulty, - and together they account for <strong>more than 70%</strong> of the total contribution share.</p>
+<p>This aligns with the single-model results and adds internal consistency to the study.</p>
+<hr>
+</section>
+<section id="strengths-of-the-paper" class="level2">
+<h2 class="anchored" data-anchor-id="strengths-of-the-paper">8. Strengths of the Paper</h2>
+<section id="strength-1-clear-problem-framing" class="level3">
+<h3 class="anchored" data-anchor-id="strength-1-clear-problem-framing">Strength 1: Clear problem framing</h3>
+<p>The paper is very clear about the gap it wants to fill: existing probabilistic ensembles are mostly linear, and that may be too restrictive.</p>
+</section>
+<section id="strength-2-theoretical-empirical-integration" class="level3">
+<h3 class="anchored" data-anchor-id="strength-2-theoretical-empirical-integration">Strength 2: Theoretical + empirical integration</h3>
+<p>Many forecasting papers are either theoretical or empirical. This one tries to do both: - formalize why linear ensembles are limited, - then validate the nonlinear alternative experimentally.</p>
+</section>
+<section id="strength-3-strong-experimental-comparisons-within-the-chosen-framing" class="level3">
+<h3 class="anchored" data-anchor-id="strength-3-strong-experimental-comparisons-within-the-chosen-framing">Strength 3: Strong experimental comparisons within the chosen framing</h3>
+<p>The comparisons against MVE, MdVE, WAE, and QR are fair and directly tied to the paper’s stated research question.</p>
+</section>
+<section id="strength-4-model-level-interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="strength-4-model-level-interpretability">Strength 4: Model-level interpretability</h3>
+<p>The Shapley-value analysis is a nice addition because it helps explain <strong>why</strong> the ensemble works, not only <strong>whether</strong> it works.</p>
+</section>
+<section id="strength-5-multi-horizon-high-resolution-setting" class="level3">
+<h3 class="anchored" data-anchor-id="strength-5-multi-horizon-high-resolution-setting">Strength 5: Multi-horizon, high-resolution setting</h3>
+<p>Testing at 1h, 3h, 6h, 12h, and 24h horizons with 5-minute load data gives the study practical depth.</p>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">9. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+</section>
+<section id="criticism-1-the-theory-depends-on-strong-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-1-the-theory-depends-on-strong-assumptions">Criticism 1: The theory depends on strong assumptions</h2>
+<p>The theoretical superiority of the nonlinear ensemble depends on assumptions like the existence of an injective Lipschitz mapping from base-model predictions to the true target. That is mathematically useful, but in practice it is a strong assumption.</p>
+<p>This means the theory is best interpreted as an <strong>expressivity argument</strong>, not a guarantee that the proposed approach will always achieve near-zero pinball loss in real data.</p>
+<hr>
+</section>
+<section id="criticism-2-can-approach-zero-is-not-the-same-as-will-train-well" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-2-can-approach-zero-is-not-the-same-as-will-train-well">Criticism 2: “Can approach zero” is not the same as “will train well”</h2>
+<p>The paper is careful in places, but the overall tone could make readers overestimate the practical implications of the approximation theorems. Real neural training is: - non-convex, - data-limited, - sensitive to hyperparameters, - and prone to optimization failure.</p>
+<p>So the theory supports the <em>possibility</em> of superior nonlinear combination, not necessarily its routine attainment.</p>
+<hr>
+</section>
+<section id="criticism-3-the-evaluation-is-narrow-in-terms-of-uncertainty-quality" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-3-the-evaluation-is-narrow-in-terms-of-uncertainty-quality">Criticism 3: The evaluation is narrow in terms of uncertainty quality</h2>
+<p>The paper focuses almost entirely on <strong>pinball loss</strong>. That is appropriate for quantile forecasting, but still somewhat narrow.</p>
+<p>It does <strong>not</strong> deeply assess: - calibration quality across many quantile levels, - sharpness-vs-calibration tradeoff beyond pinball loss, - interval coverage diagnostics, - or full distributional consistency.</p>
+<p>Because they only forecast the 20%, 50%, and 80% quantiles, the uncertainty representation is also fairly sparse.</p>
+<hr>
+</section>
+<section id="criticism-4-limited-comparison-to-more-modern-probabilistic-deep-baselines" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-4-limited-comparison-to-more-modern-probabilistic-deep-baselines">Criticism 4: Limited comparison to more modern probabilistic deep baselines</h2>
+<p>The base model set is useful, but the benchmark space is still limited. The paper does not compare against stronger end-to-end probabilistic deep learning baselines such as: - modern quantile sequence models, - conformal methods, - mixture density models, - deep state-space approaches, - or transformer-style probabilistic forecasters.</p>
+<p>So the claim is strongest <strong>within the ensemble-combination setting they define</strong>, not necessarily against the current full frontier of probabilistic forecasting.</p>
+<hr>
+</section>
+<section id="criticism-5-interpretation-is-at-the-model-level-not-the-feature-level" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-5-interpretation-is-at-the-model-level-not-the-feature-level">Criticism 5: Interpretation is at the model level, not the feature level</h2>
+<p>The Shapley analysis explains which <strong>base models</strong> matter most, but not: - which <strong>input variables</strong> drive uncertainty, - which temporal patterns are most influential, - or how external weather variables affect different horizons.</p>
+<p>So this is useful interpretability, but it is not the same as the richer feature-level XAI used in SHAP-style forecasting papers.</p>
+<hr>
+</section>
+<section id="criticism-6-computational-scalability-of-shapley-analysis-may-become-painful" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-6-computational-scalability-of-shapley-analysis-may-become-painful">Criticism 6: Computational scalability of Shapley analysis may become painful</h2>
+<p>For only four selected model types, enumerating all subsets is manageable. But exact Shapley computation scales poorly as the number of candidate models grows.</p>
+<p>So the method is elegant for a small library of base models, but may become cumbersome for larger ensemble pools unless approximation methods are used.</p>
+<hr>
+</section>
+<section id="criticism-7-generalization-evidence-is-still-geographically-narrow" class="level2">
+<h2 class="anchored" data-anchor-id="criticism-7-generalization-evidence-is-still-geographically-narrow">Criticism 7: Generalization evidence is still geographically narrow</h2>
+<p>The study uses one city-level dataset from Guangdong. It is a meaningful real-world dataset, but still only one operating environment.</p>
+<p>So the paper demonstrates that the method works <strong>well here</strong>, but not yet that it transfers robustly across: - different climates, - residential vs industrial systems, - national-scale demand, - markets with stronger weather volatility, - or different calendar/load behaviors.</p>
+<hr>
+</section>
+<section id="what-i-would-take-forward-from-this-paper" class="level2">
+<h2 class="anchored" data-anchor-id="what-i-would-take-forward-from-this-paper">10. What I Would Take Forward From This Paper</h2>
+<section id="research-takeaway-1" class="level3">
+<h3 class="anchored" data-anchor-id="research-takeaway-1">Research takeaway 1</h3>
+<p>A nonlinear meta-learner on top of diverse probabilistic forecasters is a serious benchmark and should not be ignored.</p>
+</section>
+<section id="research-takeaway-2" class="level3">
+<h3 class="anchored" data-anchor-id="research-takeaway-2">Research takeaway 2</h3>
+<p>If I am comparing forecasting pipelines, I should distinguish clearly between: - <strong>single-model improvement</strong>, and - <strong>combination-rule improvement</strong>.</p>
+<p>This paper is primarily about the second.</p>
+</section>
+<section id="research-takeaway-3" class="level3">
+<h3 class="anchored" data-anchor-id="research-takeaway-3">Research takeaway 3</h3>
+<p>Model-level Shapley analysis is a useful way to justify which base learners are worth keeping in an ensemble.</p>
+</section>
+<section id="research-takeaway-4" class="level3">
+<h3 class="anchored" data-anchor-id="research-takeaway-4">Research takeaway 4</h3>
+<p>There is room to extend this framework by adding stronger uncertainty diagnostics and richer probabilistic baselines.</p>
+<hr>
+</section>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">11. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Consider using a nonlinear stacking ensemble as a benchmark in my own probabilistic forecasting work, especially when I already have heterogeneous base learners.</label></li>
+<li><label><input type="checkbox">When reviewing this paper in a literature review, position it as a <strong>nonlinear probabilistic ensemble</strong> paper rather than a general “XAI forecasting” paper.</label></li>
+<li><label><input type="checkbox">Note that its interpretability contribution is <strong>model-contribution attribution</strong>, not feature-level explanation.</label></li>
+<li><label><input type="checkbox">If I build on this idea, add stronger uncertainty-quality diagnostics such as coverage, calibration curves, interval scores, CRPS, or conformal validity checks.</label></li>
+<li><label><input type="checkbox">Treat the theoretical claims as <strong>capacity and approximation arguments</strong>, not as practical guarantees.</label></li>
+<li><label><input type="checkbox">Use this paper to justify that linear ensemble rules may be too restrictive for probabilistic forecasting, especially in high-resolution settings.</label></li>
+</ul>
+<hr>
+</section>
+<section id="bottom-line-summary" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line-summary">12. Bottom-Line Summary</h2>
+<p>This is a strong and well-structured paper whose main message is simple but important:</p>
+<blockquote class="blockquote">
+<p>In probabilistic load forecasting, it is not enough to have many good base models.<br>
+The rule used to combine them matters, and a learned nonlinear ensemble can outperform standard linear combination methods.</p>
+</blockquote>
+<p>Its best contribution is the combination of: - a clear ensemble-learning argument, - a formal theoretical justification, - and a Shapley-based analysis of model contribution.</p>
+<p>Its main weaknesses are: - strong theoretical assumptions, - limited uncertainty evaluation breadth, - and a benchmark space that does not fully cover newer probabilistic deep learning alternatives.</p>
+<p>Overall, this is a worthwhile paper and a solid citation if I need support for: - nonlinear ensemble learning, - probabilistic load forecasting, - or Shapley-based attribution of base-model contributions in ensemble systems.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Corne173\.github\.io\/Explainable-Probabilistic-Models\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="pagination-link" aria-label="High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="pagination-link" aria-label="How to Evaluate Uncertainty Estimates in Machine Learning for Regression">
+        <span class="nav-page-text">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
