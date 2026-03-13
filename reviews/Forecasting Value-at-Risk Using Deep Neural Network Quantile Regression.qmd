@@ -1,19 +1,436 @@
 ---
 title: "Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression"
-description: "Deep neural network quantile regression with SHAP relevance for risk forecasting. Review in progress."
-date: 2024-01-01
+description: "Review of a Journal of Financial Econometrics paper proposing deep neural network quantile regression for non-linear Value-at-Risk forecasting, with mixed-frequency extensions and interpretability via SHAP and partial derivatives."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Explaining uncertainty with SHAP
+  - Probabilistic forecasting
+  - Quantile regression
+  - Value-at-Risk
+  - Deep learning
+  - Explainable AI
+  - Finance
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** *Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression*
+- **Authors & Year:** Ilias Chronopoulos, Aristeidis Raftapostolos, and George Kapetanios (2024 journal version; advance access 2023)
+- **Venue (Journal/Conference):** *Journal of Financial Econometrics*
+- **DOI:** [https://doi.org/10.1093/jjfinec/nbad014](https://doi.org/10.1093/jjfinec/nbad014)
+- **Primary Topic:** Deep neural network quantile regression for non-linear VaR forecasting
+- **Secondary Topics:** Mixed-frequency modeling, MIDAS, Monte Carlo validation, interpretability of quantile neural networks, SHAP, partial derivatives
+- **Code/Data Available?:** Not emphasized in the core paper text I reviewed
+- **Proximity/Threat Level:** Medium to High, especially if my work involves deep quantile forecasting, explainability, or benchmarking non-linear quantile models
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Chronopoulos, I., & Raftapostolos, A. (2024)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Forecasting+Value-at-Risk+Using+Deep+Neural+Network+Quantile+Regression)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why Quantiles / Why VaR?)
+- The paper starts from the classical argument that mean regression is often inadequate when the real interest is in the conditional tails of a distribution.
+- In finance, this matters because risk management is fundamentally about downside extremes rather than average behavior.
+- Value-at-Risk (VaR) is directly linked to conditional quantiles of returns, so a quantile regression framework is a natural modeling choice.
+- The authors argue that standard **linear quantile regression** may be too restrictive for financial markets, where relationships between returns and predictors are often non-linear, asymmetric, and unstable over time.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why Deep Learning?)
+- The central justification is that feed-forward neural networks have strong **universal approximation** properties, so they can approximate highly non-linear conditional quantile functions much more flexibly than linear or low-order sieve approaches.
+- They position neural networks not just as generic predictors, but as a way to estimate a **conditional quantile function** directly through the quantile loss.
+
+### The Motivation (Why Explainability?)
+- The authors explicitly acknowledge the “black-box” criticism of neural networks.
+- Their response is not merely to forecast better, but also to make the neural quantile model more interpretable through:
+  - **SHAP values**, and
+  - **partial derivatives** of the fitted network output with respect to inputs.
+- This is important because in risk forecasting, users want to know not only *what* the VaR forecast is, but also *why* it changed.
+
+### Their claim to fame / Novelty
+- They propose a **deep quantile estimator** that directly models non-linear conditional quantiles via feed-forward neural networks.
+- They extend the setup to allow **mixed-frequency inputs** through a MIDAS-style architecture.
+- They also contribute to explainable ML in finance by comparing **SHAP** with **partial-derivative-based interpretation**.
+- The paper frames itself as, to the best of the authors’ knowledge, the first finance application using a neural network quantile estimator specifically for **VaR forecasting**.
+
+### Their ultimate result
+- The deep quantile estimator outperforms linear quantile, MIDAS, and other non-parametric quantile competitors in their VaR forecasting exercise.
+- They report predictive gains of **up to 98% relative to the linear quantile benchmark**, and up to **84% for the non-linear MIDAS model**, depending on the setup.
+- Their interpretability comparison also concludes that **partial derivatives are more stable and much cheaper computationally than SHAP**, while still being informative.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Core modeling idea
+- Standard quantile regression estimates the conditional quantile by minimizing the **pinball / check loss**.
+- The authors replace the linear predictor \(x_t^\top \beta(\tau)\) with a neural network \(G_\tau(x_t; w)\), yielding a **non-linear quantile regression estimator**:
+  \[
+  \hat Q_y(\tau \mid x_t) = G_\tau(x_t; w)
+  \]
+- The model is trained by minimizing the quantile loss over the neural network parameters.
+
+### Network structure
+- They focus on **feed-forward neural networks**.
+- Hidden layers use **ReLU** activations.
+- The output layer is **linear**.
+- They frame the model as ranging from relatively parametric to more non-parametric depending on network width/depth.
+
+### Regularization
+To control overfitting, they consider:
+- **No regularization**
+- **Deep LASSO**
+- **Deep Ridge**
+- **Deep Elastic Net**
+
+This is a strong part of the paper because they do not present “deep learning” as a single monolithic model; they explicitly examine how different penalties affect finite-sample behavior and forecast quality.
+
+### Hyperparameter tuning
+They use a **time-series cross-validation** framework rather than random CV, which is the correct choice for dependent data.
+
+Tuned components include:
+- number of hidden layers
+- number of neurons
+- learning rate
+- batch size
+- dropout
+- regularization strength
+- Elastic Net mixing parameter
+- MIDAS polynomial parameters for mixed-frequency models
+
+### Optimization
+- They use **ADAM**
+- Maximum epochs: **5000**
+- **Early stopping** is used to reduce overfitting
+
+---
+
+## 4. Monte Carlo Design & What It Actually Shows
+
+### Why the Monte Carlo section matters
+This is one of the more valuable parts of the paper.  
+The authors do not jump straight to empirical finance results. They first ask whether the proposed deep quantile estimator behaves sensibly in controlled settings.
+
+### Monte Carlo setup
+They study finite-sample performance over:
+- quantiles \( \tau \in \{1\%, 2.5\%, 5\%, 10\%, 20\%\} \)
+- sample sizes \( T \in \{100, 300, 500, 1000\} \)
+- 1000 replications
+
+They compare:
+- deep quantile
+- deep LASSO
+- deep Ridge
+- deep Elastic Net
+- shallow counterparts
+- linear quantile regression
+- polynomial quantile regression
+- spline-based quantile regression
+
+### Simulation cases
+They test five settings:
+1. **Simple non-linear sinusoidal function with i.i.d. Gaussian regressor**
+2. **AR(1) regressor**
+3. **GARCH-type regressor**
+4. **A function generated from a neural-network-like composition**
+5. **Serially correlated errors**
+
+### What they find
+- Both shallow and deep neural quantile estimators generally show **good finite-sample performance**
+- **Shallow networks often outperform deeper ones** in the simulation study
+- Linear quantile regression fails badly when the true quantile function is non-linear
+- Polynomial and spline alternatives also generally underperform in these non-linear settings
+- Penalization is often helpful, especially in more difficult settings and extreme quantiles
+
+### My interpretation of this section
+This Monte Carlo exercise gives the paper real methodological credibility.  
+It is not merely “deep learning won on one dataset.” The authors show that the model class itself is able to recover non-linear quantile functions under several stylized but meaningful data-generating processes.
+
+That said, the simulations are still relatively low-dimensional and controlled. They do not stress-test the method under severe regime change, covariate shift, heavy tails beyond Gaussian innovations, or highly multivariate predictor spaces of the kind now common in financial ML.
+
+---
+
+## 5. Empirical Application: VaR Forecasting Setup
+
+### Target problem
+- Forecast **10-day-ahead VaR** using daily data
+- U.S. stock return losses over a long historical sample
+- Sample period discussed in the paper: **September 1985 to August 2020**
+
+### Out-of-sample design
+- Last **2000 observations** reserved for out-of-sample evaluation
+- Remaining **7053 observations** used for tuning and estimation
+- This split is chosen partly to make the **conditional quantile forecast encompassing** results comparable with earlier literature
+
+### Quantiles forecasted
+- \( \tau = 1\%, 5\%, 10\% \)
+
+### VaR model classes used as inputs / structures
+They examine four VaR specifications:
+1. **GARCH(1,1)-style VaR**
+2. **RiskMetrics**
+3. **CAViaR symmetric absolute value (SV)**
+4. **CAViaR asymmetric slope (ASV)**
+
+Then they build:
+- linear quantile versions
+- MIDAS versions
+- non-linear deep quantile versions
+- non-linear deep MIDAS versions
+
+### What is important here
+This is not a totally unconstrained “throw raw data into a neural net” paper.  
+The authors still organize the forecasting problem around **well-known VaR structures** from the econometrics literature. In that sense, the paper is trying to bridge:
+- classical risk econometrics, and
+- modern non-linear function approximation.
+
+That makes it much stronger than a purely black-box finance paper.
+
+---
+
+## 6. Validation Strategy (Predictions & Explanations)
+
+### Validating the predictions
+They use several forecast-comparison tools:
+- **Diebold–Mariano (DM) test**
+- **Giacomini–White (GW) test**
+- **quantile score test**
+- **conditional quantile forecast encompassing** test (Giacomini and Komunjer framework)
+
+### What they conclude from these tests
+- The deep quantile estimator generally has **higher forecasting accuracy**
+- It often **encompasses** competing forecasts more often than the reverse
+- In some cases, the encompassing tests are inconclusive, suggesting that **forecast combinations** may outperform any single model
+
+### Validating the explanations
+This is much less rigorous.
+
+They compare:
+- **SHAP values**
+- **partial derivatives**
+
+And judge them on:
+- interpretability
+- stability over time
+- computational cost
+- ability to reflect known stress periods like the **2008 financial crisis** and **COVID-19**
+
+This is useful, but it is still mostly **qualitative validation** rather than a formal XAI evaluation framework.
+
+---
+
+## 7. Explainability Contribution: What Did XAI Actually Do?
+
+### Their two interpretation tools
+1. **SHAP values**
+   - Used as a standard post-hoc feature attribution framework
+2. **Partial derivatives**
+   - Used to examine marginal sensitivity of the predicted quantile to each input
+
+### Their main interpretability findings
+- Partial derivatives are **more stable over time**
+- Partial derivatives are **far cheaper computationally** than SHAP
+- The derivative-based interpretation fluctuates around the linear quantile estimate and can capture time variation linked to major market stress events
+
+### Why this matters
+This is an interesting contribution because most finance explainability papers default to SHAP and stop there.  
+These authors ask whether a simpler structural sensitivity measure may actually be more practical.
+
+### My interpretation
+The paper’s most interesting XAI insight is not that SHAP works, but that **SHAP may not be the most useful interpretability tool in this setting**.  
+For continuously differentiable models, partial derivatives can provide:
+- a faster,
+- more stable,
+- more directly sensitivity-based view of model behavior.
+
+That is a very useful takeaway for any forecasting paper where interpretability has to be repeated over many rolling windows or over long historical horizons.
+
+---
+
+## 8. Main Strengths of the Paper
+
+### Strength 1: It is methodologically balanced
+The paper combines:
+- theory motivation,
+- simulation evidence,
+- empirical forecasting,
+- and interpretability.
+
+That gives it a more complete arc than many ML-for-finance papers.
+
+### Strength 2: It respects time-series structure
+Their use of:
+- time-series cross-validation,
+- proper out-of-sample design,
+- formal forecast comparison tests,
+makes the work much stronger than papers that only report in-sample fit or random train/test splits.
+
+### Strength 3: It benchmarks against econometric baselines
+The authors do not compare only against strawman mean models.  
+They include:
+- linear quantile models,
+- MIDAS variants,
+- CAViaR-type structures,
+- and non-parametric alternatives.
+
+### Strength 4: It gives an actual interpretability discussion
+Even if not fully rigorous, the paper takes the interpretability problem seriously and tests two different tools rather than treating explainability as an afterthought.
+
+### Strength 5: It explicitly studies regularization
+The paper acknowledges that neural quantile estimators can overfit, and it studies how penalties change performance. That is a mature methodological move.
+
+---
+
+## 9. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: The paper still uses a fairly narrow input structure
+Although the authors motivate high-dimensional flexibility, the actual VaR specifications remain relatively low-dimensional and structurally tied to traditional VaR equations.
+
+This is not necessarily bad, but it means the paper does **not fully demonstrate** how the method behaves in genuinely high-dimensional financial forecasting environments with many covariates, macro variables, realized measures, order-book features, or alternative data.
+
+### Criticism 2: The interpretability evaluation is still mostly qualitative
+The comparison between SHAP and partial derivatives is interesting, but it is not validated with:
+- faithfulness metrics,
+- stability metrics,
+- perturbation tests,
+- agreement under resampling,
+- or formal sensitivity benchmarks.
+
+So while the conclusion that partial derivatives are “better” is plausible and practically useful, it is not fully established in a rigorous XAI-evaluation sense.
+
+### Criticism 3: The forecasting victory may partly reflect flexible function approximation rather than a uniquely finance-specific insight
+The deep quantile model wins because it can represent non-linear conditional quantiles better than linear models.  
+That is a valid result, but it is also somewhat unsurprising.  
+The paper is stronger as a **demonstration of the value of non-linear quantile function estimation** than as a finance-theory breakthrough.
+
+### Criticism 4: The deep-vs-shallow message is awkward
+In Monte Carlo, shallow models often look better than deeper ones, yet the paper is framed around “deep” quantile regression.
+That does not invalidate the work, but it does weaken any simplistic narrative that *more depth is inherently better*.
+
+### Criticism 5: No broader uncertainty discussion beyond quantiles
+This paper is about quantile forecasting, not full probabilistic density estimation.  
+That is fine, but it means it does not engage with:
+- calibration of full predictive distributions,
+- tail dependence structures,
+- extreme value theory integration,
+- or whether the estimated quantiles remain coherent across levels.
+
+### Criticism 6: Potential monotonicity / quantile crossing issues are not the main focus
+Whenever multiple quantiles are estimated, one wants to know whether the resulting quantile curves are coherent and non-crossing.  
+This paper does not foreground that issue as a central methodological challenge.
+
+### Criticism 7: The benchmark set is respectable, but not modern by 2026 standards
+For historical context the benchmark suite is reasonable.  
+But by current standards, one would also want comparisons against:
+- quantile gradient boosting,
+- quantile random forests,
+- distributional boosting,
+- modern sequence models,
+- conformalized quantile methods,
+- and perhaps heavy-tail parametric or semi-parametric baselines.
+
+---
+
+## 10. What This Paper Means for My Own Research
+
+### If my work is on probabilistic forecasting
+This paper is highly relevant because it provides a concrete example of:
+- replacing linear quantile structure with a neural quantile function,
+- validating it in simulation,
+- and comparing it with conventional baselines.
+
+### If my work is on explainable forecasting
+The most useful takeaway may actually be the **partial-derivative vs SHAP** comparison.  
+That gives me a strong precedent for arguing that:
+- SHAP is not the only route to explainability,
+- and in some forecasting settings, derivative-based explanations may be more stable and computationally realistic.
+
+### If my work is on energy forecasting rather than finance
+Even though the domain is financial VaR, the methodological structure is transferable:
+- tail-focused forecasting,
+- quantile loss,
+- neural non-linearity,
+- time-series CV,
+- benchmarking against linear and structured baselines,
+- and interpretability of conditional quantile dynamics.
+
+This is especially relevant if I want to forecast:
+- reserve requirements,
+- net-load risk,
+- renewable underproduction risk,
+- demand peaks,
+- or other lower/upper tail events.
+
+---
+
+## 11. How I Would Position This Paper in a Literature Review
+
+### As a foundational citation for neural quantile forecasting
+I would cite it as evidence that:
+- neural networks can be used to estimate conditional quantiles directly,
+- and that doing so can materially improve tail-risk forecasting relative to linear quantile models.
+
+### As a bridge paper
+It is best positioned as a bridge between:
+- classical econometric quantile/VaR methods, and
+- modern ML non-linear function approximation.
+
+### As an explainability citation
+I would also use it when arguing that:
+- post-hoc explainability in probabilistic forecasting is possible,
+- but not all explainability tools are equally stable or practical.
+
+### As a limitation benchmark
+I would contrast my own work against it by noting:
+- it focuses on VaR quantiles rather than full predictive distributions,
+- uses mostly qualitative explainability validation,
+- and does not fully explore modern high-dimensional or deep sequence architectures.
+
+---
+
+## 12. Suggested “Threat Level” to My Work
+
+### Why it is a threat
+- It is published in a strong journal
+- It addresses a serious forecasting problem
+- It combines quantile prediction with explainability
+- It reports large predictive gains over classical baselines
+
+### Why it is not a complete overlap
+- It is in **finance**, not necessarily in energy systems or grid forecasting
+- It focuses on **VaR**, not full probabilistic forecasting or multi-horizon distributional forecasting
+- Its explainability validation is still relatively light
+- Its model class is feed-forward quantile regression, not the full range of modern time-series architectures
+
+### Overall threat assessment
+- **Methodological threat:** High
+- **Domain-specific threat:** Medium
+- **Direct overlap threat:** Medium unless my own work also centers on quantile neural networks with explainability
+
+---
+
+## 13. Action Items & Integration
+
+- [ ] Cite this paper as a strong example of **non-linear neural quantile regression** outperforming linear quantile approaches in a real forecasting task.
+- [ ] Use it to support the claim that **tail-focused forecasting problems benefit from flexible conditional quantile models**.
+- [ ] Reference its Monte Carlo section when justifying the need to validate quantile estimators in controlled synthetic settings before applying them empirically.
+- [ ] Use its interpretability discussion to motivate a comparison between **SHAP** and **gradient / derivative-based explanations** in my own work.
+- [ ] Explicitly improve upon this paper by including **formal XAI evaluation metrics**, not only qualitative visual inspection.
+- [ ] If relevant, extend beyond VaR-style quantiles to **full predictive distributions**, **multi-horizon forecasting**, or **quantile coherence / crossing control**.
+- [ ] Consider benchmarking against this style of model if I want a finance-inspired but general-purpose non-linear quantile baseline.
+
+---
+
+## 14. Bottom-Line Review
+
+This is a strong and thoughtful paper that does more than just apply a neural network to a finance problem.  
+Its main contribution is to show that **direct neural quantile estimation** can materially improve **VaR forecasting** when the conditional quantile function is non-linear, and that this can be studied in a reasonably disciplined way through simulation, out-of-sample testing, and interpretability analysis.
+
+Its most interesting conceptual contribution is not merely “deep learning beats linear models,” but rather:
+1. **conditional quantiles are often non-linear**,  
+2. **neural networks provide a practical estimator for them**, and  
+3. **partial-derivative-based explanations may be a more stable alternative to SHAP in this context**.
+
+The paper’s main weaknesses are that the interpretability validation remains mostly qualitative, the input space is not especially high-dimensional in practice, and the benchmark set, while solid, is no longer exhaustive by modern standards.
+
+Still, as a literature-review source, it is highly useful and deserves to be treated as an important reference for any research sitting at the intersection of:
+- quantile forecasting,
+- tail-risk prediction,
+- neural non-linear regression,
+- and explainable probabilistic modeling.

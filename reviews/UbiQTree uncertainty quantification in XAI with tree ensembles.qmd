@@ -1,19 +1,303 @@
 ---
 title: "UbiQTree: Uncertainty quantification in XAI with tree ensembles"
-description: "Decomposing SHAP value uncertainty into aleatoric and epistemic components. Review in progress."
-date: 2026-01-01
+description: "Review of a Patterns paper proposing UbiQTree, a framework for decomposing uncertainty in SHAP explanations for tree ensembles."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Aleatoric vs epistemic uncertainty
+  - Explainable AI
+  - Uncertainty quantification
+  - SHAP
+  - Tree ensembles
+  - Healthcare AI
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Akshat Dubey, Aleksandar Anžel, Bahar Ilgen, Georges Hattab (2026)
+- **Venue (Journal/Conference):** *Patterns* *(high-visibility interdisciplinary journal, especially relevant for applied AI methods)*
+- **Link/DOI:** [https://doi.org/10.1016/j.patter.2025.101454](https://doi.org/10.1016/j.patter.2025.101454)
+- **Code/Data Available?:** Yes, code is available via GitHub and Zenodo
+- **Domain/Application Area:** Explainable AI, uncertainty quantification, healthcare-oriented ML
+- **Proximity/Threat Level:** Medium-High / Conceptually important
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Dubey, A., et al. (2026)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=UbiQTree%3A+Uncertainty+quantification+in+XAI+with+tree+ensembles)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
+- **The Motivation (Why this paper exists):**
+  - SHAP is widely used to explain tree-based models, especially in healthcare and other high-stakes settings.
+  - However, SHAP is typically treated as a **point estimate**, meaning it tells you *what the attribution is* but not *how stable or trustworthy that attribution is*.
+  - This is a serious issue in practice because clinicians or decision-makers may over-trust explanations that are actually unstable across plausible model realizations.
 
-> Review in progress.
+- **The Motivation (Why uncertainty in XAI matters):**
+  - In high-stakes domains, it is not enough for a model to be accurate; the explanation itself must also be reliable.
+  - A model may correctly predict a class label while the explanation behind that prediction remains unstable.
+  - The paper argues that uncertainty in explanations must be quantified in the same way predictive uncertainty is quantified.
 
-This page is a placeholder for a future full review using the site template.
+- **Their claim to fame / Novelty:**
+  - They propose **UbiQTree**, a framework that performs uncertainty quantification directly on SHAP values for tree ensembles.
+  - Their key theoretical move is to decompose SHAP uncertainty into:
+    - **Aleatoric uncertainty**: variability linked to irreducible noise / randomness,
+    - **Epistemic uncertainty**: variability due to incomplete knowledge, limited data, or model uncertainty,
+    - **Entanglement**: covariance between model-related and data-related uncertainty contributions.
+  - They combine:
+    - **Dempster-Shafer theory** for belief/plausibility-based uncertainty reasoning,
+    - **Liu’s uncertainty theory** for uncertainty distributions and entropy-based reasoning,
+    - **Dirichlet process hypothesis sampling** to generate plausible sub-ensemble explanations.
+
+- **The paper’s main conceptual insight:**
+  - The most important features according to mean absolute SHAP are **not necessarily the most stable features**.
+  - So a feature can look globally important while being epistemically fragile.
+
+- **The Value Derived from Explainability (What XAI/UQ actually did here):**
+  - It moves SHAP from “importance scoring” toward **reliability-aware explanation**.
+  - It allows users to inspect:
+    - confidence intervals around SHAP,
+    - entropy of SHAP distributions,
+    - sign stability,
+    - disagreement across sub-models,
+    - whether importance and uncertainty are coupled.
+
+- **Their ultimate result:**
+  - UbiQTree provides a mechanism to audit SHAP reliability rather than just SHAP magnitude.
+  - Across several healthcare datasets, the framework shows that some top-ranked features have large epistemic uncertainty and inconsistent directional stability, meaning explanation quality cannot be inferred from feature importance alone.
+
+---
+
+## 3. Methodology & Technical Details
+- **Base Modeling Setting:**
+  - The framework is developed around **tree ensemble models**, particularly bagging-style models such as **Random Forests**.
+  - Their use case validation relies on RF classifiers trained on healthcare datasets.
+
+- **Core Technical Idea: SHAP variance decomposition**
+  - The paper defines total SHAP variance as the sum of:
+    - aleatoric component,
+    - epistemic component,
+    - minus an **entanglement term** that captures covariance between data-centric and model-centric expectations.
+  - This is important because they argue the usual decomposition can be misleading when model and data uncertainty are not independent.
+
+- **Theoretical Building Blocks:**
+  - **Dempster-Shafer theory (DST):**
+    - Used to define belief and plausibility over intervals of SHAP values.
+    - Useful for representing ambiguity and ignorance rather than only classical probability.
+  - **Uncertainty theory:**
+    - Used to define an uncertainty distribution over SHAP values and to reason about entropy and information gain.
+  - **Dirichlet process (DP) hypothesis sampling:**
+    - Used to sample plausible weighted sub-ensembles from the trained forest.
+    - Trees are weighted using out-of-bag performance.
+    - The concentration parameter `α` controls how concentrated the posterior is around stronger trees versus broader exploration of model variants.
+
+- **Pipeline Summary:**
+  1. Generate sub-ensembles using Dirichlet-weighted sampling.
+  2. Compute TreeSHAP for each sampled sub-ensemble.
+  3. Decompose variance into aleatoric, epistemic, and entanglement terms.
+  4. Aggregate uncertainty-aware explanation statistics:
+     - mean SHAP,
+     - standard deviation,
+     - 95% credible interval,
+     - entropy,
+     - sign stability.
+
+- **Uncertainty Metrics They Emphasize:**
+  - **Mean ± 2σ SHAP**
+  - **95% credible intervals**
+  - **Entropy of SHAP distributions**
+  - **Sign stability**
+  - **Conflict / ambiguity measures from evidence theory**
+
+- **Interpretation of their metrics:**
+  - Wide SHAP distributions imply unstable explanations.
+  - Flat or multimodal SHAP densities imply disagreement across sub-models.
+  - Low sign stability means the direction of feature effect is not robust.
+  - High entropy indicates lower certainty in the explanation.
+
+---
+
+## 4. Datasets / Experimental Testbed
+The paper validates the framework on several healthcare datasets rather than on a single benchmark. This is a strength because the method is presented as a general uncertainty-aware explanation framework rather than a dataset-specific trick.
+
+### Dataset 1: MIMIC-III
+- **Task:** Length-of-stay classification
+- **Setting:** Patients grouped into short-stay, medium-stay, and long-stay classes
+- **Data Preparation:**
+  - Removed fields such as `hadm_id`, `religion`, `marital_status`, and `ethnicity`
+  - Numerical features imputed with median and standardized
+  - RF classifier with 100 estimators, class balancing, OOB scoring
+  - 70:30 train-test split with stratification
+- **Reported predictive result:** Micro-F1 of **94.70%**
+
+### Dataset 2: Ovarian Cancer Risk and Progression Dataset
+- **Task:** Four-class risk classification
+- **Class balance:** Strongly imbalanced
+- **Preprocessing / training:**
+  - Timestamp and leakage-prone progression variable removed
+  - Median imputation, scaling, label encoding
+  - SMOTETomek used for rebalancing
+  - RF with 20 estimators and max depth 6
+- **Reported predictive result:** F1 score of **55.7%**
+
+### Dataset 3: SEER Breast Cancer Dataset
+- **Task:** Alive vs deceased outcome classification
+- **Scale:** 4,024 instances, 16 features
+- **Context:** Longitudinal, clinically relevant survival dataset
+
+- **General experimental design across datasets:**
+  - Posterior-like sub-model samples are obtained from tree ensembles
+  - SHAP is computed repeatedly across these plausible model realizations
+  - The resulting distributions are analyzed rather than a single SHAP vector
+
+---
+
+## 5. Key Results & What They Mean
+### MIMIC-III findings
+- For short-stay, medium-stay, and long-stay predictions, the dominant features repeatedly included:
+  - `NumTransfers`
+  - `NumNotes`
+  - `NumCallouts`
+- But the important point is not only that these features rank highly.
+- The framework shows that they also carry substantial epistemic uncertainty.
+- Example:
+  - In the short-stay class, `NumTransfers`, `NumNotes`, and `NumCallouts` had epistemic uncertainty values of **0.133**, **0.104**, and **0.065** respectively.
+  - Their sign stabilities were only **79.8%**, **77.0%**, and **74.5%**.
+- So the model relies on these features, but not with fully stable reasoning.
+
+### Ovarian cancer findings
+- Top features varied across risk classes, but features such as:
+  - `SocioeconomicStatus`
+  - `alcohol`
+  - `PreviousTreatment`
+  - `MenstrualHistory`
+  - `symptom`
+  showed both importance and substantial variability across model subsets.
+- This reinforces the paper’s main message:
+  - explanation magnitude does not imply explanation reliability.
+
+### SEER breast cancer findings
+- The paper examines the relationship between mean absolute SHAP and the standard deviation of SHAP values.
+- Their Figure 15 is especially important:
+  - a high positive correlation means the model’s “most important” features are also the most unstable.
+- That is a very strong warning for real-world XAI use:
+  - users might trust exactly the features they should scrutinize the most.
+
+---
+
+## 6. Validation Strategy (Predictions & Explanations)
+- **Predictive validation:**
+  - Standard supervised learning evaluation using held-out test sets and F1 scores.
+  - The predictive model is not the main novelty; the explanation analysis is.
+
+- **Explanation validation:**
+  - Their validation is largely **internal and descriptive**, not benchmarked against a formal gold standard for explanation correctness.
+  - They evaluate explanation reliability using:
+    - variance,
+    - entropy,
+    - credible intervals,
+    - sign stability,
+    - and visual distributional analysis.
+
+- **What this means:**
+  - They do not just ask, “Which features matter?”
+  - They ask, “How confident should we be that these features matter in the way SHAP says they do?”
+
+- **Operational decision thresholds:**
+  - The paper even proposes thresholds for interpreting SHAP uncertainty in deployment settings, linking high uncertainty to expert-in-the-loop verification or retraining.
+
+---
+
+## 7. Strengths
+- **Strength 1: Strong problem framing**
+  - The paper identifies a real weakness in current SHAP practice: point-valued attributions are often over-interpreted.
+  - This is especially persuasive in healthcare.
+
+- **Strength 2: Moves from importance to reliability**
+  - A major conceptual strength is that it reframes XAI from “feature ranking” to “feature attribution under uncertainty.”
+
+- **Strength 3: Rich uncertainty toolbox**
+  - The combination of variance decomposition, entropy, sign stability, confidence intervals, and evidence theory gives a genuinely multi-faceted view of explanation quality.
+
+- **Strength 4: Practical with tree ensembles**
+  - Because it works with bagging-based tree ensembles, it stays in a setting that is still widely used in tabular healthcare ML.
+
+- **Strength 5: Clear practical message**
+  - The takeaway is simple and important:
+    - **important does not mean stable**.
+
+---
+
+## 8. My Thoughts, Criticisms & Unstated Limitations
+- **Criticism 1: Heavy theory, lighter empirical proof**
+  - The paper is theoretically ambitious, but the empirical side is more illustrative than decisive.
+  - It demonstrates that the framework produces meaningful diagnostics, but it does not fully prove that these diagnostics improve downstream human decisions or clinical outcomes.
+
+- **Criticism 2: No formal external XAI ground truth**
+  - They quantify instability very carefully, but they do not establish whether a “stable” explanation is necessarily a “correct” explanation.
+  - Stability and correctness are related, but they are not the same thing.
+
+- **Criticism 3: Random Forest-centric validation**
+  - Although the motivation is stated for tree ensembles broadly, the validation is centered on RF-style bagging.
+  - That makes sense because bagging gives natural sub-model variation, but it leaves open how well the same framework transfers to boosting methods such as XGBoost or LightGBM, where tree dependence and sequential fitting complicate the interpretation.
+
+- **Criticism 4: Terminology may overstate aleatoric handling**
+  - In practice, much of what is being captured here comes from variation across trees, tree subsets, and training-induced instability.
+  - That is very naturally epistemic/model-side.
+  - The aleatoric interpretation is theoretically motivated, but in the experiments it may be less cleanly separated than the paper’s language suggests.
+
+- **Criticism 5: Computational and conceptual overhead**
+  - Standard SHAP is attractive partly because it is already understandable to practitioners.
+  - UbiQTree adds multiple theoretical layers:
+    - DST,
+    - uncertainty distributions,
+    - Dirichlet processes,
+    - variance decomposition,
+    - entropy,
+    - sign stability.
+  - This makes it richer, but also harder to communicate and operationalize outside a research setting.
+
+- **Criticism 6: Thresholds for intervention feel heuristic**
+  - Their suggested thresholds for expert review, automated decisions, and retraining are useful operationally.
+  - But they appear more heuristic than universally validated.
+  - In a production setting, these thresholds would need calibration for each domain and risk tolerance.
+
+- **Criticism 7: More comparison to prior SHAP-UQ methods was needed**
+  - The paper discusses prior work on SHAP uncertainty, but the experimental section would have been stronger if it had directly benchmarked UbiQTree against competing SHAP-UQ methods rather than mostly demonstrating its own outputs.
+
+---
+
+## 9. Research Value for My Own Work
+- **What I can take from this paper:**
+  - It gives a very useful conceptual argument that explanation quality should itself be uncertainty-aware.
+  - It supports the idea that feature importance rankings alone are incomplete.
+  - It provides language and framing for discussing:
+    - explanation robustness,
+    - attribution stability,
+    - uncertainty-aware interpretability.
+
+- **How this could influence my literature review:**
+  - I can cite this paper as evidence that SHAP-based interpretation in critical systems should not be treated as deterministic.
+  - It helps justify the inclusion of uncertainty-aware validation metrics for explainability methods.
+
+- **How this could influence my methodology:**
+  - If I use SHAP, I should consider reporting:
+    - confidence intervals,
+    - attribution variance,
+    - sign stability,
+    - entropy or dispersion metrics,
+    not just average SHAP scores.
+
+- **Positioning insight:**
+  - This paper is not mainly about improving predictive performance.
+  - It is about improving the **trustworthiness of explanations**.
+  - That distinction is important when positioning a contribution.
+
+---
+
+## 10. Action Items & Integration
+- [ ] Add this paper to the section of my literature review dealing with **uncertainty in explanations**, not just general SHAP applications.
+- [ ] Note explicitly that **high SHAP magnitude does not imply high explanation reliability**.
+- [ ] Consider whether my own SHAP analysis should include **variance, confidence intervals, sign stability, or entropy**.
+- [ ] Use this paper to justify a stronger critique of explanation methods that report only single attribution values.
+- [ ] Compare its uncertainty-aware explanation framing with other SHAP-UQ papers to identify whether UbiQTree is mainly a theoretical advance, a practical workflow, or both.
+- [ ] If relevant to my work, investigate whether similar decomposition can be adapted beyond bagging models to boosting-based or deep-learning explainers.
+
+---
+
+## 11. Bottom-Line Summary
+This paper is important because it attacks a blind spot in modern XAI practice: **we often explain models as if the explanations themselves are certain**. UbiQTree argues that this is unsafe, especially in healthcare, and proposes a structured framework for quantifying uncertainty in SHAP explanations. Its biggest contribution is not a new predictor, but a new way of thinking about explanation reliability. The most valuable takeaway is simple but powerful: **the feature the model talks about most confidently may not be the feature it understands most reliably**.

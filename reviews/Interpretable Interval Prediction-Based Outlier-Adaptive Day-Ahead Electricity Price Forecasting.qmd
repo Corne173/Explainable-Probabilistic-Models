@@ -1,19 +1,390 @@
 ---
 title: "Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features"
-description: "Outlier-adaptive interval forecasting of electricity prices with SHAP. Review in progress."
-date: 2024-01-01
+description: "Review of an IEEE TII paper proposing a GMM-LightGBM + LSTNet-KDE + SHAP framework for interpretable, outlier-adaptive day-ahead electricity price forecasting."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Power systems baselines
+  - Electricity price forecasting
+  - Probabilistic forecasting
+  - Interval prediction
+  - Explainable AI
+  - SHAP
+  - LSTNet
+  - Energy markets
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Xiaodong Shen, Huixin Liu, Gao Qiu, Youbo Liu, Junyong Liu, and Shixiong Fan (2024)
+- **Venue (Journal/Conference):** *IEEE Transactions on Industrial Informatics*  
+- **Paper Title:** *Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features*
+- **DOI:** [10.1109/TII.2024.3355105](https://doi.org/10.1109/TII.2024.3355105)
+- **Primary Topic/Concept:** Interpretable outlier-adaptive day-ahead electricity price forecasting using cross-market features and interval prediction
+- **Study Region / Testbed:** Danish day-ahead electricity market, specifically DK1 and DK2
+- **Core Methods:** GMM, LightGBM, LSTNet, KDE, SHAP
+- **Code/Data Available?:** The paper cites public data sources for market variables, but it does **not** present a dedicated public code repository in the paper itself
+- **Proximity/Threat Level:** High / Directly relevant if your work concerns probabilistic or interpretable forecasting under extreme events
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Shen, X., et al. (2024)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Interpretable+Interval+Prediction-Based+Outlier-Adaptive+Day-Ahead+Electricity+Price+Forecasting+Involving+Cross-Market+Features)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why this problem matters)
+- Electricity prices in European markets have become far more erratic due to geopolitical shocks, fuel price volatility, renewable penetration, and tighter cross-market coupling.
+- Traditional price forecasting models often focus only on the internal electricity market and ignore cross-market spillovers from gas, coal, and neighboring electricity markets.
+- Extreme prices, including sharp spikes and negative prices, are no longer rare edge cases. They are increasingly central to the forecasting problem.
+- Standard point forecasting is not enough because it does not quantify uncertainty, and it tends to break down exactly where market participants care most: during extreme or abnormal events.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why interval prediction?)
+- The authors argue that outlier prices are fundamentally harder to predict with a single point model because outliers are sparse and induce large generalization errors.
+- Their solution is not to replace point forecasting entirely, but to combine:
+  1. **point prediction** for regular price regimes, and  
+  2. **interval prediction** for abnormal or outlier regimes.
+- This “divide-and-rule” logic is a key conceptual contribution of the paper.
+
+### The Motivation (Why explainability?)
+- They explicitly position interpretability as a trust and validation mechanism for electricity market forecasting.
+- In their framing, market participants need to know **why** the model is relying on certain features, especially when economic and geopolitical events dominate the market.
+- SHAP is not used only as a descriptive dashboard. It is used as a **cross-validation mechanism** to check whether the LSTNet learned sensible market structure or whether it overfit to outlier-driven noise.
+
+### Their claim to fame / Novelty
+The paper’s novelty rests on the combination of four ideas:
+1. **Cross-market feature fusion** across electricity, gas, and coal markets, including mixed temporal granularities.
+2. **A GMM-LightGBM outlier detector**, where GMM identifies historical outliers and LightGBM forecasts future outlier timestamps.
+3. **An LSTNet-KDE hybrid predictor**, where one LSTNet forecasts the main price trend and another estimates outlier prediction errors, which KDE then converts into intervals.
+4. **SHAP-based interpretability as a model reliability check**, not just a posthoc illustration.
+
+### Their ultimate result
+- The framework shows that:
+  - **LightGBM** is the best outlier forecaster among the tested classifiers.
+  - **LSTNet** is the strongest point predictor among the tested baselines.
+  - **Interval prediction for isolated outliers** yields empirically valid and stable coverage.
+  - **SHAP identifies natural gas as the dominant cross-market driver** of electricity price trends in the Danish case study.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Overall Pipeline
+The framework has five modules:
+
+1. **Data preparation / multitemporal syncretism**
+   - Builds a unified database across electricity and primary energy markets.
+   - Electricity inputs use hourly sequences.
+   - Gas and coal inputs use daily sequences, aligned into 24-step windows.
+
+2. **Outlier detection and forecasting**
+   - Historical outliers are detected using a **Gaussian Mixture Model (GMM)**.
+   - A scaled outlier score is computed, and timestamps with scaled score ≥ 9 are labeled as outliers.
+   - These historical labels are then appended to the feature set.
+   - **LightGBM** is trained to predict outlier timestamps for the next 24-hour forecasting horizon.
+
+3. **Principal trend capture / point forecasting**
+   - A base **LSTNet** is trained on the outlier-fused input set.
+   - It captures short-term local dependencies via convolution, long-term structure via recurrent and skip-recurrent components, and local sharp behavior via an autoregressive layer.
+
+4. **Error estimation and interval prediction**
+   - A second, error-oriented **LSTNet** predicts forecasting errors for future outliers.
+   - **KDE** is then used on recent outlier errors plus the predicted error to construct a predictive interval for outlier timestamps.
+
+5. **Interpretability-based cross-validation**
+   - **SHAP** is applied to the base LSTNet.
+   - If the learned feature dependence looks unreasonable, the authors propose retraining with:
+     - outlier smoothing, and
+     - cost-sensitive weighting.
+
+### Inputs Used
+The paper defines three main input subsets:
+
+- **RIS (Raw Input Subset):**
+  - previous 24 hours of electricity-related curves
+  - previous 24 days of gas and coal prices
+
+- **OFIS (Outlier-Fused Input Subset):**
+  - RIS plus historical outlier identification labels
+
+- **FEPS (Forecasting Error Prediction Subset):**
+  - OFIS
+  - the 24-hour point forecast
+  - predictive errors for the most recent outliers
+
+### Key Features
+The paper uses a broad set of variables, including:
+- historical electricity prices
+- electricity production / consumption-type market features
+- neighboring or interconnected market electricity features
+- energy exchange features
+- gas prices
+- coal prices
+
+This is important: the study is not just “price forecasting with lagged prices.” It is explicitly a **cross-market, multitemporal forecasting problem**.
+
+### Dataset / Case Study
+- **Market:** Danish day-ahead market, DK1 and DK2
+- **Period:** May 1, 2021 to August 31, 2022
+- **Split:**
+  - Training: May 1, 2021 to May 31, 2022
+  - Validation: June 1, 2022 to July 31, 2022
+  - Testing: August 1, 2022 to August 31, 2022
+
+### Why isolate outliers?
+One of the paper’s strongest ideas is that outliers are not treated as random contamination. The authors explicitly argue that outlier prices still have **temporal patterning**, and therefore deserve their own specialized treatment rather than being discarded or flattened.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+
+### Validating the Outlier Detector
+For outlier timestamp prediction, they use:
+- **Accuracy**
+- **Recall**
+
+They compare:
+- SVM
+- XGBoost
+- LightGBM
+
+**Takeaway:** LightGBM is selected as the best detector, especially due to stronger Recall.
+
+### Validating the Point Predictor
+For point forecasting, they use:
+- **MAE**
+- **sMAPE**
+- **RRMSE**
+
+They compare the proposed LSTNet setup against:
+- CNN-LSTM
+- Informer
+- LightGBM
+
+**Takeaway:** LSTNet performs best overall for both DK1 and DK2.
+
+### Validating the Interval Predictor
+For interval forecasting, they use:
+- **PICP** (Prediction Interval Coverage Percentage)
+- **PINAW** (Prediction Interval Normalized Average Width)
+
+They evaluate prediction intervals built:
+- on **all samples**
+- on **outlier samples only**
+
+They also run a sensitivity experiment on outlier sample size.
+
+**Takeaway:** The interval method achieves empirical coverage close to the nominal level and remains relatively stable.
+
+### Validating the Explanations
+The paper validates SHAP mainly through:
+- feature ranking consistency,
+- economic plausibility,
+- cross-checking with known market structure.
+
+This is not a formal XAI benchmark. It is a **domain-knowledge plausibility validation** approach.
+
+---
+
+## 5. Main Results & What They Actually Mean
+
+### 5.1 Outlier Detection Results
+- LightGBM outperforms SVM and is competitive or better than XGBoost on Accuracy.
+- More importantly, LightGBM substantially improves **Recall**, which matters because missing rare but important price outliers is especially costly.
+- This supports the use of a two-stage detector:
+  - unsupervised GMM for labeling historical anomalies,
+  - supervised LightGBM for forecasting future abnormal timestamps.
+
+### 5.2 Point Forecasting Results
+- LSTNet beats CNN-LSTM, Informer, and LightGBM on the reported point metrics.
+- The authors highlight that the AR component helps LSTNet stay closer to local outlier behavior than the other models.
+- However, the paper also shows something more interesting:
+  - when the models are tested on **regular points only**, LSTNet still performs best,
+  - but its performance changes more noticeably when outliers are present.
+- That means the model is strong, but also meaningfully stressed by outlier structure.
+
+### 5.3 Interval Forecasting Results
+- The interval module reaches empirical coverage close to the target confidence levels.
+- When trained only on outlier samples, prediction intervals become **wider**, which the authors interpret as appropriate because outlier generalization error is larger.
+- Their claim is subtle:
+  - wider intervals are not necessarily a weakness here,
+  - because the point of the interval is to absorb the uncertainty caused by rare, poorly learned, extreme prices.
+
+### 5.4 Interpretable Findings (SHAP)
+This is one of the most valuable parts of the paper.
+
+#### Global ranking
+- **Gas** is the most important feature overall.
+- **DK1** and **DK2** are also highly important.
+- Interconnected market features such as **DE** and **SE4** rank among the top features.
+- **Coal** ranks much lower, which the authors attribute to its relatively low variation during the test period.
+
+#### Why this matters
+This is a strong result because it tells you the model is not only using local electricity history. It is relying strongly on:
+- domestic price dynamics,
+- cross-border electricity market interactions,
+- and especially gas market conditions.
+
+#### Gas ablation logic
+The authors compare forecasting performance with and without the gas feature, and show a clear degradation when gas is removed.
+That is an important validation step because it links:
+- SHAP explanation,
+- feature ranking,
+- and actual forecast performance.
+
+#### Temporal SHAP insight for gas
+They go further and analyze the 24 gas trading days used as inputs:
+- the SHAP values are consistently positive,
+- the **first to fourth trading days** matter most,
+- the **first trading day** has the strongest impact,
+- days 5–11 have almost no effect,
+- days 12–24 have small but fluctuating influence.
+
+This is one of the most interesting interpretability findings in the paper because it suggests the model is not just saying “gas matters,” but that **recent gas market information matters disproportionately more**.
+
+---
+
+## 6. Strengths of the Paper
+
+### Strength 1: It tackles the real problem, not the clean one
+A lot of electricity forecasting papers still operate in relatively stable market settings or frame extremes as nuisances. This paper directly targets **volatile, deregulated, shock-prone markets**.
+
+### Strength 2: Good problem decomposition
+The split into:
+- outlier detection,
+- point forecasting,
+- outlier interval prediction,
+- interpretability-based cross-validation
+
+is conceptually neat and practically defensible.
+
+### Strength 3: Cross-market thinking is a genuine contribution
+The inclusion of gas, coal, and neighboring electricity markets is not cosmetic. It is central to the study’s argument and is supported by the SHAP analysis.
+
+### Strength 4: The explainability is actually tied to model governance
+The paper does more than produce SHAP beeswarm plots. It frames interpretability as a tool for:
+- checking whether the predictor learned sensible structure,
+- spotting overfitting,
+- and deciding whether retraining is necessary.
+
+### Strength 5: Sensible argument for hybrid point + interval forecasting
+Their “do not use a single unified prediction mode for everything” argument is persuasive:
+- point forecasts are more intuitive and efficient in regular periods,
+- interval forecasts are more robust in outlier periods.
+
+---
+
+## 7. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: SHAP is used as a trust mechanism, but not formally validated
+The paper uses SHAP for cross-validation and decision support, but the validation remains mostly qualitative and economically intuitive.
+- There is no formal stability analysis of explanations.
+- There is no faithfulness or robustness testing.
+- There is no comparison against alternative explanation methods.
+
+So while the interpretability story is compelling, it is not rigorously benchmarked.
+
+### Criticism 2: The “cross-validation” role of SHAP is still somewhat heuristic
+The paper says that if SHAP reveals an unreasonable dependence structure, retraining is triggered with outlier smoothing and cost-sensitive learning.
+That is an interesting idea, but the paper does not fully operationalize it:
+- What exact threshold defines “untrustworthy”?
+- How often is retraining triggered?
+- How sensitive is the procedure to subjective expert judgment?
+
+This means the interpretability-to-correction loop is more of a promising framework than a fully reproducible protocol.
+
+### Criticism 3: The outlier definition is still threshold-based after transformation
+Although GMM is used, the final outlier labeling still depends on a scaled score threshold.
+That makes the “outlier” concept partly model-driven and partly arbitrary.
+A different threshold might materially alter:
+- class balance,
+- LightGBM training,
+- interval width behavior,
+- and the apparent success of the outlier-specialized branch.
+
+### Criticism 4: Baseline set is good, but not exhaustive
+The paper compares against:
+- SVM / XGBoost for outlier detection
+- CNN-LSTM / Informer / LightGBM for point prediction
+
+This is respectable, but for a paper centered on interval prediction and uncertainty, stronger interval/probabilistic baselines could have made the evidence more decisive, for example:
+- quantile regression networks,
+- conformal interval methods,
+- mixture density approaches,
+- direct probabilistic transformers.
+
+### Criticism 5: Interval prediction is targeted, not fully distributional
+Their framework is best understood as **outlier-adaptive interval forecasting**, not a full probabilistic density forecasting system across all timestamps.
+That is fine, but it limits the generality of the uncertainty modeling story.
+
+### Criticism 6: One month of testing is not very long for a volatile market claim
+The full data period is decent, but the actual test window is still relatively short.
+For highly unstable markets, longer rolling-origin testing across multiple stress regimes would have strengthened the conclusions.
+
+### Criticism 7: Potential complexity cost
+The framework is powerful, but it is also layered:
+- GMM
+- LightGBM
+- base LSTNet
+- error LSTNet
+- KDE
+- SHAP
+- possible retraining loop
+
+That may be acceptable in research, but deployment complexity is much higher than with a single unified forecaster.
+
+---
+
+## 8. What This Paper Means for My Own Research
+
+### If I am working on probabilistic forecasting
+This paper is useful because it shows a strong alternative to “predict a full distribution everywhere.”  
+Instead, I can:
+- use point forecasting in regular regimes,
+- reserve special uncertainty machinery for abnormal regimes,
+- and thereby reduce unnecessary stochastic modeling overhead.
+
+### If I am working on XAI for forecasting
+This paper is especially relevant because it treats SHAP as more than an explanation layer.
+It uses SHAP to:
+- rank cross-market drivers,
+- verify economic plausibility,
+- and supervise model reliability.
+
+That is a strong framing move for a literature review.
+
+### If I am working on energy market coupling
+The paper supports the argument that electricity price forecasting in modern European markets cannot be treated as a closed single-market time-series problem.
+Gas and cross-border electricity features matter materially.
+
+---
+
+## 9. Best Summary in Plain English
+This paper proposes a forecasting system for volatile electricity markets that first asks:
+
+1. **Will tomorrow contain abnormal price points?**  
+2. **What is the normal price trend?**  
+3. **How uncertain should I be specifically at those abnormal points?**  
+4. **Did the model learn sensible market logic, or did it overfit?**
+
+To answer those questions, it combines:
+- GMM + LightGBM to identify and forecast outliers,
+- LSTNet to forecast the main trend,
+- another LSTNet + KDE to build intervals for future outliers,
+- and SHAP to explain and verify what the model learned.
+
+Its most important empirical finding is that **natural gas is the dominant cross-market feature** shaping Danish electricity price forecasts during the studied period, and that explicitly separating outlier handling from normal forecasting improves robustness.
+
+---
+
+## 10. Action Items & Integration
+- [ ] Cite this paper in the section of my literature review dealing with **hybrid point + interval forecasting** under extreme market conditions.
+- [ ] Use it as an example of **XAI as model governance**, not just model explanation.
+- [ ] Reference it when arguing that **cross-market exogenous drivers**, especially gas, should be included in electricity price forecasting models.
+- [ ] Consider whether my own work should explicitly separate:
+  - regular regime forecasting,
+  - outlier detection,
+  - and uncertainty estimation.
+- [ ] Compare my own interpretability pipeline against this paper’s SHAP-based cross-validation idea, but improve it with more rigorous explanation validation.
+- [ ] Highlight in my critique that their SHAP-triggered retraining logic is conceptually strong but operationally under-specified.
+- [ ] Use this paper as evidence that **recent exogenous market values can matter much more than distant lags**, especially for fuel-linked price formation.
+
+---
+
+## 11. One-Line Review Verdict
+A strong, highly relevant paper that combines cross-market feature fusion, outlier-aware interval prediction, and SHAP-based interpretability into a coherent framework, but whose explanation-validation and retraining logic remain more persuasive than fully formalized.

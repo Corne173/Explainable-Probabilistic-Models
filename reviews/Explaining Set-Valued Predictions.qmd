@@ -1,19 +1,397 @@
 ---
 title: "Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification"
-description: "SHAP analysis for conformal set-valued predictions. Review in progress."
-date: 2025-01-01
+description: "Review of a 2025 study proposing SHAP-based explanations for conformal classification outputs, especially class-wise p-values, set inclusion, confidence, and credibility."
+date: 2024-05-18
 categories:
-  - Review in progress
-  - Explaining uncertainty with SHAP
+  - Conformal prediction
+  - Explainable AI
+  - Uncertainty quantification
+  - Classification
+  - SHAP
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Ulf Johansson, Aicha Maalej, Cecilia Sönströd (2025)
+- **Venue (Journal/Conference):** *Proceedings of Machine Learning Research (PMLR 266), Conformal and Probabilistic Prediction with Applications*
+- **Paper Title:** *Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification*
+- **Primary Topic:** Interpreting conformal classification outputs using SHAP
+- **Core Methods:** Class-conditional conformal prediction, Random Forest, Tree SHAP
+- **Application Domain:** Benchmark classification datasets (Iris, Wisconsin Breast Cancer, Pima Diabetes)
+- **Code/Data Available?:** Not emphasized as a core contribution in the paper
+- **Proximity/Threat Level:** Medium to High / Conceptually relevant if working on interpretable uncertainty or explanation of uncertainty-aware outputs
+- **Date Reviewed:** 2024-05-18
 
-- **Authors & Year:** Johansson, U., et al. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Explaining+Set-Valued+Predictions%3A+SHAP+Analysis+for+Conformal+Classification)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+- **The Motivation (Why Conformal Prediction?):**
+  - Standard classifiers usually return a single label, and probabilistic models return normalized probabilities, but neither necessarily communicates uncertainty in a cautious, decision-support-oriented way.
+  - Conformal classification instead outputs a **prediction set** with formal error control, allowing the model to say that multiple labels are plausible, or in rare cases that no label is plausible enough.
 
-This page is a placeholder for a future full review using the site template.
+- **The Motivation (Why Explainability?):**
+  - Even though conformal predictors provide stronger uncertainty quantification than ordinary classifiers, their outputs can still be hard for users to interpret, especially when the prediction set is non-trivial, such as:
+    - multiple labels included,
+    - a surprising label excluded,
+    - or an empty prediction set.
+  - The authors argue that practical usefulness depends not only on calibrated uncertainty, but also on understanding **why** labels were included or rejected.
+
+- **Their claim to fame / Novelty:**
+  - The paper argues that previous work mostly used conformal methods to quantify uncertainty **in explanations**, not to explain **conformal predictions themselves**.
+  - Their key novelty is to apply SHAP directly to **class-wise conformal p-values**, treating each p-value as an explainable output.
+  - This creates **class-specific, asymmetric explanations**, which is a major departure from ordinary probabilistic classifiers where class probabilities are coupled by the sum-to-one constraint.
+
+- **The central conceptual contribution:**
+  - SHAP is not limited to explaining raw model scores.
+  - By defining different target functions, the same SHAP framework can explain:
+    - class-wise p-values,
+    - class inclusion or exclusion,
+    - the full prediction set,
+    - confidence,
+    - credibility.
+
+- **The value derived from explainability (What did XAI actually do?):**
+  - It reveals why specific labels are included or excluded from the conformal set.
+  - It allows the analyst to identify **ambiguity**, **atypicality**, and possible **out-of-distribution-like behavior**.
+  - It provides both **local explanations** for individual uncertain predictions and **global explanations** of how features influence class-wise conformal behavior across the dataset.
+  - It gives a more faithful picture of uncertainty reasoning than standard softmax explanations, because each class p-value is explained independently.
+
+- **Their ultimate result:**
+  - The paper is a **proof-of-concept**, not a benchmarking paper focused on predictive superiority.
+  - Its main result is conceptual and interpretive: SHAP-enhanced conformal classification can make set-valued predictions much more transparent and decision-useful.
+
+---
+
+## 3. Methodology & Technical Details
+
+### 3.1 Overall framework
+The paper combines:
+1. an underlying classifier,
+2. class-conditional conformal calibration,
+3. SHAP explanations applied to conformal outputs.
+
+The base learner is a **Random Forest classifier with 300 trees**, and explanations are computed using **Tree SHAP**.
+
+### 3.2 Conformal classification setup
+- The study uses **inductive conformal prediction (ICP)**.
+- A trained classifier first produces class probabilities.
+- These probabilities are transformed into **nonconformity scores** using a hinge-loss-style definition:
+  \[
+  \Delta[h(x_i), \tilde{y}] = 1 - \hat{P}_h(\tilde{y} \mid x_i)
+  \]
+- For each candidate label, a conformal **p-value** is computed by comparing the test nonconformity score against calibration nonconformity scores.
+- Labels with \( p_y(x) < \epsilon \) are rejected, and the remaining labels form the prediction set.
+
+### 3.3 Class-conditional calibration
+- The conformal predictors are calibrated in a **class-conditional** manner.
+- That matters because it provides more label-aware validity and makes the p-values especially suitable for class-wise interpretation.
+
+### 3.4 Confidence and credibility
+The study also emphasizes two derived conformal quantities:
+
+- **Credibility**:
+  - the largest p-value across all labels,
+  - interpreted as how well the instance conforms to the most plausible class.
+
+- **Confidence**:
+  - one minus the second-largest p-value,
+  - interpreted as how decisively the most plausible class stands apart from the runner-up.
+
+This distinction is important:
+- a prediction can be **confident but not credible**, meaning the model is decisive, but the instance is still atypical;
+- or **credible but not confident**, meaning multiple classes look plausible.
+
+### 3.5 What exactly is explained with SHAP?
+The strongest methodological point in the paper is that **the object being explained is determined by the prediction function** passed into SHAP.
+
+Their main choice is:
+- for each class \( y \), define \( f_y(x) = p_y(x) \)
+
+This lets SHAP explain how each feature pushes a class’s conformal p-value up or down.
+
+They then outline four additional explainable targets:
+
+1. **Class inclusion**  
+   \[
+   f_y(x) = \mathbf{1}[p_y(x) > \epsilon]
+   \]
+   Explains why a class crossed the inclusion threshold.
+
+2. **Full prediction set as structured output**  
+   Encodes the entire set of included labels and explains why that set was returned.
+
+3. **Confidence**  
+   Explains why the model is decisive or indecisive.
+
+4. **Credibility**  
+   Explains why an instance is typical or atypical relative to calibration data.
+
+### 3.6 Datasets / Testbed
+The experiments use three standard benchmark datasets:
+
+- **Iris**
+- **Wisconsin Breast Cancer**
+- **Pima Indian Diabetes**
+
+These were likely chosen because:
+- the features are understandable,
+- the problems are familiar,
+- and local explanations are easy to narrate.
+
+### 3.7 Train / calibration / test split
+The paper uses a simple **stratified hold-out** split:
+- 60% training
+- 30% calibration
+- 10% testing
+
+This is important because the work is positioned as a **demonstration study**, not a large-scale statistical evaluation.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+
+### 4.1 Validating the predictions
+The paper does **not** primarily validate predictive performance against a strong set of SOTA baselines.
+Instead, the focus is on:
+- constructing conformal predictors correctly,
+- showing realistic conformal outputs,
+- and demonstrating how SHAP can interpret them.
+
+So this is more of an **interpretability-method paper** than a predictive benchmarking paper.
+
+### 4.2 Validating the explanations
+The explanations are validated mainly through:
+- **qualitative consistency checks**,
+- **dataset semantics**,
+- and **human interpretability**.
+
+Examples include:
+- In **Iris**, petal width and petal length behave in ways consistent with known class geometry.
+- In **Breast Cancer**, high-risk cellular features support malignancy while also revealing more nuanced effects on credibility.
+- In **Diabetes**, the explanations reveal that a case can still be uncertain even when confidence might initially look moderately high.
+
+### 4.3 Local and global explanation modes
+The study uses:
+- **waterfall plots** for local explanations,
+- **beeswarm plots** for global explanations.
+
+This is a good design choice because the method aims to explain both:
+- why a particular instance produced a certain set-valued prediction,
+- and how features generally influence conformal p-values across the population.
+
+---
+
+## 5. Main Findings & Interpretive Insights
+
+### 5.1 Explaining p-values is richer than explaining probabilities
+A central insight is that explaining class-wise conformal p-values gives more flexibility than explaining ordinary class probabilities.
+
+Why?
+- Probabilities must sum to one.
+- P-values for different classes are not locked into that zero-sum structure.
+
+That means:
+- the same feature can lower both classes’ plausibility,
+- or support one class without acting as a simple mirror image for another.
+
+This is one of the strongest conceptual contributions in the paper.
+
+### 5.2 It supports asymmetric, class-specific reasoning
+In binary and multiclass settings, SHAP on p-values allows:
+- a separate rationale for why class A was included,
+- and a different rationale for why class B was excluded.
+
+That is especially valuable in high-stakes settings like diagnosis or triage, where the reason a dangerous class was rejected may matter just as much as the reason another class was selected.
+
+### 5.3 It helps interpret ambiguous predictions
+The framework is particularly useful when:
+- multiple labels remain in the prediction set,
+- credibility is low,
+- or the instance looks atypical.
+
+The method helps make uncertainty **diagnostic**, not just descriptive.
+
+### 5.4 It may help flag out-of-distribution-like cases
+The authors explicitly note that empty prediction sets or very low credibility can indicate:
+- out-of-distribution behavior,
+- extreme uncertainty,
+- or corrupted/unusual inputs.
+
+Their SHAP framework then offers a way to inspect which features caused that breakdown in conformity.
+
+### 5.5 Threshold-aware explanations are different from p-value explanations
+One subtle and useful insight appears in the explanation of **set inclusion**:
+- a feature that lowers a p-value can still have a positive contribution to inclusion if the class remains above the threshold.
+
+This is an important distinction.
+It means the semantics of the explanation change depending on the target:
+- explaining the p-value,
+- versus explaining threshold crossing.
+
+That is a sophisticated point, and one of the paper’s most practically useful methodological clarifications.
+
+---
+
+## 6. Dataset-Specific Results
+
+### 6.1 Iris
+- The method shows that SHAP explanations align well with known Iris class structure.
+- In one case, **Virginica** receives a high conformal p-value and strong confidence/credibility, with petal width, petal length, and sepal length supporting the result.
+- In another case, the conformal predictor shifts the prediction from **Versicolor** to **Virginica**, and SHAP explains why the p-values justify that change.
+- The global beeswarm plot shows class-specific patterns that match known geometry of the dataset.
+
+**Why this matters:**  
+It demonstrates that the method is not merely mathematically possible, but also semantically sensible.
+
+### 6.2 Wisconsin Breast Cancer
+- A malignant case receives high confidence but lower credibility.
+- SHAP shows that some features strongly support exclusion of the benign class.
+- At the same time, for the malignant class, some features raise the p-value while others lower it.
+- The credibility explanation highlights that some features make the case somewhat atypical relative to calibration data.
+- The set inclusion explanation shows how threshold-based explanations differ from raw p-value explanations.
+
+**Why this matters:**  
+This is probably the cleanest demonstration that the framework can separate:
+- plausibility of a class,
+- atypicality of the instance,
+- and threshold-based inclusion logic.
+
+### 6.3 Pima Diabetes
+- The base classifier leans toward **Non-Diabetic**, but conformal calibration shifts the output toward **Diabetic**, which is correct.
+- However, neither class can be strongly rejected at modest significance thresholds, so the case is genuinely uncertain.
+- SHAP reveals which features reduce or increase the p-values for each class.
+- The confidence explanation shows that even a confidence value that looks decent in isolation can still represent substantial uncertainty relative to the rest of the dataset.
+- The full set explanation shows why the returned prediction set contains both labels.
+
+**Why this matters:**  
+This is a strong example of conformal prediction correcting or reframing a conventional classifier output, while SHAP explains the resulting uncertainty structure.
+
+---
+
+## 7. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: This is a proof-of-concept, not a rigorous empirical benchmark
+The paper is explicitly a proof-of-concept. That is fair, but it means the empirical claims should be interpreted cautiously. The method is shown to be plausible and interesting, not comprehensively validated.
+
+### Criticism 2: There is no formal evaluation of explanation quality
+The paper does not use rigorous XAI evaluation criteria such as:
+- faithfulness,
+- stability,
+- robustness,
+- consistency under perturbation,
+- or human-centered utility studies.
+
+That is a major gap, especially because the paper’s core contribution is interpretability.
+
+### Criticism 3: Small benchmark datasets make the examples readable but limit external validity
+Iris, WBC, and Pima are pedagogically useful, but they are relatively small and familiar.
+This makes the examples easy to understand, but it also means the study does not yet prove that the method scales well to:
+- high-dimensional tabular data,
+- sparse features,
+- image or text domains,
+- or modern deep classifiers.
+
+### Criticism 4: Random Forest + Tree SHAP is a comfortable setting
+The underlying model is a Random Forest, and the explanation engine is Tree SHAP, which is one of the most mature and convenient SHAP settings.
+That makes sense for a first study, but it leaves open the harder question:
+- how well does this framework behave with deep models, approximate explainers, or more unstable p-value structures?
+
+### Criticism 5: The method explains outputs derived from calibration, not just the base model
+This is conceptually powerful, but it also complicates interpretation.
+SHAP is not explaining the base classifier directly; it is explaining a downstream conformal quantity.
+That means the explanation now blends:
+- model behavior,
+- calibration effects,
+- dataset structure,
+- and thresholding logic.
+
+This is not a flaw, but it means practitioners may overinterpret the explanations as “why the model predicted class Y,” when the true target is subtler: “why the conformal system assigned this p-value / inclusion status / confidence / credibility.”
+
+### Criticism 6: OOD detection is suggested more than proven
+The authors mention that empty sets or low credibility may support detection of out-of-distribution or anomalous cases.
+That is a compelling idea, but the paper does not perform a dedicated OOD experiment.
+So at this stage, OOD usefulness remains more of a conceptual promise than an empirically established result.
+
+### Criticism 7: The paper does not compare against other explanation strategies for conformal outputs
+The paper presents SHAP as the explanation mechanism, but does not compare it against:
+- LIME,
+- Integrated Gradients,
+- counterfactual explanations,
+- prototype-based methods,
+- or dedicated conformal explanation techniques.
+
+So we do not yet know whether SHAP is best, merely that it works and is flexible.
+
+---
+
+## 8. Research Value for My Own Work
+
+- **Why this paper matters conceptually:**
+  - It strengthens the idea that uncertainty-aware model outputs themselves can be the target of explanation, not only raw model predictions.
+  - That is highly relevant if I want to explain:
+    - uncertainty scores,
+    - quantile behavior,
+    - interval inclusion,
+    - or calibration-derived outputs in my own forecasting work.
+
+- **Direct methodological takeaway:**
+  - SHAP can explain **any deterministic function of the model**, not just the original prediction.
+  - That opens a major design space for explaining:
+    - interval width,
+    - conformal coverage decisions,
+    - anomaly scores,
+    - forecast sharpness,
+    - quantile crossing corrections,
+    - or custom uncertainty metrics.
+
+- **Important conceptual insight for probabilistic forecasting:**
+  - The paper shows the value of explaining outputs that are **not forced into normalized competition**.
+  - This is highly relevant if I am thinking about explaining multiple uncertainty quantities independently rather than relying only on probability-simplex outputs.
+
+- **Potential relevance to my literature review:**
+  - This paper is useful for a section on:
+    - explainability of uncertainty-aware prediction systems,
+    - explanation of set-valued or structured outputs,
+    - and post-hoc interpretation of conformal prediction.
+
+---
+
+## 9. Action Items & Integration
+
+- [ ] Cite this paper in my literature review as an example of **explaining uncertainty-aware outputs rather than only raw model outputs**.
+- [ ] Use it to support the methodological point that **SHAP can explain any derived deterministic target function**, including calibrated or uncertainty-related quantities.
+- [ ] Contrast its proof-of-concept nature with the need for **formal evaluation of explanation quality**.
+- [ ] Consider whether a similar framework could be used in my own work to explain:
+  - interval width,
+  - prediction interval membership,
+  - conformalized quantiles,
+  - or other reliability metrics.
+- [ ] Highlight its key conceptual advantage: **class-specific conformal p-value explanations avoid the zero-sum constraint of softmax probabilities**.
+- [ ] Note the paper as a useful bridge between:
+  - conformal prediction,
+  - SHAP,
+  - decision support,
+  - and interpretable uncertainty.
+
+---
+
+## 10. Final Verdict
+
+This is a **clever, original, and conceptually important** paper, even though it is still an early-stage demonstration rather than a full empirical validation study.
+
+Its biggest strength is not predictive novelty, but interpretive reframing:
+it shows that conformal prediction outputs, especially class-wise p-values, can be treated as first-class explainable objects.
+
+That move is important.
+
+Instead of merely saying:
+- “here is the predicted set,”
+
+the method can now say:
+- “here is why this label was almost included,”
+- “here is why that one was excluded,”
+- “here is why the instance is atypical,”
+- and “here is why the model is uncertain.”
+
+For anyone working on explainable uncertainty quantification, this paper is highly relevant.
+Its limitations are mostly about evaluation depth, scale, and empirical breadth, not about the originality of the idea itself.

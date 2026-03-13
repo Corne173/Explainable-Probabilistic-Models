@@ -1,19 +1,346 @@
 ---
 title: "Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts"
-description: "Deep learning, confidence intervals, and SHAP for electricity demand forecasting. Review in progress."
-date: 2025-01-01
+description: "Review of an Applied Energy study proposing an explainable deeply fused CNN-BILSTM model for daily electricity demand forecasting with bootstrap-based uncertainty quantification and SHAP analysis."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Power systems baselines
+  - Electricity demand forecasting
+  - Probabilistic forecasting
+  - Explainable AI
+  - Deep learning
+  - FNET
+  - SHAP
+  - Bootstrap uncertainty
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** *Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts*
+- **Authors & Year:** Sujan Ghimire, Mohanad S. AL-Musaylh, Thong Nguyen-Huy, Ravinesh C. Deo, Rajendra Acharya, David Casillas-Pérez, Zaher Mundher Yaseen, and Sancho Salcedo-Sanz (2025 issue; accepted 2024)
+- **Venue:** *Applied Energy*  
+- **DOI:** `10.1016/j.apenergy.2024.124763`
+- **Core Topic:** Explainable deep learning for **daily electricity demand forecasting** with both **point predictions** and **95% prediction intervals**
+- **Primary Methods:** Deeply Fused Network (FNET), residual bootstrapping, SHAP
+- **Study Region:** Four substations in Southeast Queensland, Australia
+- **Threat/Proximity Level:** High relevance for explainable probabilistic load forecasting, especially where climate predictors and uncertainty intervals are central
 
-- **Authors & Year:** Ghimire, S., et al. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Explainable+deeply-fused+nets+electricity+demand+prediction+model%3A+Factoring+climate+predictors+for+accuracy+and+deeper+insights+with+probabilistic+confidence+interval+and+point-based+forecasts)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why this study matters)
+The paper starts from a very practical power-systems problem: electricity demand is nonlinear, climate-sensitive, and inherently uncertain. Pure point forecasting is not enough for operational decision-making, because operators, aggregators, and traders also need a sense of **forecast uncertainty**. The authors therefore position their work around two needs:
+1. **Higher predictive accuracy** for daily electricity demand.
+2. **Better uncertainty quantification and interpretability** for real-world energy decision-making.
 
-This page is a placeholder for a future full review using the site template.
+The paper explicitly argues that demand models should not only predict future load accurately, but should also quantify uncertainty and explain which factors drive those forecasts. This is framed as important for electricity market planning, grid operation, demand response, and trading. 
+
+### Their claim to fame / novelty
+The main novelty is the adaptation of **Deeply Fused Nets (FNET)**, originally used in image/text domains, to a **time-series electricity demand forecasting** setting. The authors argue that this is the first use of this specific deep fusion idea for electricity demand forecasting, and they extend it with:
+- **CNN + BILSTM deep fusion**
+- **Residual bootstrapping** for 95% prediction intervals
+- **SHAP analysis** for explainability
+
+So the novelty is not just “another hybrid CNN-LSTM,” but specifically a **deep fusion architecture** where intermediate representations from multiple branches are fused repeatedly, instead of only at the final stage. The study also adds a probabilistic layer via bootstrap intervals and an interpretability layer via SHAP.
+
+### Why the explainability part is important here
+The explainability contribution is not treated as decorative. The authors use SHAP to make the model more transparent and to identify the role of lagged demand and climate predictors in the final forecast. Their results suggest that **historical demand** and **evapotranspiration** are among the most influential predictors, with SHAP also revealing interaction effects, especially between lagged demand and evapotranspiration.
+
+### Why the uncertainty part is important here
+Instead of assuming a fixed parametric output distribution, the study uses **bootstrap residual resampling** to generate **95% prediction intervals**. This is important because electricity demand is chaotic and nonstationary, and the authors explicitly argue that making strong distributional assumptions may distort risk estimates.
+
+---
+
+## 3. Methodology & Technical Details
+
+## 3.1 Dataset / testbed
+The study uses electricity demand data from **four substations in Southeast Queensland, Australia**:
+- Annerley
+- Heathwood
+- Laidley
+- Zillmere
+
+The raw dataset spans **01/07/2011 to 30/06/2021**, with **280,560 measurements** sampled at **30-minute intervals**, later downsampled to **daily resolution**. This results in a 10-year daily forecasting problem. 
+
+## 3.2 Input variables
+The model does not rely on lagged demand alone. It combines historical electricity demand with **10 climate variables** from the SILO database. These include:
+- Maximum temperature
+- Minimum temperature
+- Vapour pressure
+- Vapour pressure deficit
+- Synthetic evaporation
+- Solar radiation
+- Relative humidity at maximum temperature
+- Relative humidity at minimum temperature
+- Evapotranspiration
+- Mean sea level pressure
+
+The lag structure is chosen using **PACF** and **Mutual Information Function (MIF)** analysis. The chosen lag depths differ by substation:
+- Annerley: 4 lag days
+- Heathwood: 6 lag days
+- Laidley: 5 lag days
+- Zillmere: 6 lag days
+
+This is one of the better methodological choices in the paper, because the lag structure is not arbitrarily imposed.
+
+## 3.3 Preprocessing and data split
+The authors use **min-max normalization** and split the data into:
+- **90% training/validation**: 01/07/2011 to 30/06/2020
+- **10% testing**: 01/07/2020 to 30/06/2021
+
+Within the training portion, **20% is used as a validation set** for hyperparameter tuning.
+
+## 3.4 The proposed model
+The proposed model is a **Deeply Fused Network (FNET)** built from:
+- **1D CNN**
+- **BILSTM**
+- repeated **deep fusion of intermediate representations**
+
+Key architectural details include:
+- CNN filters ranging from **32 to 128**
+- a **4-layer BILSTM** branch
+- a final **single BILSTM regression layer**
+- **SeLU** activation in the CNN branch
+- **ReLU** activation in the dense layer
+- **Adam** optimizer
+
+The authors argue that deep fusion offers several benefits over shallow fusion:
+- better information flow,
+- learning at intermediate representation levels,
+- more representative feature embeddings,
+- extraction of multi-scale features.
+
+## 3.5 Baselines
+The FNET model is compared against:
+- BILSTM
+- LSTMCNN
+- DNN
+- MLP
+- MARS
+- KRR
+- GPR
+
+This gives a reasonably broad comparison across both shallow and deep learning baselines, although there are still important omissions, discussed later.
+
+## 3.6 Uncertainty quantification
+For interval forecasting, the authors use **residual bootstrapping**:
+- **95% confidence intervals**
+- **1000 bootstrap samples**
+
+The paper explicitly prefers bootstrap-based intervals because they do not require strong prior assumptions about the underlying output distribution.
+
+## 3.7 Explainability
+The paper uses **SHAP** to:
+- rank feature importance,
+- interpret marginal feature effects,
+- analyse interactions between predictors,
+- inspect how climate variables and lagged demand affect model output.
+
+---
+
+## 4. Validation Strategy
+
+### 4.1 Point forecast validation
+The deterministic evaluation includes multiple metrics, including:
+- Correlation coefficient (`r`)
+- RMSE
+- MAE
+- additional efficiency and bias-related metrics later in the paper, such as Willmott’s Index, Nash–Sutcliffe efficiency, Legates–McCabe index, KGE, GPI, and CPI.
+
+This is a strength of the study: it does not rely on a single accuracy measure.
+
+### 4.2 Probabilistic validation
+The prediction intervals are evaluated with several uncertainty metrics, including:
+- PICP
+- MPIW
+- PINAW
+- ARIL
+- Winkler Score
+- CRPS
+- F-value
+
+This is a strong point. The paper treats uncertainty quality as multi-dimensional rather than reducing it to just one interval metric.
+
+### 4.3 Explainability validation
+The XAI validation is primarily **qualitative and domain-informed**. The authors use SHAP plots to interpret:
+- the dominance of lagged load,
+- the importance of evapotranspiration,
+- interaction effects between lagged demand and climate drivers.
+
+This gives meaningful interpretive insight, but it is not a formal XAI evaluation in the robustness/fidelity sense.
+
+---
+
+## 5. Key Results
+
+## 5.1 Deterministic forecasting performance
+The paper reports that FNET consistently performs best or among the best across the four substations and across multiple deterministic metrics.
+
+A few concrete examples:
+- **Annerley:** FNET achieved **r = 0.974**, **RMSE = 15.136 MW**, **MAE = 11.641 MW**
+- On the same substation, the nearest deep baselines were slightly worse:
+  - **LSTMCNN:** `r = 0.967`, `RMSE = 16.233 MW`, `MAE = 12.482 MW`
+  - **BILSTM:** `r = 0.965`, `RMSE = 16.481 MW`, `MAE = 12.484 MW`
+- Weakest Annerley performers included:
+  - **KRR:** `r = 0.926`, `RMSE = 23.480 MW`, `MAE = 17.593 MW`
+  - **MARS:** `r = 0.936`, `RMSE = 21.984 MW`, `MAE = 17.219 MW`
+  - **MLP:** `r = 0.950`, `RMSE = 19.579 MW`, `MAE = 14.889 MW`
+
+For **Laidley**, FNET again performs strongly:
+- **FNET:** `r = 0.963`, `RMSE = 13.038 MW`, `MAE = 10.266 MW`
+- This is better than:
+  - **BILSTM:** `r = 0.957`, `RMSE = 14.449 MW`, `MAE = 11.488 MW`
+  - **LSTMCNN:** `r = 0.961`, `RMSE = 14.370 MW`, `MAE = 11.425 MW`
+
+Across the paper’s wider set of metrics, the proposed FNET is repeatedly ranked first or near first, while shallow baselines such as MLP, KRR, and MARS tend to perform worst.
+
+## 5.2 Additional performance metrics
+The paper also shows strong FNET results on:
+- Willmott’s Index
+- Nash–Sutcliffe coefficient
+- Legates & McCabe index
+- APB
+- KGE
+- GPI
+- CPI
+
+For example, at **Laidley**, FNET achieves:
+- `EWI ≈ 0.891`
+- `ENS ≈ 0.859`
+- `ELM ≈ 0.603`
+
+The authors use these broader metrics to argue that FNET is not just slightly better in one narrow sense, but more robust overall.
+
+## 5.3 Probabilistic forecasting performance
+The probabilistic evaluation also favours FNET. The paper states that the model’s prediction intervals perform well across multiple uncertainty metrics and that the empirical error distribution and ECDF analyses show clearer separation in favour of FNET. The FNET intervals appear to maintain stronger performance when judged jointly by coverage and width, rather than only one of these.
+
+The broader takeaway is that the proposed architecture is not only a better point forecaster, but also a more useful uncertainty-aware forecaster.
+
+## 5.4 Explainability findings
+The SHAP analysis identifies **lagged electricity demand** and **evapotranspiration** as especially influential variables. A major interpretive insight is that evapotranspiration generally contributes positively, but its contribution becomes stronger when lagged demand is high. In other words, the model is not simply learning isolated one-feature effects; SHAP suggests interaction structure between demand history and climate variables.
+
+This is useful because it shows the model is not behaving as a totally opaque black box. The paper’s interpretation implies the network is capturing a meaningful coupling between thermal/climatic conditions and consumption patterns.
+
+## 5.5 Computational cost
+One downside is computational efficiency. The paper explicitly states that **FNET is less computationally efficient than the benchmark models**. However, it also argues that once trained, the model can remain in service for an extended period and that **testing time is under one minute**, which makes deployment still practical for real applications.
+
+---
+
+## 6. What the Paper Does Well
+
+### 6.1 Strong methodological breadth
+This is one of the stronger papers in the space because it combines:
+- advanced hybrid deep learning,
+- probabilistic uncertainty estimation,
+- multiple deterministic and probabilistic evaluation metrics,
+- and explainability.
+
+A lot of studies do only one or two of these.
+
+### 6.2 Good feature engineering logic
+The use of PACF and MIF to select lag structure is a sound step and gives the model design more credibility than arbitrary lag selection.
+
+### 6.3 Sensible uncertainty method
+Bootstrap residual intervals are a good fit for this application because they avoid strong parametric output assumptions. That is a sensible design choice for a volatile real-world demand signal.
+
+### 6.4 Explainability is tied to domain meaning
+The SHAP analysis is not merely decorative. It identifies influential climate variables and interaction effects that can plausibly matter in real electricity demand dynamics.
+
+### 6.5 Broad evaluation
+The paper evaluates performance from many angles, which makes its conclusion more convincing than papers that rely only on RMSE or only on one interval metric.
+
+---
+
+## 7. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: “Explainable” does not mean rigorously validated explainability
+The paper uses SHAP well for qualitative interpretation, but it does **not** formally evaluate explanation quality using metrics such as:
+- explanation stability,
+- robustness,
+- fidelity,
+- sensitivity to perturbations,
+- or agreement across runs/background choices.
+
+So although the SHAP figures are insightful, the study does not prove that the explanations themselves are stable or trustworthy in a stricter XAI sense.
+
+### Criticism 2: Residual bootstrap intervals are practical, but still limited
+Bootstrap intervals are attractive because they are distribution-light, but they are still built on residual behaviour learned from past model errors. That means they may underperform under structural change, abrupt demand regime shifts, or unseen climate-demand patterns. The paper does not deeply interrogate whether residual bootstrap remains well calibrated under distribution shift.
+
+### Criticism 3: The benchmark set is broad, but not cutting-edge
+The comparison is fair across several classical and hybrid baselines, but from a current forecasting perspective, the paper still omits stronger modern sequence models and probabilistic methods, for example:
+- quantile neural networks,
+- transformer-based forecasters,
+- mixture density approaches,
+- conformal prediction baselines,
+- distributional deep learning alternatives.
+
+So while FNET beats the included baselines, the broader state-of-the-art comparison remains incomplete.
+
+### Criticism 4: Limited external generalization
+All experiments are conducted on four substations in one regional context in Queensland. That is useful, but it does leave open the question of whether the same gains hold across:
+- different countries,
+- different climates,
+- larger transmission-level systems,
+- more abrupt socio-economic demand patterns,
+- or higher renewable penetration settings.
+
+### Criticism 5: Interpretability is still mostly feature attribution, not mechanistic understanding
+The SHAP analysis tells us which features matter and how they trend, but it still does not fully reveal the internal mechanics of the deep fused representation. So the model becomes more interpretable, but not truly transparent in a structural sense.
+
+### Criticism 6: Computational cost matters more than the paper admits
+The authors acknowledge that FNET is slower than alternatives. That is important. In operational environments where models must be retrained frequently, or where many substations/regions must be modeled simultaneously, this cost can become a real deployment bottleneck.
+
+---
+
+## 8. Positioning This Paper in the Literature
+
+This paper is best positioned as a **high-quality hybrid deep learning paper** that sits at the intersection of:
+- load forecasting,
+- uncertainty quantification,
+- and post-hoc interpretability.
+
+Its biggest contribution is not that it invents uncertainty quantification or SHAP for forecasting, but that it integrates:
+1. a **deep fusion architecture**,
+2. **bootstrap-based interval prediction**,
+3. and **SHAP-based interpretation**
+into one forecasting workflow.
+
+Relative to weaker forecasting papers, it is stronger because it goes beyond point accuracy. Relative to cutting-edge probabilistic forecasting research, it is still somewhat transitional, because its uncertainty layer is bootstrap-based rather than intrinsically distributional or conformal.
+
+---
+
+## 9. Relevance to My Own Research / Why This Paper Matters
+
+This paper is highly relevant if my research is about:
+- interpretable probabilistic demand forecasting,
+- climate-aware load prediction,
+- comparing point vs interval forecasting performance,
+- integrating SHAP into forecasting pipelines,
+- or arguing for more transparent forecasting tools in energy systems.
+
+It is especially useful as a citation for the claim that **accurate load prediction alone is insufficient** and that **uncertainty and interpretability must also be incorporated**.
+
+It is also useful as a methodological reference if I want to justify:
+- hybrid CNN-BILSTM forecasting,
+- bootstrap-based prediction intervals,
+- climate feature integration,
+- or SHAP analysis of load drivers.
+
+---
+
+## 10. Action Items & Integration
+
+- [ ] Cite this paper in the literature review as an example of a **hybrid deep learning + uncertainty + explainability** framework for electricity demand forecasting.
+- [ ] Compare my own method against its three main pillars separately: **point accuracy**, **prediction interval quality**, and **interpretability**.
+- [ ] Use this paper to support the argument that **climate predictors materially improve electricity demand models**, especially when combined with lagged demand.
+- [ ] Note that its uncertainty method is **bootstrap-based**, which is more flexible than rigid parametric assumptions but still not necessarily robust under major distribution shift.
+- [ ] In my own work, strengthen the XAI section by adding **formal explanation validation**, not just qualitative SHAP plots.
+- [ ] If I am benchmarking against this paper, include stronger modern probabilistic baselines so that my comparison is more current and harder to dismiss.
+- [ ] Use this paper as evidence that **deep fusion of intermediate representations** can outperform more standard hybrid CNN-LSTM style models.
+- [ ] Explicitly discuss computational trade-offs if proposing a more complex architecture than standard deep baselines.
+
+---
+
+## 11. Bottom-Line Takeaway
+
+This is a strong and relevant paper. Its main achievement is showing that a **deeply fused CNN-BILSTM model**, augmented with **bootstrap prediction intervals** and **SHAP explanations**, can outperform a wide set of classical and neural baselines for **daily electricity demand forecasting**. The paper is methodologically richer than many load forecasting studies because it treats forecasting as a three-part problem: **accuracy, uncertainty, and interpretability**.
+
+Its main weaknesses are that the explainability is validated only qualitatively, the probabilistic method is still residual-bootstrap rather than a more modern intrinsically probabilistic framework, and the benchmark set does not fully represent the strongest current state of the art. Even so, it is a very useful paper and a strong reference point for any work on explainable probabilistic energy forecasting.

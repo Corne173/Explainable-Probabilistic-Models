@@ -1,19 +1,494 @@
 ---
 title: "Interpretable building energy performance prediction using XGBoost Quantile Regression"
-description: "Feature influence across low, medium, and high quantiles in building energy prediction. Review in progress."
-date: 2025-01-01
+description: "Review of an Energy & Buildings paper on interpretable BEPR prediction using XGBoost, SHAP, and XGBoost Quantile Regression."
+date: 2025-05-01
 categories:
-  - Review in progress
-  - Explaining uncertainty with SHAP
+  - Building energy performance
+  - Explainable AI
+  - XGBoost
+  - Quantile regression
+  - SHAP
+  - Energy efficiency
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** *Interpretable building energy performance prediction using XGBoost Quantile Regression*
+- **Authors & Year:** Sinem Guler Kangalli Uyar, Bilge Kagan Ozbay, Berker Dal (2025)
+- **Venue (Journal/Conference):** *Energy & Buildings*
+- **DOI:** 10.1016/j.enbuild.2025.115815
+- **Primary Topic:** Building Energy Performance Ratio (BEPR) prediction using interpretable machine learning
+- **Core Methods:** XGBoost, SHAP, XGBoost Quantile Regression (XGBoost-QR)
+- **Study Region:** Istanbul, Türkiye
+- **Dataset Size:** 3,594 residential buildings
+- **Threat / Relevance Level:** High relevance for interpretable building-energy modeling, especially for studies combining prediction with explanation and heterogeneous-effects analysis
 
-- **Authors & Year:** Kangalli Uyar, S.G., et al. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Interpretable+building+energy+performance+prediction+using+XGBoost+Quantile+Regression)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation
+The paper is motivated by the need to improve building energy efficiency using data-driven methods that can both **predict performance accurately** and **explain what drives it**. Buildings account for a large share of global energy consumption and emissions, so identifying the determinants of poor energy performance is directly relevant for energy policy, retrofit prioritization, and sustainable building design.
 
-This page is a placeholder for a future full review using the site template.
+The authors focus on the **Building Energy Performance Ratio (BEPR)**, which is a relative measure comparing a building’s annual energy consumption per square meter against a reference building. In this formulation:
+- **BEPR > 100** means higher energy consumption than the reference building, hence lower efficiency.
+- **BEPR < 100** means lower energy consumption than the reference building, hence higher efficiency.
+
+### Why standard mean prediction is not enough
+A key argument in the paper is that mean-based regression hides important heterogeneity. Two buildings can have similar average predicted performance while being driven by very different underlying factors. This is especially important in energy datasets with extremes, such as very efficient buildings or very inefficient, older, poorly insulated buildings.
+
+### Why interpretability matters
+The authors explicitly position interpretability as a requirement rather than an optional extra. Their argument is that black-box models may predict well, but without explanation they are less useful for:
+- identifying actionable retrofit priorities,
+- understanding the physical drivers of inefficiency,
+- supporting fair and transparent policy design,
+- distinguishing which variables matter most for low- versus high-performance buildings.
+
+### Main novelty / claim to fame
+The main novelty is not simply that they use XGBoost. Rather, it is the **combination** of:
+1. **XGBoost** for high-accuracy prediction,
+2. **SHAP** for interpretability, and
+3. **XGBoost Quantile Regression** for analyzing how feature effects change across different parts of the BEPR distribution.
+
+Their central contribution is that they do not stop at predicting BEPR. They ask:
+- Which variables matter most overall?
+- Do these variables change in importance across low-, medium-, and high-BEPR buildings?
+- Can this heterogeneity support more targeted energy-efficiency interventions?
+
+### What the paper ultimately contributes
+The study contributes three things:
+- a comparative benchmarking of multiple machine learning models for BEPR prediction,
+- an interpretable explanation of the best-performing model using SHAP,
+- a quantile-based framework that reveals heterogeneous feature effects across different energy-performance levels.
+
+---
+
+## 3. Problem Setup & Study Design
+
+### Target variable
+The prediction target is **Building Energy Performance Ratio (BEPR)**.
+
+The paper defines it as:
+
+\[
+BEPR = 100 \times \left(\frac{EP_a}{EP_r}\right)
+\]
+
+where:
+- \(EP_a\) = annual energy consumption per square meter of the actual building,
+- \(EP_r\) = annual energy consumption per square meter of the reference building.
+
+This makes BEPR a regulatory and comparative efficiency indicator rather than a direct raw load value.
+
+### Research questions
+The study is structured around three main questions:
+1. What building characteristics most strongly influence BEPR?
+2. Do the determinants differ between buildings with low BEPR and high BEPR?
+3. How can those differences support better residential energy-efficiency policy?
+
+### Workflow
+The research design combines:
+- building data,
+- meteorological data,
+- socioeconomic data,
+- preprocessing and standardization,
+- train/test split,
+- model training and hyperparameter optimization,
+- model evaluation,
+- selection of best model,
+- interpretability analysis via SHAP,
+- heterogeneous-effects analysis via quantile regression.
+
+---
+
+## 4. Dataset, Variables & Context
+
+### Dataset
+The study uses **3,594 residential buildings in Istanbul**. All buildings are reinforced concrete structures and the sample is derived from **Energy Performance Certificates (EPCs)**. Because EPCs are not continuously updated, the dataset is essentially cross-sectional rather than longitudinal.
+
+### Building context
+Istanbul is a strong case study because it has:
+- a very large residential building stock,
+- substantial variation in age and building form,
+- many multi-storey buildings,
+- a large share of older buildings,
+- strong policy relevance in the Turkish energy-efficiency context.
+
+### Input features
+The model uses **20 variables**, including:
+- wall U-value,
+- window U-value,
+- roof U-value,
+- column U-value,
+- beam U-value,
+- slab-related U-values,
+- door U-value,
+- building age,
+- average floor height,
+- number of floors,
+- heating power,
+- cooling power,
+- hot water power,
+- lighting power,
+- average wind speed,
+- average temperature,
+- quality-of-life index,
+- market value.
+
+These variables span:
+- building envelope quality,
+- mechanical system capacity,
+- local weather,
+- socioeconomic proxies.
+
+### Important note about missing data dimensions
+A major limitation is already visible at the data level: the study does **not** include occupant behavior, schedules, thermostat habits, appliance usage, or maintenance data. It also lacks temporal operational data such as hourly or seasonal smart-meter readings. This becomes important later when interpreting both the strengths and the limitations of the findings.
+
+---
+
+## 5. Methods & Technical Details
+
+## 5.1 Compared algorithms
+The paper compares a broad set of regression algorithms:
+- Multiple Linear Regression (MLR)
+- Decision Tree (DT)
+- K-Nearest Neighbors (KNN)
+- Support Vector Regression (SVR)
+- Artificial Neural Network (ANN)
+- Random Forest (RF)
+- Extreme Gradient Boosting (XGBoost)
+
+It then separately applies:
+- **XGBoost Quantile Regression (XGBoost-QR)**
+
+### Why this comparison matters
+This comparison is useful because it spans:
+- simple linear models,
+- local / distance-based models,
+- non-linear kernel methods,
+- neural networks,
+- ensemble tree methods.
+
+This lets the authors assess whether gains come merely from nonlinearity, or specifically from the boosted-tree structure.
+
+---
+
+## 5.2 Training and validation strategy
+- **Train/test split:** 80/20
+- **Cross-validation:** 5-fold cross-validation
+- **Hyperparameter tuning:** grid search
+- **Feature processing:** z-score standardization for continuous variables
+
+### Evaluation metrics
+The paper evaluates models using metrics such as:
+- \(R^2\)
+- adjusted \(R^2\)
+- RMSE
+
+The paper also checks model behavior using **Bland-Altman plots**, which is a useful diagnostic addition because it goes beyond aggregate performance metrics and reveals error structure.
+
+---
+
+## 5.3 Why XGBoost won
+The paper reports that **XGBoost achieved the best test performance** while keeping overfitting within an acceptable range relative to the training set. The authors note that its superiority is consistent with prior building-energy literature that finds boosted trees effective for complex, heterogeneous, high-dimensional problems.
+
+This makes sense methodologically:
+- XGBoost handles nonlinearity well,
+- captures interactions without explicit manual feature engineering,
+- includes regularization,
+- is robust in heterogeneous tabular datasets,
+- often performs especially well when feature effects are mixed, non-additive, and not smoothly linear.
+
+---
+
+## 5.4 Why they moved from XGBoost to XGBoost-QR
+The authors do not treat quantile regression as just another probabilistic add-on. They motivate it from the **heteroscedasticity** seen in the model errors.
+
+From the Bland-Altman analysis, prediction errors widen as mean energy consumption increases. That means the model is less uniform in accuracy across the response range. In other words, the problem is not just “predict the average BEPR,” but “understand the conditional distribution of BEPR across different building profiles.”
+
+That is why they use XGBoost-QR:
+- to model different quantiles of BEPR,
+- to analyze different performance regimes,
+- to reduce the masking effect of average-based models.
+
+---
+
+## 5.5 Technical note on XGBoost-QR
+A technically interesting part of the paper is the discussion of **why ordinary pinball loss is awkward inside standard XGBoost**. Since XGBoost relies on second-order optimization, the standard pinball loss is problematic because it is non-differentiable and has zero second derivative in the needed sense.
+
+To address this, the study uses **Arctan Pinball Loss**, a smooth approximation that:
+- is differentiable,
+- has a non-zero second derivative,
+- allows quantile regression inside the XGBoost framework.
+
+The paper also notes an advantage of multi-quantile prediction in a shared model: quantiles share tree splits, which helps reduce the risk of **quantile crossing**.
+
+This is one of the stronger technical contributions of the paper.
+
+---
+
+## 6. Interpretability Strategy
+
+### Why SHAP was chosen
+Although XGBoost has built-in feature importance measures such as gain, weight, and cover, the authors argue that these can produce inconsistent rankings. They therefore use **SHAP** for a more stable and theoretically grounded explanation framework.
+
+### Scope of interpretability
+The paper uses SHAP in a mainly **global-to-local** way:
+- global feature importance rankings,
+- dependence plots for top variables,
+- interaction-style visual interpretation using color-coded feature overlays.
+
+This is a good design choice because it does not stop at ranking variables; it also explores how the variables behave across their value ranges.
+
+---
+
+## 7. Main Findings
+
+## 7.1 Best-performing predictive model
+The headline result is straightforward:
+
+- **XGBoost was the strongest overall predictive model** among the tested algorithms.
+- It outperformed the benchmark models on test performance.
+- It also maintained an acceptable train-test gap, which the authors interpret as acceptable overfitting control.
+
+The paper therefore justifies using XGBoost as the main predictive engine and SHAP / XGBoost-QR as the explanatory layers around it.
+
+---
+
+## 7.2 Global SHAP feature importance
+The SHAP analysis identifies the following variables as the most important BEPR drivers:
+1. **wall_U**
+2. **roof_U**
+3. **window_U**
+4. **building_age**
+
+This is a highly intuitive and physically plausible result.
+
+### Why this matters
+These variables are all directly linked to heat transfer and building fabric quality:
+- poor wall insulation increases thermal losses,
+- poor roof insulation increases envelope losses,
+- poor window insulation increases thermal leakage,
+- older buildings often reflect outdated materials, weaker insulation standards, or aging envelopes.
+
+This is exactly the kind of result that strengthens trust in the model: the most important variables are not arbitrary high-dimensional artifacts, but core building-physics variables.
+
+---
+
+## 7.3 SHAP dependence findings
+The dependence plots show the following patterns:
+
+### wall_U
+- Strong positive relationship with BEPR contribution.
+- As wall U-value increases, SHAP values rise.
+- Poor wall insulation strongly worsens predicted energy performance.
+- The effect becomes steeper at higher wall_U values.
+
+### window_U
+- Also positively related to BEPR contribution.
+- The relationship is more nonlinear than wall_U.
+- There are hints of plateauing or fluctuation at higher values.
+- Outliers with very poor window insulation can have disproportionately large impact.
+
+### roof_U
+- Positive relationship with BEPR contribution.
+- Poor roof insulation increasingly worsens energy performance.
+- The effect strengthens further at high roof_U values.
+
+### building_age
+- Older buildings tend to push BEPR upward.
+- The effect is positive overall but more dispersed at higher ages.
+- This suggests heterogeneity among old buildings: some may have been retrofitted, while others remain highly inefficient.
+
+### Interaction insight
+The paper also shows that the impact of insulation variables is often stronger in **older buildings**, especially for wall and roof insulation. This is a useful interaction insight because it links fabric quality to building vintage, which is highly actionable for retrofit strategy.
+
+---
+
+## 7.4 Quantile-based findings
+The quantile analysis is one of the strongest parts of the paper.
+
+The authors examine effects across quantiles such as:
+- 0.10
+- 0.25
+- 0.50
+- 0.75
+- 0.90
+
+### General pattern
+The impact of the top variables becomes stronger at higher quantiles. That means:
+- in buildings with worse energy performance,
+- wall, roof, window insulation, and building age matter even more.
+
+### Specific qualitative pattern
+- At lower quantiles, envelope features such as **wall_U** and **window_U** are especially influential.
+- At higher quantiles, **building_age** and **roof_U** become more prominent.
+- By the 0.90 quantile, the ranking shifts, showing that the determinants of very poor energy performance are not exactly the same as those of average or highly efficient buildings.
+
+### Why this is important
+This means the paper does not just say “insulation matters.”
+It says:
+- **which insulation-related variables matter**, and
+- **for which types of buildings they matter most**.
+
+That is much more useful for policy and retrofit triage.
+
+---
+
+## 8. Policy and Practical Significance
+
+The practical value of the paper is that it turns a predictive model into a **decision-support tool**.
+
+### What decision-makers gain
+Policymakers or planners could use findings like these to:
+- target older buildings with poor wall and roof insulation,
+- prioritize retrofit schemes by energy-performance segment,
+- design different interventions for different BEPR strata,
+- identify vulnerable, high-consumption buildings in lower-income contexts,
+- avoid one-size-fits-all retrofit policy.
+
+### Social and equity relevance
+One especially strong idea in the discussion is that quantile-based modeling can help identify **vulnerable buildings** that might sit in the upper consumption quantiles due to age, poor insulation, and socioeconomic disadvantage. That makes the framework useful not just for efficiency, but also for equity-oriented energy policy.
+
+---
+
+## 9. Strengths of the Study
+
+### Strength 1: Good problem framing
+The paper is very clear about the difference between:
+- average prediction,
+- interpretable prediction,
+- distribution-aware prediction.
+
+That conceptual layering is well done.
+
+### Strength 2: Sensible choice of methods
+Using XGBoost for accuracy, SHAP for interpretability, and quantile regression for heterogeneity is a coherent and methodologically defensible combination.
+
+### Strength 3: Physically plausible explanations
+The main explanatory variables align well with domain knowledge, which increases trust in the model.
+
+### Strength 4: Heterogeneity is treated seriously
+Many papers stop at global feature importance. This one goes further by asking how effects differ across performance regimes.
+
+### Strength 5: Useful diagnostic thinking
+The inclusion of Bland-Altman analysis and explicit discussion of heteroscedasticity is a valuable methodological step.
+
+### Strength 6: Strong policy relevance
+The results are highly actionable for retrofit targeting and building-energy policy design.
+
+---
+
+## 10. Criticisms, Gaps & Unstated Limitations
+
+## Criticism 1: The interpretability is still mainly correlational
+Even though the paper is more interpretable than a standard black-box study, SHAP still explains the model, not the true causal system. The paper occasionally reads as though feature importance directly reveals causal leverage. That should be treated more carefully.
+
+A high SHAP value means a variable was important to the prediction, not necessarily that changing it alone would produce the exact same real-world improvement in BEPR.
+
+---
+
+## Criticism 2: Missing occupant behavior is a major limitation
+The omission of occupant behavior is not minor. It is one of the biggest constraints in residential energy modeling.
+
+Without data on:
+- occupancy schedules,
+- thermostat behavior,
+- appliance usage,
+- maintenance quality,
+- operational habits,
+
+the model is heavily weighted toward envelope and proxy socioeconomic variables. That likely biases interpretability toward what is observable in certificates rather than everything that truly drives energy use.
+
+This is especially important in the upper quantiles, where user behavior and operational irregularities may dominate.
+
+---
+
+## Criticism 3: Cross-sectional EPC data limits dynamic realism
+Because the EPC data are not temporal, the model cannot capture:
+- seasonal dynamics,
+- daily operation,
+- degradation over time,
+- behavior changes,
+- post-retrofit evolution.
+
+That makes the paper stronger as a **structural benchmarking study** than as a dynamic building-operations study.
+
+---
+
+## Criticism 4: Single-region scope limits generalizability
+The Istanbul-only focus is understandable and useful, but it limits external validity. The model may not transfer cleanly to:
+- different climates,
+- different regulatory baselines,
+- different construction traditions,
+- different socioeconomic contexts.
+
+A model that performs well in Istanbul may behave differently in colder continental climates, tropical climates, or regions with different building codes.
+
+---
+
+## Criticism 5: Comparison is broad, but not necessarily deepest in every direction
+The authors compare many algorithms, which is good for breadth. But the paper is still largely a **tabular ML comparison**, and it does not deeply explore:
+- uncertainty calibration quality,
+- alternative interpretable boosting frameworks,
+- causal feature analysis,
+- counterfactual retrofit analysis,
+- advanced distributional models beyond quantile regression.
+
+So the study is strong in practical ML benchmarking, but less strong as a broader uncertainty-modeling study.
+
+---
+
+## Criticism 6: SHAP validation remains mostly plausibility-based
+The SHAP findings are physically intuitive, but the paper does not rigorously validate explanation quality using:
+- stability tests,
+- perturbation consistency,
+- explanation sensitivity analysis,
+- fidelity stress tests,
+- causal sanity checks.
+
+So although the explanations look credible, they are still largely accepted because they align with engineering common sense.
+
+---
+
+## 11. My Overall Interpretation
+
+This is a strong applied paper with a very sensible structure:
+
+- compare models,
+- select the best predictor,
+- interpret it with SHAP,
+- extend it with quantile regression,
+- convert the outputs into policy-relevant insight.
+
+Its biggest strength is not any single technique, but the fact that the paper does **not** stop at predictive accuracy. It explicitly asks what the model has learned and whether those learned patterns differ across performance levels.
+
+In that sense, it is a good example of moving from:
+**prediction** → **interpretation** → **heterogeneity-aware policy insight**.
+
+If I were positioning my own work relative to this paper, I would say this study is a strong benchmark for interpretable tabular building-energy modeling, but it still leaves room for improvement in:
+- temporal realism,
+- behavioral data integration,
+- causal interpretation,
+- explanation validation,
+- cross-region generalization.
+
+---
+
+## 12. Action Items & Integration for My Own Research
+
+- [ ] Cite this paper as a strong example of combining **high-performing tabular ML** with **post-hoc explainability** and **distribution-aware analysis**.
+- [ ] Use it to justify why **mean-only models can miss heterogeneous effects** across the response distribution.
+- [ ] Reference its SHAP findings when discussing the importance of **envelope thermal properties** and **building age** in building-energy studies.
+- [ ] Use it as a methodological precedent for integrating **quantile regression** into an otherwise deterministic ML workflow.
+- [ ] In my own work, improve on this study by adding:
+  - temporal data,
+  - operational / occupant variables,
+  - stronger explanation-validation procedures,
+  - cross-domain generalization tests,
+  - calibration or uncertainty analysis where relevant.
+- [ ] Position my contribution carefully: this paper already covers interpretability + quantile heterogeneity well, so novelty would need to come from stronger data, stronger validation, or stronger methodological innovation.
+
+---
+
+## 13. One-Paragraph Summary
+This paper presents a strong applied machine-learning framework for predicting and interpreting the Building Energy Performance Ratio of residential buildings in Istanbul. Among several algorithms, XGBoost performed best, and SHAP showed that wall U-value, roof U-value, window U-value, and building age were the dominant drivers of BEPR. The most valuable contribution is the use of XGBoost Quantile Regression, which reveals that the relative importance of these factors changes across low-, medium-, and high-performance buildings. This makes the study more useful than a standard mean-regression paper because it captures heterogeneous effects that are directly relevant for targeted retrofit policy. Its main limitations are the lack of behavioral variables, lack of temporal dynamics, and limited geographic generalizability, but overall it is a very solid benchmark in interpretable building-energy modeling.

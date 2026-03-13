@@ -1,19 +1,340 @@
 ---
 title: "High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques"
-description: "Campus power plant forecasting with probabilistic outputs and SHAP. Review in progress."
-date: 2025-01-01
+description: "Review of an Energy Strategy Reviews paper on long-term campus energy forecasting using XGBoost, SHAP, and likelihood-based evaluation."
+date: 2025-06-03
 categories:
-  - Review in progress
-  - Related load and demand forecasting
+  - Energy forecasting
+  - University campus demand
+  - XGBoost
+  - Explainable AI
+  - Probabilistic evaluation
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Saad A. Alsamraee, Sanjeev Khanna (2025)
+- **Venue (Journal/Conference):** *Energy Strategy Reviews* *(strong applied energy systems journal with policy and strategy relevance)*
+- **DOI:** [https://doi.org/10.1016/j.esr.2025.101769](https://doi.org/10.1016/j.esr.2025.101769)
+- **Institutional Context:** University of Missouri campus combined heat and power plant (CHPP)
+- **Primary Topic/Concept:** Long-term, high-resolution campus energy demand forecasting using lightweight machine learning models
+- **Models Compared:** Decision Tree (DT), Random Forest (RF), Support Vector Regressor (SVR), K-Nearest Neighbors (KNN), and XGBoost
+- **Interpretability Method:** SHAP
+- **Probabilistic Component:** Negative Log-Likelihood (NLL) under a Gaussian residual assumption
+- **Data Availability:** The authors state that they do **not** have permission to share the data
+- **Proximity/Threat Level:** Moderate to High / Relevant benchmark for tabular long-horizon energy forecasting
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Alsamraee, S.A., & Khanna, S. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=High-resolution+energy+consumption+forecasting+of+a+university+campus+power+plant+based+on+advanced+machine+learning+techniques)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation
+The study is motivated by the operational difficulty of forecasting energy demand in large university campuses, which behave like miniature cities. Their consumption is driven by a mix of weather, academic schedules, building functions, and unusual disruptions such as COVID-19. The authors argue that traditional linear statistical models struggle with such irregular, nonlinear demand patterns, especially for long-horizon forecasting.
 
-This page is a placeholder for a future full review using the site template.
+### Why this matters
+Accurate long-term energy forecasts are important for:
+- balancing production and consumption,
+- improving operational efficiency of campus energy systems,
+- reducing costs,
+- improving sustainability planning, and
+- supporting better strategic decisions for large institutions.
+
+### Their claimed contribution
+The paper’s main contribution is not a fundamentally new algorithm, but rather an **applied forecasting framework** that combines:
+- a long historical dataset,
+- multiple classical machine learning baselines,
+- a strong tabular learner (XGBoost),
+- SHAP for interpretability, and
+- a likelihood-style metric (NLL) to supplement deterministic error measures.
+
+### What is actually novel here
+The practical novelty lies in the combination of:
+1. **six years of hourly campus demand data**,
+2. **long-term forecasting emphasis**, rather than only short-term day-ahead prediction,
+3. **real-world deployment to forecast the full year 2023**, and
+4. **a lightweight modeling philosophy**, explicitly positioned against more computationally heavy deep learning methods.
+
+### Their main result
+XGBoost was the best-performing model on the testing set, with:
+- **MAE = 0.8680**
+- **RMSE = 1.2078**
+- **MAPE = 3.1292%**
+- **R² = 0.94**
+- **NLL = 1.5924**
+
+It also outperformed the naïve mean baseline by about **46% in NLL**, and the model’s 2023 deployment forecasts remained close to actual campus demand statistics.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Dataset / Testbed
+- **System studied:** University of Missouri campus power plant
+- **Forecasting target:** Campus energy demand
+- **Resolution:** Hourly
+- **Historical period:** 2017 to 2022
+- **Training corpus size:** 52,637 hours
+- **Deployment period:** Full year 2023, 8,760 hours
+
+### Raw inputs
+The original dataset contains demand plus key weather parameters:
+- air temperature,
+- relative humidity,
+- wind speed,
+- wind direction,
+- atmospheric pressure,
+- solar intensity.
+
+### Feature engineering
+The paper expands the feature space through:
+- **Fourier features** for seasonality,
+- **lag features** based on past demand,
+- **time-series index features** for hourly, daily, weekly, monthly, seasonal, holiday, and annual structure.
+
+The authors note that the engineered dataset expanded from **7 original features to 22 features**, though they also refer elsewhere to 25 diverse features, which introduces some ambiguity in the exact final feature count.
+
+### Preprocessing
+The paper reports:
+- K-Best feature selection,
+- mode imputation for missing values,
+- outlier removal,
+- scaling using Standard Scaler and Min-Max Scaler.
+
+### Models compared
+Five models were benchmarked:
+- Decision Tree
+- Random Forest
+- Support Vector Regressor
+- K-Nearest Neighbors
+- XGBoost
+
+### Validation strategy
+The paper uses a **temporal split**, with:
+- **84% training data** covering five years,
+- **16% testing data** covering the most recent year.
+
+Within the training process, they also apply a **five-fold time-series cross-validation** procedure.
+
+### Metrics
+The evaluation is broader than many applied campus-energy papers:
+- **MAE**
+- **RMSE**
+- **MAPE**
+- **R²**
+- **NMAE**
+- **NRMSE**
+- **Negative Log-Likelihood (NLL)**
+
+### Probabilistic framing
+The probabilistic component is relatively modest. They do **not** train a full probabilistic model in the same sense as quantile regression, mixture density models, or NGBoost. Instead, they compute **NLL assuming Gaussian residuals** on the test set. So the probabilistic evaluation is essentially a post-hoc likelihood check under a residual normality assumption.
+
+---
+
+## 4. Key Empirical Findings
+
+### Overall model ranking
+The paper shows a clear ordering in test performance:
+1. **XGBoost**
+2. **Decision Tree**
+3. **KNN**
+4. **Random Forest**
+5. **SVR**
+
+### Testing-phase performance
+- **SVR:** MAE 1.5285, RMSE 2.1426, MAPE 5.3841%, R² 0.78
+- **RF:** MAE 1.0470, RMSE 1.7117, MAPE 3.7490%, R² 0.86
+- **KNN:** MAE 1.1383, RMSE 1.5998, MAPE 4.0500%, R² 0.88
+- **DT:** MAE 0.9252, RMSE 1.3275, MAPE 3.2600%, R² 0.91
+- **XGBoost:** MAE 0.8680, RMSE 1.2078, MAPE 3.1292%, R² 0.94
+
+### Likelihood-based performance
+Their NLL comparison is:
+- **Baseline mean predictor:** 2.9586
+- **SVR:** 2.1816
+- **RF:** 2.3314
+- **KNN:** 1.9634
+- **DT:** 1.7235
+- **XGBoost:** 1.5924
+
+This strengthens the case that XGBoost was not merely best in point error, but also best under their Gaussian-residual likelihood criterion.
+
+### Sensitivity analysis
+The paper does a genuinely useful robustness check:
+- With **1%, 5%, and 10% random missingness**, XGBoost remains fairly stable.
+- Under a **simulated COVID-style demand reduction scenario**, the model still keeps **R² above 0.92**.
+
+This is one of the stronger practical sections of the paper because it moves beyond ordinary train/test reporting.
+
+### Real-world deployment
+The model was used to forecast the **entire year 2023**. Reported descriptive statistics show that the forecasted distribution was very close to the actual one:
+- forecasted mean: **27.53 MWh**
+- actual mean: **27.31 MWh**
+- mean error: **0.22 MWh**
+
+They also report:
+- actual 2023 total campus demand: **239,217 MW**
+- forecasted total: **241,236 MW**
+
+This real deployment element makes the paper more valuable than a purely retrospective benchmark.
+
+---
+
+## 5. Explainability / SHAP Analysis
+
+### Why SHAP was used
+The paper uses SHAP to make the XGBoost model more transparent and to identify which variables drive long-term campus demand predictions.
+
+### What SHAP found
+According to the authors, the most important features were:
+1. **Air temperature**
+2. **Hour of day**
+3. **Day of week**
+4. **Year index**
+5. **Fourier seasonal terms**
+6. **Relative humidity**
+7. **Solar intensity**
+8. **Lagged demand values**
+
+### Interpretation of the explanations
+This ranking is intuitive and plausible:
+- **Temperature** reflects HVAC-driven demand.
+- **Hour of day** captures diurnal operating cycles.
+- **Day of week** captures weekday/weekend differences.
+- **Seasonal Fourier terms** encode broader annual structure.
+- **Lagged demand** helps preserve recurrent campus patterns.
+
+### What the SHAP section adds
+The SHAP analysis supports the claim that the model is not purely opportunistic. It appears to be using physically meaningful and calendar-driven signals rather than only arbitrary correlations.
+
+### What the SHAP section does not do
+The paper does **not** use SHAP for:
+- rigorous feature selection,
+- causal interpretation,
+- explanation stability analysis,
+- robustness analysis of explanations,
+- comparison of explanations across model classes, or
+- uncertainty explanation in a richer probabilistic sense.
+
+So SHAP is used primarily as a **post-hoc interpretability layer**, not as an integrated scientific validation framework.
+
+---
+
+## 6. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: The “probabilistic forecasting” claim is weaker than it sounds
+The paper presents NLL and speaks about uncertainty quantification, but this should be interpreted carefully. The model is still fundamentally a **point forecasting model**. The probabilistic component comes from assuming Gaussian residuals on the test set, not from learning a full predictive distribution directly. That is a much weaker notion of probabilistic forecasting than:
+- quantile regression,
+- conformal prediction,
+- NGBoost,
+- Bayesian neural networks,
+- Gaussian mixture models, or
+- direct interval/distributional forecasting.
+
+So while the paper does include a probabilistic evaluation metric, it is more accurate to say it offers a **likelihood-based post-hoc uncertainty check** than a full probabilistic forecasting framework.
+
+### Criticism 2: Baseline selection is practical, but not ambitious
+The baselines are reasonable classical ML comparators, but they are not especially strong relative to the current state of the art in forecasting research. There is no comparison against:
+- LSTM/GRU sequence models in this specific benchmark,
+- Temporal Fusion Transformer,
+- N-BEATS,
+- direct quantile boosting,
+- LightGBM/CatBoost,
+- conformalized models,
+- probabilistic deep learning baselines.
+
+The paper explicitly justifies this by emphasizing computational efficiency and long-term practicality, but the tradeoff is that the study proves XGBoost is best among a **restricted benchmark set**, not necessarily among the strongest modern forecasting methods.
+
+### Criticism 3: The probabilistic evaluation assumes Gaussian residuals without deeply justifying it
+Their NLL framework depends on a Gaussian residual assumption. Yet campus demand data can be heteroscedastic, regime-dependent, calendar-sensitive, and affected by structural changes. A single Gaussian residual model may not describe that complexity well. This matters because a good NLL under the wrong distributional assumption may still overstate calibration quality.
+
+### Criticism 4: Some methodological details are a bit muddy
+There are a few places where the exposition feels slightly inconsistent or under-specified:
+- They mention **25 features** in one place and **22 engineered features** in another.
+- They discuss both **training/validation/testing** and a split where 84% is training and 16% is validation/test in a way that is not always perfectly clean conceptually.
+- They mention pre-validation and grid search, but the exact tuned hyperparameters are not clearly foregrounded in the parts shown.
+- The notation around the likelihood section and some metric equations is not especially polished.
+
+These are not fatal flaws, but they reduce reproducibility clarity.
+
+### Criticism 5: SHAP is descriptive, not deeply validated
+The SHAP results are sensible, but they are mostly used to confirm expected domain relationships. That is useful, but limited. The paper does not ask deeper questions such as:
+- Are the SHAP rankings stable over time?
+- Are explanations robust across folds?
+- Do explanations drift pre-, during-, and post-COVID?
+- Are the same drivers important in extreme demand events?
+- Does explanation stability align with forecast stability?
+
+For a paper that highlights explainability, there is room for much stronger XAI analysis.
+
+### Criticism 6: Context specificity may limit external generalization
+The authors do acknowledge this. The University of Missouri campus has unusual demand drivers, especially lab, research, and animal facilities. That means the demand structure may differ substantially from:
+- residential districts,
+- ordinary office campuses,
+- industrial microgrids,
+- campuses with electric heating,
+- campuses in different climates.
+
+So the paper is a strong **case study**, but not yet a general proof that the same modeling choice will dominate elsewhere.
+
+### Criticism 7: The deployment section is a major strength, but still not a full operations study
+Forecasting 2023 with post-hoc comparison is excellent and far better than many papers stop at. But the study still does not quantify downstream operational benefit such as:
+- cost savings,
+- improved dispatch,
+- reduced reserve margins,
+- peak shaving benefit,
+- emissions reduction,
+- optimization performance when forecasts are embedded in an EMS.
+
+So the paper demonstrates predictive quality, but not yet full economic or control-system value.
+
+---
+
+## 7. What This Paper Gets Right
+
+### Strong points
+- Uses a **real operational dataset** over a long period.
+- Includes **COVID-era disruption**, which is useful for realism.
+- Chooses a **practical and computationally efficient** modeling family.
+- Compares multiple classical models rather than only presenting one.
+- Adds **SHAP**, which improves interpretability.
+- Includes **likelihood-based evaluation**, even if limited.
+- Performs **sensitivity analysis** on missingness and demand shocks.
+- Most importantly, it includes **real-world 2023 deployment**, which greatly strengthens credibility.
+
+### Why it matters
+This paper is valuable because it is operationally grounded. It is not trying to be the most theoretically sophisticated forecasting paper ever written. Instead, it shows how a robust tabular learner can work well in a real campus energy setting, at a one-year horizon, with interpretable drivers and reasonable resilience to data issues.
+
+---
+
+## 8. Positioning Relative to My Research
+
+### Why it is relevant
+This paper is relevant if I am working on:
+- energy demand forecasting,
+- feature importance and XAI,
+- lightweight forecasting systems,
+- campus or institutional energy systems,
+- long-horizon forecasting under real operational constraints.
+
+### Where my work can go further
+If I want to position my own study beyond this one, I can improve on it by:
+1. using **true probabilistic forecasting** rather than Gaussian residual NLL only,
+2. adding **stronger modern baselines**,
+3. evaluating **calibration explicitly**,
+4. validating **explanations quantitatively**, and
+5. connecting forecast quality to **actual operational decisions** such as dispatch, storage scheduling, or demand response.
+
+---
+
+## 9. Action Items & Integration
+- [ ] Cite this paper as a strong **applied XGBoost benchmark** for long-horizon campus energy demand forecasting.
+- [ ] Use it to support the argument that **lightweight tabular ML models can outperform more conventional learners** in operational energy settings.
+- [ ] Note that its “probabilistic” component is **post-hoc Gaussian NLL**, not full distributional forecasting.
+- [ ] Use its SHAP section as an example of **useful but limited post-hoc interpretability**.
+- [ ] Emphasize in my literature review that this paper includes **real deployment on 2023 future data**, which is a genuine strength.
+- [ ] Differentiate my own work by including **better calibration metrics**, **richer probabilistic outputs**, and **more rigorous XAI validation**.
+- [ ] Consider citing its robustness experiments when discussing **missing data resilience** and **demand-shift sensitivity**.
+
+---
+
+## 10. Bottom-Line Summary
+This is a strong applied forecasting paper rather than a methodological breakthrough. Its main achievement is showing that **XGBoost, paired with engineered temporal and weather features, can deliver accurate, interpretable, and operationally credible long-term campus energy forecasts**. The study is especially strong in its deployment-minded framing and sensitivity analysis. Its main weaknesses are that its probabilistic framing is fairly shallow, its baseline set is limited, and its SHAP analysis remains descriptive rather than rigorously validated. Even so, it is a useful and credible benchmark for real-world institutional energy forecasting.

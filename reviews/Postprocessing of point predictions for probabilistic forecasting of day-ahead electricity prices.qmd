@@ -1,19 +1,359 @@
 ---
 title: "Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression"
-description: "Isotonic distributional regression for probabilistic electricity price forecasting. Review in progress."
-date: 2024-01-01
+description: "Review of an Energy Economics paper comparing QRA, Conformal Prediction, and Isotonic Distributional Regression for probabilistic day-ahead electricity price forecasting."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Related load and demand forecasting
+  - Probabilistic forecasting
+  - Electricity price forecasting
+  - Postprocessing
+  - Isotonic distributional regression
+  - Conformal prediction
+  - Quantile regression averaging
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Arkadiusz Lipiecki, Bartosz Uniejewski, Rafał Weron (2024)
+- **Venue (Journal/Conference):** *Energy Economics*
+- **DOI:** https://doi.org/10.1016/j.eneco.2024.107934
+- **Core Topic:** Postprocessing point forecasts into full probabilistic forecasts for day-ahead electricity prices
+- **Main Methods Studied:** Quantile Regression Averaging (QRA), Conformal Prediction (CP), and Isotonic Distributional Regression (IDR)
+- **Markets Studied:** Germany and Spain
+- **Test Horizon:** Two 4.5-year out-of-sample periods spanning COVID and the war in Ukraine
+- **Code/Data Availability:** They mention using public data and an open-source Julia package, **PostForecasts.jl**, for postprocessing
+- **Proximity/Threat Level:** High / Directly relevant if I work on probabilistic forecasting, postprocessing, calibration, or distributional evaluation
+- **Why this paper matters:** It shows that strong probabilistic forecasts do not necessarily require end-to-end distributional deep learning; carefully designed postprocessing on top of strong point forecasts can outperform more complex neural distribution models
 
-- **Authors & Year:** Lipiecki, A., et al. (2024)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Postprocessing+of+point+predictions+for+probabilistic+forecasting+of+day-ahead+electricity+prices%3A+The+benefits+of+using+isotonic+distributional+regression)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why probabilistic electricity price forecasting?)
+- The paper starts from a practical market argument: decisions based on predictive **distributions** of day-ahead electricity prices can yield substantially higher profits than decisions based only on point forecasts.
+- This is especially relevant in electricity markets because prices are volatile, spiky, and regime-dependent, particularly during shocks such as COVID, fuel crises, and the war in Ukraine.
+- In a trading or risk management setting, a point forecast gives only a central guess, while a predictive distribution gives information about **tail risk**, **asymmetry**, and **forecast confidence**.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why postprocess point forecasts instead of building a probabilistic model from scratch?)
+- The authors argue that most models used in practice and in the literature still generate **point predictions only**.
+- Rather than discarding that large ecosystem, they propose a practical route: take already strong point forecasts and convert them into probabilistic forecasts through **postprocessing**.
+- This is attractive because it leverages progress in point forecasting while avoiding the full complexity of bespoke probabilistic model design.
+
+### Their claim to fame / novelty
+- This is, according to the authors, the **first study to consider Isotonic Distributional Regression (IDR)** for electricity price forecasting.
+- It is also one of the first to use **Conformal Prediction (CP)** in this domain.
+- They do not merely compare methods individually; they also study **forecast combination**, and use **Shapley values** to quantify how much each postprocessing component contributes to the final ensemble.
+- Their combined model, **LEAR-Ave**, beats a state-of-the-art **Distributional Deep Neural Network with Johnson SU output (DDNN-JSU)** over long and difficult test periods.
+
+### The actual scientific value
+- The paper makes a strong case that **distributional quality can be improved substantially by intelligent postprocessing**, not just by increasingly complex end-to-end deep architectures.
+- It also shows that **diversity among probabilistic components matters**: the best overall results come not from a single postprocessor, but from combining QRA, CP, and IDR.
+- Shapley analysis reveals that **IDR contributes the most** to the ensemble, even though its standalone performance is less uniformly stable than QRA.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Datasets / testbed
+- The authors use publicly available data from:
+  - **ENTSO-E** for day-ahead prices, load forecasts, and renewable generation forecasts
+  - **Investing.com** for carbon emission, natural gas, crude oil, and coal prices
+- Markets:
+  - **Germany**: BZN|DE-LU, historically BZN|DE-AT-LU before 30.09.2018
+  - **Spain**: BZN|ES
+- Time span:
+  - **01.01.2015 to 31.12.2023**
+- Test period:
+  - Starts on **27.06.2019**
+  - Gives a **4.5-year out-of-sample evaluation**
+- Data engineering details:
+  - Some ENTSO-E series had 15-minute resolution and were aggregated to hourly
+  - DST transitions were explicitly handled by averaging missing/duplicate hours
+
+### Point forecasting backbone
+The paper is not about inventing a new point forecasting model. Instead, it uses point predictions as inputs to postprocessing.
+
+#### Main point model: LEAR
+- They use a variant of the **LASSO-Estimated AutoRegressive (LEAR)** model.
+- Inputs include:
+  - lagged electricity prices
+  - day-ahead load forecasts
+  - day-ahead renewable generation forecasts
+  - macro variables: carbon emission prices, natural gas, Brent crude, and coal prices
+  - weekday dummies
+- Important implementation choices:
+  - They apply an **asinh variance-stabilizing transformation** to prices
+  - They use **coordinate descent LASSO**
+  - They use **7-fold cross-validation**
+  - They repeat the LEAR estimation **5 times** per training window and average the results to reduce randomness
+
+#### Benchmark point model: naive
+- They also include a simple **similar-day naive benchmark**
+- Monday, Saturday, and Sunday use the price from the same day last week
+- Other weekdays use yesterday’s price
+
+### Forecast generation setup
+- Rolling window estimation
+- Forecasts are generated daily for all 24 hours of the next day
+- LEAR uses four training window lengths:
+  - **56, 84, 1092, and 1456 days**
+- Postprocessing is trained separately by hour using calibration windows:
+  - **28, 56, 91, and 182 days**
+
+---
+
+## 4. Postprocessing Methods Compared
+
+### 4.1 Quantile Regression Averaging (QRA / QRM variant)
+- QRA estimates quantiles directly using quantile regression.
+- The authors test several variants and retain the best-performing one:
+  - a **Quantile Regression Machine (QRM)-style formulation** using the **average point forecast** as the regressor
+- Strengths:
+  - Direct quantile estimation
+  - Flexible and well-established in energy forecasting
+  - Generally strong and stable overall performer
+- Weaknesses:
+  - Computationally the heaviest of the postprocessors in the paper because a separate optimization is needed for each quantile
+
+### 4.2 Conformal Prediction (CP)
+- CP constructs prediction intervals using recent absolute forecast errors.
+- It is attractive because it provides **valid intervals** under weak assumptions and requires **no parametric distributional assumption**.
+- In this paper, CP is centered around the average point forecast.
+- Limitation:
+  - Quantiles are derived under an implicit **symmetry assumption** around the point forecast
+  - This can be restrictive in electricity prices, where distributions are often asymmetric and heavy-tailed
+
+### 4.3 Isotonic Distributional Regression (IDR)
+- IDR is the most novel method here.
+- It is a **nonparametric distributional learning method** under a **stochastic order / isotonicity constraint**.
+- Intuition:
+  - If one point forecast is higher than another, the corresponding predicted distribution should shift in an orderly way
+- Why it fits this problem:
+  - Point forecasts are natural ordering variables for subsequent conditional distributions
+- Implementation:
+  - The authors fit separate IDR distributions for each of the four point forecast models
+  - Then they combine them by vertical averaging
+- Key property:
+  - IDR directly minimizes **CRPS** under isotonic constraints
+- Important empirical finding:
+  - IDR is the **most behaviorally varied** of the three methods
+  - That variation appears to be exactly why it adds the most value in the ensemble
+
+### 4.4 Ensemble of predictive distributions: LEAR-Ave
+- Final ensemble = average of:
+  - **LEAR-QRM**
+  - **LEAR-CP**
+  - **LEAR-IDR**
+- The paper’s strongest message is that the combination beats all standalone methods, including the sophisticated DDNN benchmark
+
+### 4.5 Additional probabilistic benchmarks
+They also compare against simpler Gaussian-error-based probabilistic benchmarks:
+- **Naive-1N**
+- **Naive-N**
+- **LEAR-N**
+
+These assume prediction errors are normally distributed with estimated standard deviation.
+
+### 4.6 Distributional deep learning benchmark
+- The main modern benchmark is **DDNN-JSU**
+- It is a Distributional Deep Neural Network outputting the parameters of a **Johnson SU** distribution
+- This is the “complex neural competitor” that the postprocessing approaches are tested against
+
+---
+
+## 5. Validation Strategy
+
+### Forecast evaluation
+The paper is strong in evaluation design.
+
+#### Test setting
+- Two large markets
+- 4.5-year test periods
+- Includes highly nonstationary and crisis-heavy conditions
+
+#### Main metric
+- **CRPS (Continuous Ranked Probability Score)**
+- This is the central metric for probabilistic forecast quality
+
+#### Secondary analysis
+- **APS20** for the extreme 20 percentiles, targeting tail/risk performance
+- **Conditional Predictive Ability (CPA) test** to assess whether forecast differences are statistically significant
+- **Rolling 182-day skill scores** to inspect temporal stability and regime sensitivity
+- **Shapley values** to assess contribution of each ensemble component
+
+### Why this validation is strong
+- They do not stop at average performance
+- They check:
+  - overall distribution quality
+  - temporal robustness
+  - tail performance
+  - statistical significance
+  - component contribution in the ensemble
+
+That is a real strength of the paper.
+
+---
+
+## 6. Main Results
+
+### Overall CRPS performance
+- **LEAR-Ave** is the best model overall across both Germany and Spain and across all four subperiods.
+- The simple Gaussian and naive baselines perform worst, as expected.
+- The LEAR-based postprocessing family consistently outperforms the deep distributional benchmark in most settings.
+
+### The most important headline result
+- The combined postprocessed forecast **outperforms DDNN-JSU**, despite the latter being a much more complex model.
+
+### Relative behavior of the three postprocessors
+- **QRA / LEAR-QRM**:
+  - Strong all-rounder
+  - Stable
+  - Often the best standalone method
+- **CP / LEAR-CP**:
+  - Stable but usually the weakest contributor of the three
+  - Useful in the ensemble, but not the star
+- **IDR / LEAR-IDR**:
+  - Most uneven over time
+  - Sometimes weaker in volatile transition periods
+  - But in certain regimes, especially calmer periods after volatile ones, it becomes very strong
+  - Contributes the most to the ensemble according to Shapley values
+
+### Tail-risk results
+- In the tails, the story becomes more nuanced.
+- **LEAR-Ave** still performs best overall across the full test sets.
+- However, **DDNN-JSU** shows strength in some tail-focused settings, especially right after hyperparameter optimization.
+- The authors therefore do not dismiss DDNN-JSU entirely; instead, they argue it may have tail-performance potential, but at very high tuning cost.
+
+### Computational findings
+- Postprocessing is far cheaper than frequent deep model hyperparameter tuning.
+- Approximate timing reported:
+  - LEAR: around 2.5 to 3 hours
+  - QRA: 10 to 15 minutes
+  - CP: 10 to 15 seconds
+  - IDR: 15 to 20 seconds
+  - LEAR-Ave: around 2.75 to 3.25 hours total
+  - DDNN-JSU: around 6 to 6.5 hours for forecasting, while hyperparameter optimization could take **weeks**
+- This makes the postprocessing route extremely attractive in practice
+
+---
+
+## 7. What Shapley Analysis Revealed
+One of the most interesting parts of the paper is that Shapley values are not used for feature importance, but for **ensemble-component importance**.
+
+### What they found
+- Across both Germany and Spain, **IDR contributes the most** to LEAR-Ave
+- **CP contributes the least**
+- In 2023, IDR’s contribution exceeds **75%** in both markets
+
+### Why this matters
+- IDR is not necessarily the most stable standalone model
+- But it brings the most **diversity** and the most **marginal value** when combined with QRA and CP
+- This is a really important lesson: the most valuable component in an ensemble is not always the one with the most stable standalone average score
+
+---
+
+## 8. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: Strong paper, but still heavily tied to a strong point forecasting backbone
+- The postprocessing works well partly because the base point forecasts are already strong.
+- That means some of the gains may reflect the strength of the improved LEAR implementation, not only the postprocessing scheme itself.
+- In other words, this is not a “pure postprocessing comparison in isolation”; it is a postprocessing comparison on top of a carefully optimized point forecasting pipeline.
+
+### Criticism 2: IDR’s success is real, but also regime-dependent
+- The authors are honest that IDR is the most uneven method over time.
+- That means IDR may not be a universal winner.
+- Its strongest value seems to come from complementing other methods, not necessarily replacing them.
+
+### Criticism 3: CP is somewhat handicapped by symmetry
+- Conformal Prediction is attractive for validity, but in this setup it is transformed into quantiles via a symmetry-centered construction.
+- Electricity price distributions are often not symmetric, especially during crisis periods and spikes.
+- So the paper’s CP implementation may understate how competitive more advanced conformalized or asymmetric conformal methods could be.
+
+### Criticism 4: Benchmark fairness versus DDNN-JSU
+- The paper compares against DDNN-JSU using a fixed hyperparameter set optimized earlier.
+- That is practical and defensible, but it does mean the deep benchmark may be under-optimized relative to what is theoretically possible.
+- The authors acknowledge this themselves.
+- So the paper proves that postprocessing can beat **realistically deployed** deep distributional models, but not necessarily the best imaginable re-tuned version of them.
+
+### Criticism 5: Distributional assumptions are not equally stressed
+- The Gaussian baselines are obviously simplistic and mostly serve as weak references.
+- That is fine, but it means the main real contest is QRA vs CP vs IDR vs DDNN-JSU.
+- I would have liked to see stronger modern alternatives too, for example:
+  - direct quantile neural networks
+  - conformalized quantile regression
+  - mixture density models
+  - nonparametric distributional learners beyond isotonicity
+
+### Criticism 6: Interpretability is only lightly touched
+- Shapley values here are used to interpret **ensemble contribution**, not the economics or drivers of price formation.
+- That is useful, but different from explaining the market itself.
+- So this is not really an XAI paper in the broad electricity-price sense; it is more a paper about **performance attribution inside an ensemble**.
+
+### Criticism 7: Heavy dependence on calibration design
+- The success of the method depends on:
+  - window lengths
+  - rolling recalibration
+  - averaging scheme
+  - market regime
+- Those are practical strengths, but also tuning levers.
+- This raises a portability question: how much of the reported advantage would remain under different calibration schedules or other markets outside Germany and Spain?
+
+---
+
+## 9. What This Paper Does Especially Well
+- It is **practical**, not just methodological
+- It evaluates over **long and difficult market periods**
+- It uses **statistical significance testing**, not only metric ranking
+- It studies **tails separately**
+- It includes **computational cost**
+- It uses **Shapley values cleverly** to explain ensemble value
+- It demonstrates that **simple + well-calibrated + diverse** can beat **complex + expensive**
+
+This is one of the paper’s biggest lessons.
+
+---
+
+## 10. Positioning Relative to My Own Work
+This paper is highly relevant if I am working on:
+- probabilistic forecasting
+- calibration/postprocessing of point forecasts
+- ensemble distributions
+- uncertainty quantification in energy systems
+- risk-sensitive forecasting
+
+### What I can borrow
+- The idea of **treating probabilistic forecasting as a postprocessing problem**
+- The use of **CRPS + tail metrics + CPA tests**
+- The notion that **diversity among probabilistic components** matters
+- Shapley-value attribution at the **ensemble component** level
+
+### What I can improve on
+- Add stronger modern probabilistic baselines
+- Explore asymmetric or adaptive conformal methods
+- Test whether IDR-style gains persist in:
+  - other power systems
+  - renewable forecasting
+  - load forecasting
+  - highly nonstationary non-price time series
+- Separate the effect of:
+  - base point model quality
+  - postprocessor quality
+  - ensemble diversity
+
+---
+
+## 11. Action Items & Integration
+- [ ] Read up on **Isotonic Distributional Regression** in the original Henzi et al. papers, since this paper shows it is not just theoretically elegant, but practically useful.
+- [ ] Consider whether my own forecasting pipeline could benefit from a **postprocessing layer** rather than only end-to-end probabilistic modeling.
+- [ ] Use **CRPS**, **tail-only pinball metrics**, and **CPA tests** together when benchmarking probabilistic models.
+- [ ] Explore **ensemble-component Shapley values** as a way to explain why a combination works.
+- [ ] Treat model diversity as a design objective, not merely an accidental property.
+- [ ] Be cautious about concluding that a sophisticated deep distributional model is superior just because it is more expressive; this paper is a strong counterexample.
+- [ ] If I compare against neural distributional methods, document how much hyperparameter tuning they actually receive, since fairness depends heavily on that choice.
+
+---
+
+## 12. Final Takeaway
+This paper is a strong argument for **postprocessing as a serious probabilistic forecasting strategy**, not just a lightweight add-on. Its central message is not merely that IDR works, but that **a diverse ensemble of simple, well-designed postprocessors on top of strong point forecasts can outperform more complicated end-to-end distributional deep learning systems**.
+
+If I had to summarize the paper in one line:
+
+> Do not assume the best probabilistic forecast must come from the most complex probabilistic model; in hard electricity markets, smart postprocessing and forecast combination can win.

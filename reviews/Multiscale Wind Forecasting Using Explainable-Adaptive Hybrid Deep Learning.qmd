@@ -1,19 +1,488 @@
 ---
 title: "Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning"
-description: "Hybrid deep learning with adaptive prediction bands for wind forecasting. Review in progress."
-date: 2026-01-01
+description: "Review of an Applied Sciences paper proposing an adaptive VMD, dual-stream CNN–BiLSTM, and quantile regression framework for uncertainty-aware and explainable short-term wind speed forecasting."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Power systems baselines
+  - Wind forecasting
+  - Probabilistic forecasting
+  - Explainable AI
+  - Quantile regression
+  - VMD
+  - CNN-BiLSTM
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Fatih Serttas (2026)
+- **Venue (Journal/Conference):** *Applied Sciences* (MDPI)
+- **Title:** *Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning*
+- **DOI:** [https://doi.org/10.3390/app16021020](https://doi.org/10.3390/app16021020)
+- **Study Type:** Journal article
+- **Code/Data Available?:** No public code repository reported in the paper. The meteorological dataset is **not publicly available** and must be requested from the Turkish State Meteorological Service (MGM) through official channels.
+- **Primary Domain:** Short-term wind speed forecasting
+- **Core Methods:** Adaptive VMD, dual-stream CNN–BiLSTM, quantile regression, SHAP
+- **Main Positioning:** Uncertainty-aware and explainable hybrid deep learning for wind forecasting
+- **Proximity/Threat Level:** Medium to High / Relevant methodological neighbor
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Serttas, F. (2026)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Multiscale+Wind+Forecasting+Using+Explainable-Adaptive+Hybrid+Deep+Learning)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+- **The Motivation (Why wind forecasting matters):**
+  - Wind speed forecasting is central to reliable renewable generation scheduling, reserve planning, grid stability, and short-term operational decision-making.
+  - Wind is highly stochastic, nonlinear, irregular, and multiscale, so classical forecasting methods often struggle to capture its behavior.
 
-This page is a placeholder for a future full review using the site template.
+- **The Motivation (Why probabilistic forecasting?):**
+  - The paper explicitly argues that point forecasts alone are operationally insufficient.
+  - Grid operators need not just a single estimate, but a sense of **forecast uncertainty**, especially under unstable wind conditions.
+  - The model therefore outputs adaptive quantile bands rather than fixed uncertainty intervals.
+
+- **The Motivation (Why explainability?):**
+  - The authors argue that many deep learning models in wind forecasting remain black boxes.
+  - Existing XAI work in this area tends to focus only on meteorological feature importance and does not really explain decomposition components, multiscale signal behavior, or dual-stream model internals.
+  - Their SHAP analysis is meant to show that the model learns physically meaningful drivers rather than merely fitting patterns blindly.
+
+- **Their claim to fame / Novelty:**
+  - They combine four things in one framework:
+    1. **Adaptive VMD** to determine the number of decomposition modes in a data-driven way,
+    2. **Dual-stream CNN–BiLSTM** to separately process decomposed wind dynamics and meteorological/temporal drivers,
+    3. **Quantile regression** for uncertainty-aware forecasting,
+    4. **Mode-aware SHAP analysis** for interpretability across both exogenous variables and decomposed modes.
+  - Their main novelty is not raw RMSE minimization, but the integration of **multiscale decomposition + probabilistic learning + explainability**.
+
+- **The Value Derived from Explainability (What did XAI actually do?):**
+  - It showed that **seasonal periodicity** and **solar-related variables** strongly influence predictions.
+  - It demonstrated that lower-frequency VMD modes dominate the model’s decision process, while higher-frequency modes mainly help with sudden local variations.
+  - It supported the authors’ claim that the internal behavior of the model aligns with physical wind-generation mechanisms.
+
+- **Their ultimate result:**
+  - The final proposed hybrid quantile model achieved:
+    - **RMSE = 0.700 m/s**
+    - **MAE = 0.545 m/s**
+    - **Pinball Loss = 0.1367**
+    - **PICP = 0.8846**
+    - **PINAW = 0.3445**
+    - **Approx. CRPS = 0.136**
+  - The model’s main contribution is therefore **calibrated uncertainty and interpretability**, rather than best-in-class point error.
+
+---
+
+## 3. Methodology & Technical Details
+
+### 3.1 Dataset / Study Area
+- The study uses **four years of hourly meteorological data (2021–2025)** from the **Afyonkarahisar Meteorology Directorate** in Türkiye.
+- Target and inputs include:
+  - Wind speed (WS)
+  - Global horizontal irradiance (GHI)
+  - Direct normal irradiance (DNI)
+  - Diffuse irradiance (DIF)
+  - Air temperature (T)
+  - Time variables:
+    - hour
+    - day of year (DOY)
+    - `hour_sin`, `hour_cos`
+    - `doy_sin`, `doy_cos`
+
+### 3.2 Data Characteristics
+- The wind regime is mostly **low-speed**, with the highest frequencies concentrated in the **0–2 m/s** range.
+- Higher wind speeds above **4 m/s** are rare.
+- This means the dataset is **right-skewed**, noisy, and hard to forecast, especially for sudden peaks.
+- The series also exhibits:
+  - daily periodicity,
+  - seasonal structure,
+  - long-term trend,
+  which motivates multiscale decomposition.
+
+### 3.3 Data Cleaning & Preprocessing
+- Around **1.1% missing values** were present, mainly from intermittent solar-radiation sensor outages.
+- Missing values were handled using **time-based linear interpolation**.
+- Invalid values were corrected using physically motivated rules:
+  - wind speed < 0 m/s set to 0,
+  - temperatures outside **−40°C to 60°C** removed before interpolation,
+  - negative radiation values set to 0.
+- Wind speed was normalized with **Min–Max scaling** before VMD.
+- Separate MinMaxScalers were used for:
+  - VMD mode inputs,
+  - meteorological/temporal inputs,
+  - target wind speed.
+
+### 3.4 Forecasting Setup
+- Data split:
+  - **70% training**
+  - **15% validation**
+  - **15% test**
+- Forecast horizon:
+  - **1 hour ahead**
+- Input window:
+  - Primary setup uses **24 hours historical data** to predict the next hour.
+- A later performance-comparison table mentions a common comparison setup using:
+  - **input window = 12**
+  - **forecast horizon = 1**
+  - same 70/15/15 split
+
+### 3.5 Adaptive VMD
+- The paper uses **Variational Mode Decomposition (VMD)** rather than fixed decomposition methods like EMD/CEEMDAN.
+- Key idea:
+  - Decompose the wind-speed signal into band-limited modes with different center frequencies.
+- The important hyperparameter is the number of modes **K**.
+- Instead of setting this manually, the authors test:
+  - **K ∈ {3, 4, 5, 6, 7}**
+- For each K:
+  - the signal is decomposed,
+  - a lightweight feed-forward neural proxy model is trained,
+  - validation RMSE is checked,
+  - the best K is selected.
+- Final choice:
+  - **K = 4**
+- Interpretation of the four modes:
+  - **IMF1:** noise-like, high-frequency surges
+  - **IMF2:** medium-frequency short-term behavior
+  - **IMF3:** more regular daily-cycle variation
+  - **IMF4:** low-frequency long-term trend
+- They also discuss **spectral flatness** as a guiding criterion to avoid over-decomposition.
+
+### 3.6 Model Architecture
+The model is a **dual-stream CNN–BiLSTM**:
+
+#### Wind-Stream
+- Input: VMD modes
+- Purpose: learn multiscale wind dynamics
+- Components:
+  - 1D Conv layer
+  - BiLSTM layers
+  - Dense projection
+
+#### Met-Stream
+- Input: meteorological and temporal variables
+- Purpose: learn external environmental and seasonal drivers
+- Components:
+  - 1D Conv layer
+  - BiLSTM layers
+  - Dense projection
+
+#### Fusion & Output
+- The latent representations from both streams are concatenated.
+- Then passed through:
+  - Dense(64, ReLU)
+  - Dense(32, ReLU)
+- Final output layer predicts three quantiles:
+  - **Q0.05**
+  - **Q0.50**
+  - **Q0.95**
+
+### 3.7 Detailed Architecture Notes
+- CNN:
+  - 1 × Conv1D
+  - 32 filters
+  - kernel size = 3
+  - same padding
+  - ReLU activation
+- BiLSTM:
+  - 2 stacked layers
+  - units = 64 → 32
+  - first layer returns sequences
+  - second returns final representation
+- Training details:
+  - Adam optimizer
+  - learning rate = `1e-4`
+  - `clipnorm = 1.0`
+  - EarlyStopping with patience = 5
+- Additional regularization:
+  - dropout = 0.2
+  - recurrent dropout = 0.2
+- The discussion section notes the architecture has roughly **3.1 million trainable parameters**.
+
+### 3.8 Quantile Regression
+- Instead of only minimizing MSE, the model is trained to estimate quantiles.
+- The 0.05–0.95 interval corresponds to a **90% prediction interval**.
+- The authors justify this choice as a good trade-off between:
+  - uncertainty coverage,
+  - sharpness,
+  - operational usefulness for reserve allocation and scheduling.
+
+### 3.9 Evaluation Metrics
+The study evaluates both deterministic and probabilistic performance.
+
+- **Deterministic metrics:**
+  - RMSE
+  - MAE
+
+- **Probabilistic metrics:**
+  - Pinball Loss
+  - PICP
+  - PINAW
+  - Approximate CRPS
+
+### 3.10 Explainability Strategy
+- SHAP is applied to the **median output (Q0.5)**.
+- SHAP values are computed for:
+  - meteorological and temporal features,
+  - VMD modes
+- Their goal is not only ranking variables, but explaining the contribution of decomposed multiscale components.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+
+### 4.1 Validating the Predictions
+- Standard train/validation/test split with sliding windows.
+- Deterministic accuracy is derived from the **median forecast**.
+- Probabilistic quality is evaluated through interval coverage and width.
+
+### 4.2 Validating the Uncertainty
+- The 0.05–0.95 quantile band is inspected visually and numerically.
+- The authors emphasize that the band:
+  - widens during unstable periods,
+  - narrows during quiet periods,
+  - adapts over time rather than staying fixed.
+- This is their evidence that the model captures time-varying volatility.
+
+### 4.3 Validating the Explanations
+- The paper mostly relies on **qualitative physical consistency checks**.
+- It argues that explanation outputs align with known atmospheric and seasonal behavior.
+- There is no formal quantitative XAI validation such as:
+  - fidelity,
+  - stability,
+  - robustness,
+  - sensitivity tests,
+  - perturbation-based explanation evaluation.
+
+---
+
+## 5. Results
+
+### 5.1 Deterministic Performance
+- Final model:
+  - **RMSE = 0.700 m/s**
+  - **MAE = 0.545 m/s**
+- The median forecast tracks:
+  - general trend,
+  - diurnal periodicity,
+  - seasonal variation,
+  but smooths sharp peaks.
+
+### 5.2 Probabilistic Forecasting
+- The model produces **non-symmetric**, dynamically changing quantile bands.
+- Reported interpretation:
+  - observations fall within the band a large portion of the time,
+  - intervals widen under unstable wind conditions,
+  - intervals narrow during calm periods.
+
+### 5.3 Coverage
+- The paper reports:
+  - **PICP = 87.4%** for the 90% interval in one section.
+- In the comparison table, the final hybrid model is reported as:
+  - **PICP = 0.8846**
+- So the calibration is close to but slightly below ideal 90% coverage.
+
+### 5.4 SHAP Findings for Meteorological / Temporal Inputs
+- The paper first states:
+  - **GHI** is the most dominant meteorological variable,
+  - **Temperature** is also influential,
+  - **DNI** and **DIF** matter less but still contribute,
+  - `hour_sin` and `hour_cos` show the model learns daily periodicity.
+- Later, a more detailed SHAP interpretation states:
+  - **`doy_sin`** is actually the most important overall feature,
+  - followed by **GHI**,
+  - then hourly harmonics.
+
+This suggests that the dominant explanatory story is:
+1. **Seasonality**
+2. **Solar forcing**
+3. **Diurnal periodicity**
+4. **Secondary atmospheric features**
+
+### 5.5 SHAP Findings for VMD Modes
+- Importance ranking:
+  - **IMF4** highest
+  - **IMF3** second
+  - **IMF1 / IMF2** lower
+- Interpretation:
+  - low-frequency trend and smooth persistent modes are the main forecasting signal,
+  - high-frequency modes help explain short-term perturbations but are less reliable overall.
+
+### 5.6 Benchmark Comparison
+The paper compares several variants:
+
+- **Baseline CNN–LSTM**
+  - Only WS
+  - MSE loss
+  - RMSE = 0.59
+  - MAE = 0.56
+
+- **Dual-Stream MSE**
+  - VMD modes + meteorology + time
+  - RMSE = 0.76
+  - MAE = 0.60
+
+- **Dual-Stream Quantile**
+  - pure quantile loss
+  - RMSE = 0.74
+  - MAE = 0.57
+
+- **TCN-Quantile baseline**
+  - Only WS
+  - Hybrid loss
+  - RMSE = 0.451
+  - MAE = 0.335
+  - Pinball Loss = 0.087
+  - PICP = 0.895
+  - PINAW = 0.226
+  - CRPS = 0.087
+
+- **Proposed Hybrid Quantile**
+  - VMD modes + meteorology + time
+  - Hybrid loss = `0.7 × Quantile + 0.3 × MSE`
+  - RMSE = 0.700
+  - MAE = 0.54
+  - Pinball Loss = 0.1367
+  - PICP = 0.8846
+  - PINAW = 0.3445
+  - CRPS = 0.136
+
+---
+
+## 6. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: The strongest baseline actually appears to beat the proposed model
+- The most obvious issue in the results table is that the **TCN-Quantile baseline appears substantially better** than the proposed method on nearly every reported metric:
+  - much lower RMSE,
+  - much lower MAE,
+  - lower pinball loss,
+  - better coverage,
+  - narrower intervals,
+  - lower CRPS.
+- That creates a major tension in the paper’s narrative.
+- The authors try to reposition the contribution around uncertainty-awareness and interpretability rather than best raw error, but the TCN baseline is also probabilistic.
+- So unless there is some hidden mismatch in experimental protocol or implementation complexity, this table weakens the claim that the proposed framework is a stronger forecasting model.
+
+### Criticism 2: Internal inconsistency in the architecture description
+- There is a noticeable inconsistency between sections.
+- In one place, the authors say pooling is **intentionally omitted** to avoid losing peak information.
+- In later architecture subsections, both wind-stream and met-stream include **MaxPooling1D**.
+- That is a methodological inconsistency that should not appear in a polished paper.
+- It makes the exact implemented architecture slightly ambiguous.
+
+### Criticism 3: Input window inconsistency
+- The main methodology says the model predicts the next hour from **24 hours of historical data**.
+- The performance comparison table states that all models were evaluated under a common setup with **input window = 12**.
+- That is another reproducibility issue.
+- A reader cannot be completely certain whether the final reported numbers come from the 24-step design, the 12-step benchmark protocol, or mixed settings.
+
+### Criticism 4: “Adaptive” VMD is only partially adaptive
+- The paper markets the decomposition stage as adaptive, which is fair to a degree.
+- But the adaptivity is limited to searching over a **small discrete set**:
+  - `K ∈ {3,4,5,6,7}`
+- That is more like a validation-based hyperparameter sweep than fully adaptive mode discovery.
+- It is better than manually fixing K once, but it is still a fairly narrow search strategy.
+
+### Criticism 5: SHAP validation is still mostly qualitative
+- The explainability section is interesting and useful, but it is not rigorously validated.
+- The authors mainly argue that the SHAP outputs “make physical sense.”
+- That is helpful, but it does not tell us:
+  - whether explanations are stable across seeds,
+  - whether they are robust to small perturbations,
+  - whether the model is explanation-faithful,
+  - whether similar samples get similar explanations.
+
+### Criticism 6: Point-forecasting weakness is partially excused rather than solved
+- The authors openly acknowledge that decomposition and quantile learning smooth the signal and reduce pointwise responsiveness to peaks.
+- That honesty is good.
+- But it also means the proposed architecture is not especially strong at one of the most standard forecasting tasks: exact next-step point accuracy.
+- The paper reframes this as a design choice, which is partly fair, but it remains a practical limitation.
+
+### Criticism 7: Single-site, low-wind regional scope limits generalization
+- The entire model is validated on one regional dataset from Afyonkarahisar.
+- The authors themselves acknowledge that offshore and high-wind environments have very different turbulence characteristics and spectral properties.
+- So the model’s broader generalizability is not demonstrated.
+
+### Criticism 8: The non-public dataset limits reproducibility
+- Since the dataset is not publicly released, independent replication is difficult.
+- That weakens the experimental transparency of the work.
+
+### Criticism 9: No stronger ablation on the value of each ingredient
+- The paper does compare several variants, which is good.
+- But it still does not fully isolate:
+  - adaptive vs fixed VMD,
+  - SHAP’s practical value beyond explanation,
+  - meteorology stream vs time stream vs decomposition stream,
+  - hybrid loss vs pure quantile loss in a deeper ablation sense.
+- A more systematic ablation would have made the contribution clearer.
+
+### Criticism 10: The paper slightly overstates its interpretability advantage
+- It is fair to say this study gives **more** interpretability than a plain CNN–LSTM.
+- But SHAP on the median output is still a partial explanation of a fairly complex hybrid architecture.
+- It does not completely “open the black box.”
+- It gives useful attribution insights, especially feature- and mode-level importance, but not full mechanistic transparency.
+
+---
+
+## 7. Strengths
+
+- Integrates decomposition, deep learning, uncertainty, and explainability in one pipeline.
+- Uses a physically sensible multiscale interpretation of wind dynamics.
+- Clearly recognizes that uncertainty matters in operational forecasting.
+- Makes a strong case that accuracy-only evaluation is insufficient.
+- Provides both feature-level and mode-level explanation.
+- Acknowledges several of its own limitations rather than overselling pure RMSE performance.
+
+---
+
+## 8. Weaknesses
+
+- Best reported benchmark seems better than the proposed method.
+- Internal inconsistencies in architecture and input-window description hurt reproducibility.
+- XAI validation is qualitative only.
+- Generalization beyond one low-wind region is untested.
+- Dataset is private.
+- Adaptive decomposition is still based on a small manual search set.
+
+---
+
+## 9. Relevance to My Work / Integration Notes
+
+- **Why it matters to my literature review:**
+  - This paper is useful as an example of a study that treats **uncertainty quantification and explainability as first-class objectives** rather than just add-ons.
+  - It is particularly relevant if I want to position my own work against:
+    - deterministic-only deep forecasting papers,
+    - fixed decomposition pipelines,
+    - shallow XAI analyses that only rank raw features.
+
+- **What I can adopt:**
+  - The framing that **point accuracy alone is not enough** for operational forecasting.
+  - The use of **quantile outputs** instead of only point estimates.
+  - The idea of explaining not only exogenous variables, but also **decomposed latent signal components**.
+  - The insight that lower-frequency modes often dominate predictive utility.
+
+- **What I should improve beyond this paper:**
+  - Use **public or reproducible datasets** where possible.
+  - Add **formal XAI evaluation**:
+    - stability,
+    - robustness,
+    - fidelity,
+    - perturbation sensitivity.
+  - Make the experimental setup fully consistent and reproducible.
+  - Benchmark against stronger modern baselines and make sure the proposed method actually wins, or clearly explain why it is still valuable if it does not.
+  - Perform better ablations to isolate the value of each design choice.
+
+---
+
+## 10. Action Items & Integration
+
+- [ ] Cite this paper as an example of **joint multiscale decomposition + uncertainty modeling + explainability** in wind forecasting.
+- [ ] Note that its main contribution is **not superior point error**, but rather uncertainty-aware and interpretable forecasting.
+- [ ] Use this study when discussing the shift from deterministic forecasting to **decision-aware probabilistic forecasting**.
+- [ ] Mention the methodological weakness that the reported **TCN-Quantile baseline outperforms the proposed model** on the comparison table.
+- [ ] Flag the architecture inconsistency regarding **pooling vs no pooling**.
+- [ ] Flag the reproducibility inconsistency regarding **24-step vs 12-step input window**.
+- [ ] Compare its SHAP usage against more rigorous explainability-validation frameworks in my own work.
+- [ ] Consider whether a better version of this idea would be:
+  - adaptive decomposition,
+  - stronger probabilistic learner,
+  - cleaner benchmark design,
+  - formal explanation validation.
+
+---
+
+## 11. One-Line Takeaway
+This paper is valuable not because it proves the best wind forecasting model, but because it is a clear example of how modern forecasting research is trying to combine **multiscale representation, uncertainty quantification, and interpretability** into a single operationally meaningful framework.
