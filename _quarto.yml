@@ -2,9 +2,12 @@ project:
   type: website
   output-dir: docs
   render:
-    - index.qmd
+    - "*.qmd"
     - "reviews/*.qmd"
     - "!review-template.qmd"
+
+execute:
+  freeze: false
 
 website:
   title: "Review Articles"
@@ -23,38 +26,8 @@ website:
         contents:
           - index.qmd
           - about.qmd
-      - section: "Explaining uncertainty with SHAP"
-        contents:
-          - "An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.qmd"
-          - "Uncertainty-aware optimization of zeolite particle size.qmd"
-          - "Quantifying and explaining machine learning uncertainty in predictive process monitoring.qmd"
-          - "Interpretable building energy performance prediction using XGBoost Quantile Regression.qmd"
-          - "Explaining Set-Valued Predictions.qmd"
-          - "Explaining Predictive Uncertainty with Information Theoretic Shapley Values.qmd"
-          - "Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.qmd"
-      - section: "Aleatoric vs epistemic uncertainty"
-        contents:
-          - "UbiQTree uncertainty quantification in XAI with tree ensembles.qmd"
-          - "Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.qmd"
-          - "Enhancing energy prediction in variable refrigerant flow cooling systems.qmd"
-          - "Uncertainty-aware Bayesian neural network with SHAP interpretability.qmd"
-          - "Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.qmd"
-          - "A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.qmd"
-      - section: "Power systems baselines"
-        contents:
-          - "Explainable deeply-fused nets electricity demand prediction model.qmd"
-          - "Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.qmd"
-          - "Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.qmd"
-          - "Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.qmd"
-          - "An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.qmd"
-          - "High-resolution probabilistic load forecasting.qmd"
-          - "Data-driven cooperative trading framework for a risk-constrained wind integrated power system.qmd"
-      - section: "Related load and demand forecasting"
-        contents:
-          - "Hybrid model for robust and accurate forecasting building electricity demand.qmd"
-          - "High-resolution energy consumption forecasting of a university campus power plant.qmd"
-          - "Weighted residual clustering-based building load prediction interval estimation.qmd"
-          - "Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.qmd"
+      - section: "All Reviews"
+        contents: "reviews/*.qmd"
 
 
 format:
