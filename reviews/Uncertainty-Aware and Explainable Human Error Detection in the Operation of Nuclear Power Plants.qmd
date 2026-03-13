@@ -1,19 +1,478 @@
 ---
 title: "Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants"
-description: "Trust, uncertainty, and SHAP in safety-critical power-system operations. Review in progress."
-date: 2024-01-01
+description: "Review of a Nuclear Technology paper integrating Bayesian uncertainty quantification and SHAP explanations for multiclass human error detection in nuclear power plant operation."
+date: 2024-07-23
 categories:
-  - Review in progress
-  - Aleatoric vs epistemic uncertainty
+  - Uncertainty quantification
+  - Explainable AI
+  - Nuclear power plants
+  - Human error detection
+  - Bayesian neural networks
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Bhavya Reddy, Ezgi Gursel, Katy Daniels, Anahita Khojandi, Jamie Baalis Coble, Vivek Agarwal, Ronald Boring, Vaibhav Yadav, and Mahboubeh Madadi (2024)
+- **Venue (Journal/Conference):** *Nuclear Technology*
+- **DOI:** https://doi.org/10.1080/00295450.2024.2372217
+- **Published Online:** 23 July 2024
+- **Core Domain:** Human error detection in nuclear power plant operations
+- **Main Technical Themes:** Multiclass classification, uncertainty quantification (UQ), explainable AI (XAI), Bayesian neural networks (BNNs), SHAP
+- **Code/Data Available?:** Not explicitly provided in the paper extract I reviewed
+- **Proximity/Threat Level:** Moderate to High for anyone working on trustworthy AI in safety-critical monitoring
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Reddy, B., et al. (2024)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-Aware+and+Explainable+Human+Error+Detection+in+the+Operation+of+Nuclear+Power+Plants)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+- **The Motivation (Why this matters):**
+  - In nuclear power plants, operators must monitor many variables in short time windows and identify incidents rapidly.
+  - This cognitive burden can itself increase the chance of human error.
+  - If an operator incorrectly identifies an abnormal situation, the resulting mitigation action may also be wrong, which is dangerous in a safety-critical environment.
 
-This page is a placeholder for a future full review using the site template.
+- **Why AI alone is not enough:**
+  - A classifier that merely predicts an error class is not sufficient in this domain.
+  - Operators and supervisors also need to know whether the prediction is trustworthy.
+  - In other words, the system must not only be accurate, but also transparent about its confidence.
+
+- **Why Explainability is important here:**
+  - XAI is used to answer *why* a prediction was made.
+  - In this paper, that means identifying which probe-location and vibration-derived features drove the model toward a given error class.
+  - This is especially useful in operator-support settings, where a prediction should ideally be translated into actionable feedback.
+
+- **Why Uncertainty Quantification is important here:**
+  - Safety-critical systems require more than point predictions.
+  - The model should indicate when it is unsure, especially when data are limited and errors can be costly.
+  - The paper explicitly distinguishes between **aleatory uncertainty** (inherent variability in data) and **epistemic uncertainty** (model uncertainty due to limited knowledge or limited data).
+
+- **Their claim to fame / Novelty:**
+  - The paper positions itself as addressing a research gap in the **joint use of XAI and UQ**, specifically for **human error classification in nuclear power plants**.
+  - Rather than treating explainability and uncertainty as separate post-processing ideas, the authors attempt to integrate them into one workflow.
+  - Their emphasis is not just on explaining predictions, but also on explaining **how certain the model is about those predictions**.
+
+- **What they actually contribute:**
+  - They compare multiple multiclass classifiers, including custom uncertainty-aware neural networks, custom XGBoost variants, ensemble combinations, and Bayesian neural networks.
+  - They select the best-performing model not just by classification metrics, but also by UQ behavior.
+  - They then use SHAP to analyze both:
+    1. which features drive predictions, and
+    2. which features appear linked to predictive uncertainty.
+
+- **Their ultimate result:**
+  - The **Bayesian neural network (BNN)** was the strongest overall model.
+  - It achieved the best balance of predictive performance and uncertainty behavior, outperforming the custom and ensemble alternatives on most metrics.
+  - The most challenging classes were **Error B** and **Error D**, and these became the main focus of the explainability analysis.
+
+---
+
+## 3. Methodology & Technical Details
+
+- **Problem Formulation:**
+  - Multiclass classification of operator measurement behavior into:
+    - **No error**
+    - **Error A:** Off-axis probe orientation
+    - **Error B:** Off-position first measurement
+    - **Error C:** Off-position second measurement
+    - **Error D:** Swapped locations
+
+- **Data Source / Testbed:**
+  - The dataset came from a **physical flow loop test bed** at the Department of Nuclear Engineering, University of Tennessee, Knoxville.
+  - Surveillance data were manually collected using **Fluke handheld probes**.
+  - Tri-axial acceleration data and pump speed streams were used.
+
+- **Dataset Size:**
+  - Total instances: **85**
+    - **45 normal**
+    - **10 instances each** for four error types
+  - This is a very small dataset for a five-class classification problem.
+
+- **Train/Test/Validation Split:**
+  - **70% train**
+  - **25% test**
+  - **5% validation**
+  - In count terms:
+    - Train: **50**
+    - Test: **24**
+    - Validation: **11**
+
+- **Sampling / Signal Characteristics:**
+  - Accelerometer data were collected at **25.6 kHz**
+  - **60 000 samples** were collected roughly every **5 minutes**
+  - Each recording covered about **2.3 seconds**
+
+- **Preprocessing Challenges:**
+  - The raw Fluke outputs were originally in **PDF graph form**
+  - Data had to be manually extracted using **Engauge Digitizer**
+  - This means the dataset is not purely sensor-native in the ML sense; it carries a manual digitization bottleneck
+  - That introduces potential granularity loss and human preprocessing bias
+
+- **Feature Construction / Signal Handling:**
+  - Frequency values were bucketed to identify informative acceleration bands
+  - The retained bands were:
+    - **Axial:** 1827 to 2327 Hz
+    - **Tangential:** 41 to 541 Hz
+    - **Radial:** 2249 to 2750 Hz
+  - FFT was used to move into the frequency domain
+  - The frequencies were then merged with amplitudes for the selected bands
+
+- **Validation Strategy:**
+  - Because of the small sample size, the authors used **10-fold cross-validation**
+  - Hyperparameters were tuned using **grid search constrained by the validation set**
+
+---
+
+## 4. Models Compared
+
+The paper compares several uncertainty-aware and ensemble-style models.
+
+### 4.1 Neural Network with Custom Loss
+- A multilayer perceptron was trained with a custom loss:
+  - **Cross-entropy loss**
+  - plus an **entropy term**
+- The goal was to optimize not only correctness, but also confidence behavior.
+- A scalar **lambda** controlled the tradeoff between classification fit and entropy regularization.
+
+### 4.2 XGBoost with Custom Loss
+- XGBoost was modified to include an entropy component in its objective.
+- This was meant to make the model uncertainty-aware while retaining the strong predictive behavior of boosted trees.
+
+### 4.3 Ensemble Models
+The paper constructed ensemble combinations motivated by:
+- XGBoost having the best traditional accuracy
+- Neural networks being comparatively more “certain” under the custom loss setup
+
+The ensemble variants included combinations such as:
+- Traditional NN + custom XGBoost
+- Custom NN + XGBoost
+- Custom NN + custom XGBoost
+- Traditional XGBoost + simple neural network
+
+### 4.4 Bayesian Neural Network (BNN)
+- The BNN is the paper’s most important model.
+- It uses:
+  - **Cross-entropy loss**
+  - plus **KL divergence**
+- This introduces a probabilistic treatment of weights and allows epistemic uncertainty to be modeled directly.
+- This is particularly suitable for:
+  - safety-critical settings
+  - limited data regimes
+  - situations where calibrated confidence matters
+
+---
+
+## 5. Explainability & Uncertainty Framework
+
+- **Why SHAP was chosen:**
+  - The authors justify SHAP on the basis of:
+    - cooperative game theory foundation
+    - local accuracy
+    - broad applicability across model families
+    - ability to capture feature interactions
+  - They explicitly note that gradient-based explainers would not transfer as well across all models used in the study.
+
+- **How UQ was integrated:**
+  - UQ was not treated as a separate calibration add-on only.
+  - Instead, the authors used UQ measures to understand:
+    - prediction certainty
+    - the relationship between accuracy and confidence
+    - how feature contributions vary when predictions are certain vs uncertain
+
+- **What this means conceptually:**
+  - The study’s main conceptual move is:
+    - *do not just explain what the model predicted*
+    - *also explain how trustworthy that prediction seems to be*
+
+---
+
+## 6. Evaluation Strategy
+
+### 6.1 Performance Metrics
+The authors used metrics suitable for imbalanced multiclass classification:
+- **Accuracy**
+- **Weighted F1 score**
+- **AUC-PR**
+- **Matthews Correlation Coefficient (MCC)**
+
+### 6.2 Uncertainty Metrics
+They also used multiple UQ-oriented metrics:
+- **Average entropy**
+- **Multiclass Brier score**
+- **Mutual information (MI)** for epistemic uncertainty
+- **Difference between the top two predicted probabilities**
+
+### 6.3 Why this is a good evaluation choice
+- This is one of the stronger parts of the paper.
+- They do not rely on accuracy alone.
+- They acknowledge that in safety-critical classification, a model that is accurate but poorly calibrated or overconfident can still be dangerous.
+
+---
+
+## 7. Key Results
+
+## 7.1 Lambda Sensitivity
+- For the custom-loss neural network and custom-loss XGBoost, lambda was varied between **0.1 and 0.9**
+- As lambda increased:
+  - entropy increased
+  - confidence behavior changed
+  - predictive metrics could improve or degrade depending on whether the model moved away from overconfidence or toward excessive uncertainty
+
+- **Observed trend:**
+  - Higher lambda led to greater entropy, as expected
+  - Weighted F1 gradually decreased
+  - Brier score worsened at higher lambda values
+- This suggests that too much emphasis on entropy regularization can make the model overly uncertain and less effective
+
+## 7.2 Comparative Model Performance
+- The **BNN** emerged as the strongest overall model.
+- Reported metrics for the BNN:
+  - **Accuracy:** 0.95 ± 0.72
+  - **AUC-PR:** 0.81 ± 0.17
+  - **Weighted F1:** 0.95 ± 0.08
+  - **MCC:** 0.92 ± 0.13
+  - **Brier score:** 0.07 ± 0.12
+  - **MI:** 1.04 ± 0.36
+  - **Average entropy:** 0.07 ± 0.06
+
+- **Interpretation:**
+  - The BNN had the best overall balance of:
+    - discrimination
+    - calibration
+    - confidence quality
+    - classwise balance
+
+- **Interesting nuance:**
+  - Some ensemble models achieved stronger **AUC-PR** than the BNN
+  - But the BNN was still preferred because its overall behavior across both predictive and uncertainty metrics was more balanced and robust
+
+---
+
+## 8. Uncertainty Insights
+
+- The paper provides a classwise uncertainty analysis using repeated BNN passes.
+
+### 8.1 Class-Level Probability Histograms
+- The BNN was run **100 times per sample**
+- The resulting probability distributions were plotted classwise
+
+### 8.2 What the histograms showed
+- **No-error class:** highly concentrated near probabilities between **0.97 and 1**
+  - Very confident and stable predictions
+- **Error A:** similarly concentrated near **1**
+  - Also highly certain
+- **Error B:** much more spread out
+  - Some predictions still peaked near **1**
+  - Others spread roughly from **0.4 to 0.88**
+  - This indicates substantial variation in certainty
+- **Error C:** mostly confident, but with some moderately uncertain points
+- **Error D:** also showed mixed certainty
+  - Some points clustered high
+  - Others spread between **0.40 and 0.76**
+
+### 8.3 Interpretation
+- The model handles **No Error** and **Error A** well
+- The main epistemic difficulty appears around **Error B** and **Error D**
+- This is exactly the kind of behavior that makes uncertainty-aware analysis valuable:
+  - the model is effectively signaling where it is less trustworthy
+
+### 8.4 Top-Two Probability Gap Analysis
+- The paper also examined the difference between the top two class probabilities
+- Large differences imply stronger decisiveness
+- Small differences imply uncertainty
+
+- **Observed pattern:**
+  - No Error and Error A mostly sat in the “accurate and certain” region
+  - **Error B** often showed **high accuracy but lower certainty**
+  - **Error D** had lower decisiveness and lower accuracy more often
+- That distinction is important:
+  - Error B may be *recoverably ambiguous*
+  - Error D may be *structurally harder* for the model
+
+---
+
+## 9. Explainability Insights
+
+This is the most interesting section conceptually.
+
+### 9.1 What they try to explain
+The authors do not stop at “feature importance.”
+They specifically look at feature contributions under three scenarios:
+1. **Accurate and Certain**
+2. **Accurate and Uncertain**
+3. **Inaccurate and Certain**
+
+That is a very useful framing because it separates:
+- reliable decisions
+- cautious-but-correct decisions
+- confidently wrong decisions
+
+### 9.2 Main classes analyzed
+- **Error B**
+- **Error D**
+
+These were chosen because they were the most uncertainty-relevant classes.
+
+### 9.3 Error B findings
+- For an accurate and certain Error B prediction:
+  - **surv_loc_one_tangential** had a strong positive contribution
+  - **surv_loc_two_tangential** contributed negatively
+- This aligns well with the physical definition of Error B:
+  - the mistake is associated with the **first measurement location**
+
+- For accurate but uncertain Error B cases:
+  - features such as:
+    - **surv_loc_two_tangential**
+    - **surv_loc_one_radial.4**
+    - **surv_loc_two_tangential.4**
+    - **surv_loc_two_axial.4**
+  appeared influential
+- These were moderate rather than decisive, suggesting the model sensed the correct class but without full confidence
+
+### 9.4 Error D findings
+- For accurate and certain Error D cases:
+  - **surv_loc_one_axial** contributed positively
+  - features such as:
+    - **surv_loc_one_radial**
+    - **surv_loc_one_tangential.1**
+    - **surv_loc_two_tangential.4**
+  interacted in a more balanced way
+- This makes intuitive sense because Error D involves **swapped locations**, so both measurement sites matter
+
+### 9.5 High-variance SHAP features
+- The paper also discusses SHAP variance at a more global level
+- Features with high SHAP variance were interpreted as possible contributors to predictive uncertainty
+- The authors note that features contributing to uncertainty and inaccuracy in pointwise SHAP analysis also tended to have high variance globally
+
+### 9.6 Why this is useful
+- This is not merely descriptive XAI
+- It opens the door to **operator-facing decision support**
+- A future system could potentially say things like:
+  - “The issue likely involves probe placement at location 1”
+  - “The model is not fully certain, so supervisor verification is advised”
+
+That is far more useful than a raw class label alone.
+
+---
+
+## 10. Strengths of the Paper
+
+- **Strong safety-critical framing**
+  - The paper understands that trust, calibration, and confidence matter in nuclear settings.
+
+- **Joint treatment of XAI and UQ**
+  - This is the paper’s biggest conceptual strength.
+  - Many papers do either feature attribution or uncertainty, but not both in a unified way.
+
+- **Good use of BNNs for small-data uncertainty-aware classification**
+  - The dataset is very small, so a probabilistic model class is a reasonable choice.
+
+- **Thoughtful metric selection**
+  - The inclusion of MCC, AUC-PR, Brier score, entropy, MI, and top-two gap is better than a shallow accuracy-only comparison.
+
+- **Operator-oriented interpretation**
+  - The authors are clearly thinking about practical deployment, not just classifier benchmarking.
+
+- **Useful analysis of “accurate but uncertain” vs “inaccurate but certain”**
+  - That distinction is extremely valuable in trustworthy AI.
+
+---
+
+## 11. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: Very small dataset
+- The dataset has only **85 instances total**, with only **10 samples per error class**.
+- That is extremely small for a five-class classification problem, especially one involving neural and Bayesian models.
+- Even with 10-fold cross-validation, instability is likely.
+- Some of the reported standard deviations also suggest variability.
+
+### Criticism 2: Manual digitization bottleneck
+- A major practical limitation is that data were manually extracted from PDF graphs using Engauge Digitizer.
+- That creates a preprocessing bottleneck and may introduce:
+  - discretization error
+  - extraction inconsistency
+  - human preprocessing bias
+- This reduces confidence that the pipeline would scale cleanly to real plant settings.
+
+### Criticism 3: Explainability validation is still mostly qualitative
+- The SHAP analysis is interesting and plausible, but it is still largely a **domain-consistency argument**
+- The paper does not appear to use formal XAI quality metrics such as:
+  - fidelity
+  - stability
+  - robustness under perturbation
+  - explanation consistency across folds
+- So the explanations are persuasive, but not rigorously validated
+
+### Criticism 4: “Uncertainty-aware” does not automatically mean “well-calibrated”
+- The paper uses several uncertainty metrics, which is good
+- But there is still limited discussion of formal calibration diagnostics beyond entropy and Brier score
+- For a deployment paper, one might also want:
+  - reliability diagrams
+  - expected calibration error
+  - risk-coverage analysis
+  - abstention analysis
+
+### Criticism 5: Weak generalization evidence
+- The data come from a single experimental test bed
+- The paper does not establish how well the method would transfer across:
+  - other hardware
+  - other probe operators
+  - other surveillance tasks
+  - real plant conditions rather than controlled experimental conditions
+
+### Criticism 6: Limited comparator set
+- The comparison is useful, but still somewhat narrow
+- There is no comparison against stronger modern uncertainty baselines such as:
+  - deep ensembles
+  - Monte Carlo dropout
+  - evidential classifiers
+  - temperature-scaled deterministic networks
+  - calibrated gradient boosting baselines
+- So while the BNN wins in this study, it is not necessarily proven superior to the broader uncertainty-aware literature
+
+### Criticism 7: Some feature names are difficult to interpret operationally
+- The SHAP outputs are technically informative but not yet operator-friendly
+- The authors acknowledge this and propose translating features into operator-understandable outputs in future work
+- That is a key step that is still missing for real usability
+
+---
+
+## 12. Research Value for My Own Work
+
+- **What makes this paper useful:**
+  - It is a strong example of combining predictive modeling, uncertainty analysis, and explanation in a safety-critical context
+  - It gives a practical template for analyzing:
+    - accurate/certain
+    - accurate/uncertain
+    - inaccurate/certain cases
+  - That framing is highly reusable in other trustworthy-AI papers
+
+- **What I would borrow conceptually:**
+  - Joint XAI + UQ framing
+  - Separating classwise uncertainty behavior
+  - Using SHAP not only to explain predictions, but also to inspect uncertainty-driving features
+  - Highlighting “confidently wrong” predictions as a risk category
+
+- **What I would improve if I built on this:**
+  - Use a larger and more realistic dataset
+  - Add formal calibration evaluation
+  - Add more rigorous XAI validation
+  - Benchmark against stronger UQ baselines
+  - Translate feature explanations into task-level, human-readable alerts
+
+---
+
+## 13. Action Items & Integration
+
+- [ ] Cite this paper in any literature review section dealing with **trustworthy AI in safety-critical systems**
+- [ ] Use it as an example of **joint XAI + UQ**, rather than treating these as separate toolboxes
+- [ ] Reuse the paper’s framing of **accurate/certain**, **accurate/uncertain**, and **inaccurate/certain** predictions
+- [ ] Compare its BNN-based approach against stronger modern uncertainty baselines in future work
+- [ ] Note the limitations of very small datasets and manually digitized inputs when discussing external validity
+- [ ] Incorporate stronger calibration and explanation-quality metrics if extending this research direction
+- [ ] Consider how SHAP outputs can be transformed into operator-facing decision support rather than left as raw feature names
+
+---
+
+## 14. Overall Takeaway
+
+This paper is not just about classifying human error in nuclear operations. Its real contribution is showing how **uncertainty quantification and explainability can be combined to build a more trustworthy classifier** in a safety-critical setting. The Bayesian neural network gave the strongest overall performance, and the SHAP analysis helped reveal why difficult classes like Error B and Error D remained uncertain. 
+
+The paper is strongest as a **trustworthy-AI workflow paper** rather than as a definitive benchmark paper. Its main weaknesses come from the tiny dataset, limited comparator set, and mainly qualitative explanation validation. Still, it is a genuinely useful contribution because it moves beyond the shallow “accurate black box” mindset and asks the far more important question: **when the model makes a decision, how much should an operator trust it, and why?**
