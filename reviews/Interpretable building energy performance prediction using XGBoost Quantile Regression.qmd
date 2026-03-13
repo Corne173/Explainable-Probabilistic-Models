@@ -1,0 +1,19 @@
+---
+title: "Interpretable building energy performance prediction using XGBoost Quantile Regression"
+description: "Feature influence across low, medium, and high quantiles in building energy prediction. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Explaining uncertainty with SHAP
+---
+
+## Citation
+
+- **Authors & Year:** Kangalli Uyar, S.G., et al. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Interpretable+building+energy+performance+prediction+using+XGBoost+Quantile+Regression)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

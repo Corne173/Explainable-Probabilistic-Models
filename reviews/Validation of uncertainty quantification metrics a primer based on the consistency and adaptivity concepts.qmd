@@ -1,0 +1,399 @@
+---
+title: "Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts"
+description: "Review of Pascal Pernot’s framework for validating uncertainty quantification using calibration, consistency, and adaptivity."
+date: 2024-05-18
+categories:
+  - Uncertainty Quantification
+  - Calibration
+  - Adaptivity
+  - Consistency
+  - Probabilistic Forecasting
+  - Explainable AI
+---
+
+## 1. Quick Reference & Meta-Data
+
+- **Paper Title:** Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts  
+- **Authors & Year:** Pascal Pernot (2023)  
+- **Venue (Journal/Conference):** Methodological primer / review-style article on uncertainty quantification validation  
+- **Primary Topic:** Validation frameworks for uncertainty quantification (UQ) in machine learning models  
+- **Domain:** Physico-chemical modelling and materials science ML, but methodology generalises to probabilistic ML models in any domain  
+- **Code/Data Available?:** No primary implementation focus; paper mainly introduces conceptual evaluation framework  
+- **Proximity / Threat Level:** Medium relevance / methodological support paper rather than a competing forecasting model  
+- **Date Reviewed:** 2024-05-18  
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+### Motivation: Why Uncertainty Validation Matters
+
+Many modern machine learning models provide **uncertainty estimates** alongside predictions. These may come from:
+
+- Bayesian neural networks  
+- Gaussian processes  
+- ensemble models  
+- quantile regression  
+- probabilistic boosting methods  
+
+However, simply producing uncertainty estimates does **not guarantee they are reliable**. A model might output uncertainty values that appear reasonable but **do not correspond to the actual prediction errors**.
+
+The paper argues that existing validation approaches mostly test **average calibration**, which checks whether uncertainties are correct *on average*. However, average correctness does **not guarantee local reliability**.
+
+For safety-critical applications such as energy forecasting, autonomous systems, or scientific modelling, uncertainty estimates must be reliable **for individual predictions and across the input space**, not just globally.
+
+---
+
+### Main Conceptual Contribution
+
+The paper introduces a **three-component framework for validating uncertainty quantification**:
+
+1. **Average Calibration**
+2. **Consistency**
+3. **Adaptivity**
+
+These three concepts together provide a **much more complete validation framework** for probabilistic models.
+
+---
+
+### Average Calibration
+
+Average calibration tests whether the predicted uncertainty magnitude matches the **overall error dispersion**.
+
+For variance-based uncertainty models, this typically means:
+
+\[
+Var(E) \approx \langle u_E^2 \rangle
+\]
+
+Where:
+
+- \(E\) = prediction error  
+- \(u_E\) = predicted uncertainty  
+
+If a model is well calibrated, then the **variance of the errors should match the average predicted uncertainty variance**.
+
+However, this check alone is insufficient because **overestimation in some regions and underestimation in others can cancel out**.
+
+---
+
+### Consistency
+
+Consistency tests whether uncertainties remain correct **across different levels of predicted uncertainty**.
+
+In other words:
+
+> If the model says uncertainty is high, do we actually observe larger errors?
+
+Mathematically this is expressed through conditional calibration:
+
+\[
+Var(Z \mid u_E = \sigma) \approx 1
+\]
+
+Where
+
+\[
+Z = \frac{E}{u_E}
+\]
+
+This ensures that uncertainty estimates are **correctly scaled across different uncertainty magnitudes**.
+
+---
+
+### Adaptivity
+
+Adaptivity is the paper's most important conceptual contribution.
+
+Adaptivity tests whether uncertainties remain reliable **across the input space**.
+
+Instead of conditioning on predicted uncertainty, the analysis conditions on **input features**:
+
+\[
+Var(Z \mid X = x) \approx 1
+\]
+
+This evaluates whether uncertainty estimates remain valid in **different regions of the data distribution**.
+
+Example:
+
+A solar power forecasting model might produce correct uncertainty on average but fail during:
+
+- cloudy conditions  
+- winter months  
+- high irradiance periods  
+
+Adaptivity analysis would reveal these failures.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Variance-Based UQ Framework
+
+For variance-based uncertainty predictions, the paper defines the minimal validation dataset as:
+
+\[
+C = \{E, u_E\}
+\]
+
+Where:
+
+- \(E = R - V\)  
+- \(R\) = reference value  
+- \(V\) = predicted value  
+
+Total uncertainty combines prediction uncertainty and measurement uncertainty:
+
+\[
+u_E = \sqrt{u_R^2 + u_V^2}
+\]
+
+Where:
+
+- \(u_R\) = reference uncertainty  
+- \(u_V\) = predicted uncertainty  
+
+---
+
+### Standardised Error (Z-Score)
+
+The standardized error is defined as:
+
+\[
+Z = \frac{E}{u_E}
+\]
+
+If uncertainties are correctly estimated, then:
+
+\[
+Var(Z) \approx 1
+\]
+
+This metric is central to many UQ validation diagnostics.
+
+---
+
+### Interval-Based UQ
+
+For prediction interval models (e.g., quantile regression or conformal prediction), the primary metric is:
+
+**Prediction Interval Coverage Probability (PICP)**
+
+This measures the proportion of observations that fall within the predicted interval.
+
+Example:
+
+If a model predicts **95% intervals**, then approximately **95% of observations should fall inside those intervals**.
+
+However, similar to variance-based UQ, this must also be validated **locally**, not only globally.
+
+---
+
+## 4. Validation Strategy
+
+The paper validates its framework using two approaches:
+
+### Synthetic Case Studies
+
+Six synthetic datasets are constructed to represent different failure modes.
+
+These include cases where models are:
+
+- fully calibrated and adaptive  
+- calibrated but inconsistent  
+- calibrated but not adaptive  
+- completely miscalibrated  
+
+This allows the author to demonstrate how different diagnostic tools respond to known ground truth.
+
+---
+
+### Reanalysis of Existing ML Studies
+
+The framework is also applied to previously published uncertainty quantification studies.
+
+This reanalysis shows that many published models that appear well-calibrated actually exhibit:
+
+- local miscalibration
+- inconsistent uncertainty scaling
+- lack of adaptivity across feature space
+
+Thus the standard validation methods used in prior literature may **overestimate model reliability**.
+
+---
+
+## 5. Diagnostic Tools Evaluated
+
+The paper evaluates several common UQ validation tools.
+
+### Calibration Curves
+
+Calibration curves compare predicted uncertainty with observed error.
+
+These are useful but mainly test **average calibration**.
+
+---
+
+### Reliability Diagrams
+
+Reliability diagrams evaluate calibration across different uncertainty bins.
+
+They test **consistency**, but are sensitive to:
+
+- bin size  
+- sample size  
+- data distribution
+
+---
+
+### Confidence Curves
+
+Confidence curves measure model error as predictions are filtered by uncertainty ranking.
+
+However, the paper argues that **oracle-based confidence curves are misleading**, because they do not test calibration directly.
+
+Instead, the paper proposes **probabilistic reference curves**.
+
+---
+
+### Local Z-Variance Diagnostics
+
+The paper proposes analysing **local variance of standardized errors**.
+
+This allows detection of:
+
+- local over-confidence
+- local under-confidence
+
+---
+
+### Local Coverage Probability
+
+For interval predictions, local coverage probability evaluates whether predicted intervals remain valid across:
+
+- uncertainty levels
+- input features
+
+---
+
+## 6. Key Findings
+
+### Average Calibration is Insufficient
+
+A model can appear perfectly calibrated globally while being **locally unreliable**.
+
+---
+
+### Adaptivity is Often Ignored
+
+Most prior work evaluates calibration and consistency but does not evaluate adaptivity.
+
+This means uncertainty models may fail under certain conditions without detection.
+
+---
+
+### Many Standard Metrics Are Weak
+
+Common scalar metrics such as:
+
+- ENCE  
+- AUCO  
+
+do not guarantee consistency or adaptivity.
+
+They should not be used as the sole evidence of reliable uncertainty.
+
+---
+
+### Reliability Diagrams Depend on Binning
+
+Improper binning can hide important uncertainty failures.
+
+Careful bin selection is necessary.
+
+---
+
+## 7. Limitations of the Study
+
+### Framework Requires Expert Interpretation
+
+The methodology relies heavily on diagnostic plots rather than automated metrics.
+
+Practitioners must interpret results carefully.
+
+---
+
+### Feature Selection for Adaptivity is Non-Trivial
+
+Choosing the right feature dimension to analyse adaptivity requires domain knowledge.
+
+In high-dimensional models this can be difficult.
+
+---
+
+### Focus on Diagnosis Rather Than Correction
+
+The paper provides tools for identifying problems but does not propose new algorithms to fix them.
+
+---
+
+## 8. Relevance to Probabilistic Forecasting Research
+
+This framework is highly relevant for validating uncertainty estimates in:
+
+- solar power forecasting  
+- load forecasting  
+- wind forecasting  
+- probabilistic demand prediction  
+
+It highlights the importance of validating uncertainty across:
+
+- time of day  
+- weather regimes  
+- seasonal variation  
+- demand levels  
+
+This is particularly important for **grid operations**, where uncertainty estimates influence:
+
+- reserve scheduling  
+- trading decisions  
+- system stability planning.
+
+---
+
+## 9. Action Items & Integration
+
+- Evaluate probabilistic forecasting models using **three criteria**:
+  - calibration
+  - consistency
+  - adaptivity  
+
+- Include diagnostics such as:
+  - reliability diagrams
+  - local coverage analysis
+  - standardized error variance tests
+
+- Analyse uncertainty reliability across **key domain features**, such as:
+  - irradiance level
+  - forecast horizon
+  - temperature
+  - season
+
+- Avoid relying solely on scalar calibration metrics.
+
+---
+
+## 10. Bottom Line
+
+The paper provides a **conceptual framework for validating uncertainty quantification** that goes beyond standard calibration tests.
+
+It argues that reliable uncertainty estimates must satisfy three properties:
+
+1. **Calibration** — correct on average  
+2. **Consistency** — correct across uncertainty levels  
+3. **Adaptivity** — correct across the input space  
+
+Many existing studies only validate the first property.
+
+Therefore, rigorous uncertainty validation must evaluate **all three dimensions** to ensure that uncertainty estimates remain trustworthy in real-world applications.

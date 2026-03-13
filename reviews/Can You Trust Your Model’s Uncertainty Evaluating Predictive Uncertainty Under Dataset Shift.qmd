@@ -1,0 +1,69 @@
+---
+title: "Tier 2 Research Review: Theory & Justification"
+date: 2024-05-18
+categories:
+  - Theory
+  - Methodology Justification
+  - Probabilistic Forecasting
+  - Epistemic vs Aleatoric Uncertainty
+  - Dataset Shift
+---
+
+# 📝 TIER 2 RESEARCH REVIEW: Theory & Justification
+
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
+- **Authors & Year:** Yaniv Ovadia, Emily Fertig, Jie Ren, et al. (2019)
+- **Venue (Journal/Conference):** NeurIPS 2019 *(Highly authoritative; foundational paper from Google Research/DeepMind on dataset shift).*
+- **Link/DOI:** [arXiv:1906.02530](https://arxiv.org/abs/1906.02530)
+- **Primary Topic/Concept:** The failure of post-hoc calibration under dataset shift, the danger of models being "confidently wrong," and the necessity of capturing epistemic uncertainty.
+
+---
+
+## 2. The Core Theory (What is the main concept?)
+- **The specific theory or mechanism explained:** 
+  - Standard machine learning models (and those calibrated via post-hoc methods like Temperature Scaling) only effectively capture *aleatoric* uncertainty (data noise). When exposed to out-of-distribution (OOD) data or dataset shift, these models do not naturally increase their uncertainty; instead, they become **"confidently wrong."**
+- **Their main argument/conclusion:** 
+  - Achieving perfect calibration on an i.i.d. (independent and identically distributed) validation set *does not guarantee* calibration under real-world distribution shifts. Only methods that explicitly capture *epistemic* uncertainty (like Deep Ensembles) are robust enough to "know what they don't know" as data shifts.
+
+---
+
+## 3. Key Arguments & Evidence (The "Why")
+- **Mathematical / Logical Foundation:** 
+  - They decouple accuracy from prediction reliability using Proper Scoring Rules (Brier Score, Negative Log-Likelihood) and Expected Calibration Error (ECE). This allows them to mathematically prove that as shift increases, a model's calibration degrades faster than its accuracy.
+- **Key Evidence & Testing Mechanics:** 
+  - **Progressive Shift:** They didn't just test "in vs. out". They applied synthetic corruptions (e.g., blur, rotation) at *progressive levels of intensity* to image (MNIST, CIFAR-10, ImageNet), text, and tabular datasets.
+  - **Completely OOD Data:** They tested models on entirely different datasets (e.g., training on MNIST, testing on NotMNIST) to see if predictive entropy spiked. It often didn't.
+  - **The Deep Ensemble Finding:** Across almost all tests, Deep Ensembles (using as few as 5 models) consistently provided the most reliable uncertainty estimates under shift.
+- **Terminology / Definitions:** 
+  - **Aleatoric Uncertainty:** Inherent noise or randomness in the data (what standard single models capture).
+  - **Epistemic Uncertainty:** Uncertainty due to a lack of knowledge or lack of data (what ensembles or Bayesian methods capture).
+  - **Dataset Shift / Covariate Shift:** When the test input distribution diverges from the training distribution.
+
+---
+
+## 4. Application to My Work (How I will use this)
+- **What specific decision in my paper does this justify?**
+  - I will use this paper to mathematically and empirically justify *why* my methodology cannot rely on standard single-model outputs or simple post-hoc calibration. Because PV forecasting operates in environments prone to severe covariate shift (changing weather, sensor drift), models that only output aleatoric uncertainty are dangerous. I need a framework (like ensembles or direct interval optimization) that inherently accounts for epistemic uncertainty to prevent "confidently wrong" predictions.
+- **Where does this belong in my paper?**
+  - [x] Introduction (Setting up the problem: standard ML uncertainty is dangerous in real-world grids due to the "confidently wrong" phenomenon).
+  - [x] Background / Related Work (Defining Epistemic vs. Aleatoric uncertainty and highlighting the limits of post-hoc calibration).
+  - [x] Methodology (Defending the choice of robust, uncertainty-aware loss functions or ensemble architectures).
+
+---
+
+## 5. Boundaries & Caveats (Where does the theory break?)
+- **The "Relativity Problem" of Entropy (Crucial Insight):** 
+  - The authors prove that models fail by comparing entropy/confidence on an *in-distribution* set versus a *known shifted* set. However, in the real world, uncertainty metrics like entropy are purely relative. If you don't have a known OOD dataset to benchmark against, how do you set the threshold for "too much entropy"? The paper highlights the failure under shift, but it does not solve the operational problem of defining absolute OOD thresholds in production without reference data.
+- **Assumptions made by the authors:** 
+  - The study evaluates classification tasks (discrete distribution over $k$ classes). Metrics like discrete ECE or softmax entropy do not perfectly translate to continuous regression intervals without adaptation (e.g., adapting to PICP/PINAW or CWC).
+
+---
+
+## 6. Action Items & Pre-Written Assets
+**Golden Quotes:**
+- > *"Better calibration and accuracy on the i.i.d. test dataset does not usually translate to better calibration under dataset shift (shifted versions as well as completely different OOD data)."* (p. 9)
+- > *"Post-hoc calibration (on i.i.d validation) with temperature scaling leads to well-calibrated uncertainty on the i.i.d. test set and small values of shift, but is significantly outperformed by methods that take epistemic uncertainty into account as the shift increases."* (p. 9)
+
+**Pre-written Justification Blurb:**
+> *"Standard machine learning models typically capture only aleatoric uncertainty, leading to highly overconfident predictions when exposed to out-of-distribution inputs. As demonstrated by Ovadia et al. (2019), methods relying on post-hoc calibration may perform well on i.i.d. test sets but degrade rapidly under dataset shift, often yielding 'confidently wrong' predictions. Because operational forecasting environments are inherently subject to covariate shifts—such as seasonal variations and evolving weather dynamics—relying on standard calibration is insufficient. To ensure safe operational decision-making, it is imperative to utilize architectures, such as ensembles, that explicitly capture epistemic uncertainty and maintain reliable prediction bounds under distributional shift."*

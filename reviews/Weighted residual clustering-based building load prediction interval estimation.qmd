@@ -1,0 +1,19 @@
+---
+title: "Weighted residual clustering-based building load prediction interval estimation"
+description: "Building load interval estimation using SHAP-guided residual clustering. Review in progress."
+date: 2022-01-01
+categories:
+  - Review in progress
+  - Related load and demand forecasting
+---
+
+## Citation
+
+- **Authors & Year:** Zhang, C.-B., et al. (2022)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Weighted+residual+clustering-based+building+load+prediction+interval+estimation)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

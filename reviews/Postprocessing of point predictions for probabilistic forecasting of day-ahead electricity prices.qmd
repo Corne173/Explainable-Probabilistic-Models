@@ -1,0 +1,19 @@
+---
+title: "Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression"
+description: "Isotonic distributional regression for probabilistic electricity price forecasting. Review in progress."
+date: 2024-01-01
+categories:
+  - Review in progress
+  - Related load and demand forecasting
+---
+
+## Citation
+
+- **Authors & Year:** Lipiecki, A., et al. (2024)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Postprocessing+of+point+predictions+for+probabilistic+forecasting+of+day-ahead+electricity+prices%3A+The+benefits+of+using+isotonic+distributional+regression)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

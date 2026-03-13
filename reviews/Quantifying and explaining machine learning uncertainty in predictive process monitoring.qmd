@@ -1,0 +1,84 @@
+---
+title: "Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective"
+description: "Review of an Annals of Operations Research paper combining Quantile Regression Forests (QRF) and SHAP to explain predictive uncertainty in manufacturing."
+date: 2024-05-18
+categories:
+
+  - Reviewed
+  - Probabilistic forecasting
+  - Explainable AI (XAI)
+  - Predictive process monitoring
+  - Quantile Regression Forests
+  - Operations Research
+---
+
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Nijat Mehdiyev, Maxim Majlatow, Peter Fettke (2025)
+- **Venue (Journal/Conference):** Annals of Operations Research *(Highly reputable OR journal)*
+- **Link/DOI:** [https://doi.org/10.1007/s10479-024-05943-4](https://doi.org/10.1007/s10479-024-05943-4)
+- **Code/Data Available?:** No (Uses a proprietary real-world dataset from a German manufacturer).
+- **Proximity/Threat Level:** High / Direct Competition (Focuses on combining UQ and XAI).
+- **Date Reviewed:** 2024-05-18
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+- **The Motivation (Why Probabilistic?):**
+  - In Operations Research (OR), the "predict-then-optimize" paradigm requires robust parameters. Traditional OR uses deterministic point forecasts or overly simplistic stochastic parameters. By quantifying uncertainty (predicting processing times as intervals), planners can create better worst-case/best-case production schedules and optimize resource allocation.
+- **The Motivation (Why Explainable?):**
+  - If a system simply says "this process has high uncertainty," the planner cannot act on it. Explaining *what* drives the uncertainty allows planners to intervene (e.g., if "order quantity" drives uncertainty, they can adjust batch sizes to mitigate risk).
+- **Their claim to fame / Novelty:**
+  - Instead of just explaining the point forecast, they **directly explain the prediction interval width** using SHAP. 
+  - They group predictions into practical "Uncertainty Profiles" (low, medium, high) based on the relative width of the intervals to make the outputs actionable for non-technical domain experts.
+- **The Value Derived from Explainability (What did XAI actually do?):**
+  - **Identified Uncertainty Drivers:** SHAP revealed that "Quantity" (number of items) actively *widens* the prediction interval (increases uncertainty), while the historical "Mean Processing Time" *narrows* the interval (increases confidence).
+
+---
+
+## 3. Methodology & Technical Details
+- **Datasets / Testbed:**
+  - Real-world Manufacturing Execution System (MES) event log from a medium-sized German firm. 
+  - 11,943 cases (traces), 48,577 events, 30 distinct activities.
+- **The Model (Quantile Regression Forests):**
+  - They use QRF, a tree-based ensemble that estimates conditional quantiles rather than just a conditional mean. The prediction interval is constructed by taking the lower quantile ($Q_{\alpha}$) and the upper quantile ($Q_{1-\alpha}$).
+- **The XAI Mechanism (Explaining the Interval Width):**
+  - To explain uncertainty, they fundamentally change the target output of the SHAP explainer. Instead of explaining the point forecast, they define the "game" to be explained as the width of the prediction interval: $W(x) = Q_{1-\alpha}(x) - Q_{\alpha}(x)$.
+  - By setting $W(x)$ as the target, SHAP calculates the marginal contribution of every feature to either *widening* (increasing uncertainty) or *narrowing* (decreasing uncertainty) the interval.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+- **Validating the Predictions (Forecasting Quality):**
+  - **Data Split:** 10-fold overlapping sliding window cross-validation (chronological split to mimic real-world deployment).
+  - **Point Metrics:** MAE, RMSE. 
+  - **Uncertainty Metrics:** PICP (Coverage), MPIW (Absolute Width), and **MRPIW (Mean Relative Prediction Interval Width)**.
+  - **Statistical Rigor:** Used the non-parametric Friedman-Nemenyi test to prove QRF's superiority over BART in relative interval width.
+- **Validating the Explanations (XAI Quality):**
+  - **Approach:** The validation of the explanations is purely qualitative and human-centric. There are no mathematical XAI metrics (like fidelity, robustness, or stability) used to verify that the SHAP outputs are faithful to the model.
+  - **Thoroughness of the Validation Mechanism:** The extent of their XAI validation relies on two things:
+    1. **A Single Expert Interview:** They built a prototype dashboard and showed it to exactly *one* process expert from the manufacturing partner. The validation rests on this single expert stating that the outputs were "intuitively comprehensible" and "sufficiently sound and satisfactory." 
+    2. **A Single Local Example:** For local interpretability, the paper presents a deep dive into only *one* specific test instance (a "Dishing Press" activity) to show how feature values pushed the interval bounds up or down. The rest of the XAI analysis relies on aggregated global SHAP summary plots.
+
+---
+
+## 5. My Thoughts, Criticisms & Unstated Limitations
+- **Criticism 1: The Conflation of Aleatoric and Epistemic Uncertainty (Major Flaw):** 
+  - The authors fundamentally fail to distinguish between *aleatoric* uncertainty (inherent data noise/randomness) and *epistemic* uncertainty (model ignorance/lack of data). In Section 3.3, they explicitly lump these together, stating that uncertainty arises from both "the model's inherent limitations" and "noise in the data." 
+  - By applying SHAP to the quantile interval width $W(x)$, they are primarily explaining the *aleatoric* uncertainty (the learned conditional variance in the data). However, they treat the resulting explanations as if they represent general "model uncertainty" that could be mitigated by adding more data, which is technically inaccurate. A wider quantile interval usually means the underlying process is inherently noisy at those feature values, not necessarily that the model lacks knowledge.
+- **Criticism 2: Extremely Weak XAI Validation:** 
+  - Relying on an $n=1$ sample size for expert validation via a dashboard is anecdotal, not scientifically rigorous validation of an XAI framework. Furthermore, walking through a single local instance does not prove the SHAP explanations are robust across the dataset. The lack of quantitative XAI evaluation metrics is a glaring limitation.
+- **Criticism 3: Independent Quantile Estimation vs. Interval Optimization:** 
+  - QRF estimates the upper and lower quantiles *independently*. Estimating quantiles independently does not explicitly optimize the calibration or sharpness of the *interval itself* during training. The model is completely unaware of interval width during the learning phase; it is only measured post-hoc.
+- **Criticism 4: The Computational Cost of KernelSHAP:** 
+  - The authors used *KernelSHAP* to explain the prediction interval width. Since QRF is a tree-based model, using KernelSHAP (which is model-agnostic and computationally explosive) instead of a specialized TreeSHAP algorithm suggests an inefficient pipeline that would struggle to scale in real-time high-dimensional process monitoring.
+- **Observation on "Uncertainty Profiles" (MRPIW):**
+  - Their use of MRPIW (Mean Relative Prediction Interval Width) to create low/medium/high profiles is highly practical. Absolute width (MPIW) naturally scales with the target size (longer tasks have wider intervals). Normalizing the width by the point prediction to create profiles makes the uncertainty actionable for domain experts.
+
+---
+
+## 6. Action Items & Integration
+- [ ] **Adopt MRPIW:** Add Mean Relative Prediction Interval Width (MRPIW) to my suite of validation metrics. It is a highly practical metric for proving interval sharpness across different scales of data.
+- [ ] **Highlight the Aleatoric vs. Epistemic Gap:** Use this paper in my literature review to point out that current UQ+XAI applications often fail to distinguish between aleatoric and epistemic uncertainty. Clearly define which type of uncertainty *my* model is predicting and explaining.
+- [ ] **Address the XAI Target:** Note their technique of setting the SHAP target directly to the interval width ($W(x) = U(x) - L(x)$). I must ensure my XAI framework explicitly formulates the mathematical "game" it is trying to explain (e.g., explaining the variance output or the interval bounds directly).
+- [ ] **Position against Qualitative Validation:** Explicitly state that recent applied papers rely entirely on anecdotal, $n=1$ qualitative "sanity checks" for XAI. Position my quantitative XAI metrics (fidelity, stability, etc.) as a necessary and rigorous evolution for trust in probabilistic forecasting.
+- [ ] **Highlight the Training Gap:** Point out that their model (QRF) estimates quantiles independently, leaving an opening for my approach which directly optimizes the interval quality (via differentiable CWC or similar interval-based losses) during training.

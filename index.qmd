@@ -1,0 +1,20 @@
+---
+title: "Review Articles"
+listing:
+  contents: reviews
+  sort: "date desc"
+  type: default
+  fields: [title, description, date, categories]
+---
+
+# Welcome
+
+This website collects my review articles on probabilistic models and related topics.
+
+The main page gives a summary of all the papers I have reviewed, while each paper has its own dedicated review page.
+
+Some entries are already fully reviewed, while others are placeholder pages marked **Review in progress** so I can keep track of papers I still want to summarize.
+
+## All Reviews
+
+The entries below are generated automatically from the metadata in each review page.

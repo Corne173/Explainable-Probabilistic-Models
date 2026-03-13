@@ -1,0 +1,19 @@
+---
+title: "A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks"
+description: "Deep neural networks with interpretable confidence intervals for battery health. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Aleatoric vs epistemic uncertainty
+---
+
+## Citation
+
+- **Authors & Year:** Lim, E.I.H.-E., & Wong, N.H.L. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=A+Unified+Framework+for+Interpretable+and+Uncertainty-Aware+Battery+State+of+Health+Estimation+Using+Deep+Neural+Networks)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

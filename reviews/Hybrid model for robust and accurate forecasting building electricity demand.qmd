@@ -1,0 +1,19 @@
+---
+title: "Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods"
+description: "Building electricity demand forecasting with prediction intervals and SHAP. Review in progress."
+date: 2024-01-01
+categories:
+  - Review in progress
+  - Related load and demand forecasting
+---
+
+## Citation
+
+- **Authors & Year:** Dong, X., et al. (2024)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Hybrid+model+for+robust+and+accurate+forecasting+building+electricity+demand+combining+physical+and+data-driven+methods)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

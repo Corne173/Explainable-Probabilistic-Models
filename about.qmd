@@ -1,0 +1,12 @@
+---
+title: "About"
+---
+
+This Quarto website is a collection of my review articles.
+
+I use it to keep a structured record of papers I have read, their contributions, limitations, and how they relate to my own research.
+
+Each review is written as its own `.qmd` page, while the home page provides a running summary of all available reviews.
+
+
+

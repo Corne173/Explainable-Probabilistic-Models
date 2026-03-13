@@ -1,0 +1,19 @@
+---
+title: "Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression"
+description: "Deep neural network quantile regression with SHAP relevance for risk forecasting. Review in progress."
+date: 2024-01-01
+categories:
+  - Review in progress
+  - Explaining uncertainty with SHAP
+---
+
+## Citation
+
+- **Authors & Year:** Chronopoulos, I., & Raftapostolos, A. (2024)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Forecasting+Value-at-Risk+Using+Deep+Neural+Network+Quantile+Regression)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

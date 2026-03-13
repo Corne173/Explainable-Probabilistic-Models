@@ -1,0 +1,19 @@
+---
+title: "Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems"
+description: "Bayesian neural network with SHAP for epistemic and aleatoric uncertainty. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Aleatoric vs epistemic uncertainty
+---
+
+## Citation
+
+- **Authors & Year:** Wu, J., et al. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-aware+Bayesian+neural+network+with+SHAP+interpretability+for+data-driven+assembly+quality+prediction+in+complex+manufacturing+systems)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

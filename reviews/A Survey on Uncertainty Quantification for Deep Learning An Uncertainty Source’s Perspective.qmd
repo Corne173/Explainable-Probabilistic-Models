@@ -1,0 +1,324 @@
+---
+title: "A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective"
+description: "Detailed literature review of a survey paper that organizes deep learning uncertainty quantification methods by uncertainty source rather than by model family alone."
+date: 2026-03-13
+categories:
+  - Uncertainty Quantification
+  - Deep Learning
+  - Explainable AI
+  - Trustworthy AI
+  - Bayesian Neural Networks
+  - Out-of-Distribution Detection
+---
+
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Wenchong He, Zhe Jiang (2023; arXiv version updated 2024)
+- **Venue (Journal/Conference):** *ACM Computing Surveys*  
+- **Paper Type:** Survey / Taxonomy paper
+- **Primary Topic:** Uncertainty Quantification (UQ) for Deep Neural Networks
+- **Core Perspective:** Categorization of UQ methods by **uncertainty source**
+- **Link/DOI:** ACM Computing Surveys article; arXiv preprint version noted in the paper
+- **Code/Data Available?:** No central code contribution; this is a conceptual and methodological survey
+- **Proximity/Threat Level:** Medium to High / Foundational framing paper
+- **Date Reviewed:** 2026-03-13
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+- **The Motivation (Why this survey matters):**
+  - Deep neural networks often achieve excellent predictive accuracy, but they can still make incorrect predictions with unjustifiably high confidence. This is dangerous in high-stakes domains such as medical diagnosis, autonomous driving, disaster response, and other safety-critical systems. The paper argues that predictive accuracy alone is insufficient; models also need to know *when they do not know*. :contentReference[oaicite:1]{index=1}
+  - The authors position uncertainty quantification (UQ) as the mechanism for assigning confidence to predictions beyond conventional accuracy metrics. They emphasize that uncertainty is not monolithic: it arises from different sources, and understanding those sources is essential for selecting the right method. :contentReference[oaicite:2]{index=2}
+
+- **Their claim to fame / Novelty:**
+  - The central novelty is not a new UQ algorithm, but a **new taxonomy**. Existing surveys, according to the authors, mainly categorize UQ methods either:
+    1. by neural network architecture, or
+    2. by Bayesian vs non-Bayesian viewpoint.
+  - This survey instead organizes methods by **uncertainty source**, specifically:
+    - **Data uncertainty**,
+    - **Model uncertainty**, and
+    - **Combined data + model uncertainty**.  
+  - The authors argue this is practically more useful, because in real problems one type of uncertainty may dominate, and method selection should be driven by that reality rather than by model family labels alone. :contentReference[oaicite:3]{index=3}
+
+- **The conceptual contribution:**
+  - The paper clearly distinguishes:
+    - **Data uncertainty (aleatoric)** as randomness/noise intrinsic to the data and often irreducible,
+    - **Model uncertainty (epistemic)** as lack of knowledge due to limited data, suboptimal architecture/parameters, or distribution shift, which is often reducible. :contentReference[oaicite:4]{index=4}
+  - It then maps major UQ approaches to these uncertainty types, creating a more decision-oriented view of the literature. :contentReference[oaicite:5]{index=5}
+
+- **The practical value of the survey:**
+  - The taxonomy is linked to real deployment contexts such as:
+    - out-of-distribution detection,
+    - active learning,
+    - robustness,
+    - reinforcement learning,
+    - medical applications,
+    - geoscience,
+    - transportation,
+    - biochemical engineering.  
+  - This makes the survey more than a catalog; it acts as a method-selection framework. 
+
+- **Their ultimate message:**
+  - No single UQ method is universally best.
+  - The right UQ choice depends on:
+    - what kind of uncertainty dominates,
+    - whether calibration, interpretability, computational tractability, or OOD awareness matters most,
+    - and what deployment environment the model must survive in. 
+
+---
+
+## 3. Methodology & Technical Framing
+
+- **Problem formulation:**
+  - The survey defines a learning setup where a model predicts both:
+    - the target, and
+    - an associated uncertainty score.
+  - The paper frames UQ as optimizing not only empirical prediction loss, but also calibration-related behaviour through expected calibration error (ECE). In other words, a good UQ model should not merely be accurate; its confidence should align with its actual error rate. :contentReference[oaicite:8]{index=8}
+
+- **Two-source uncertainty formulation:**
+  - **Data uncertainty** arises from noisy measurement, ambiguity in labels, overlap in class distributions, imperfect sampling, transmission errors, representation limitations, and heterogeneous noise levels. The paper emphasizes that for classification this can be understood through conditional entropy, while for regression it is tied to observation noise, especially heteroscedastic noise. :contentReference[oaicite:9]{index=9}
+  - **Model uncertainty** arises from imperfect parameter estimation, architecture misspecification, and training/test distribution mismatch, including OOD cases. The paper stresses that this is often the type of uncertainty you hope to reduce with more data or better modelling choices. :contentReference[oaicite:10]{index=10}
+
+- **Their master taxonomy:**
+  - The survey groups UQ methods into three main branches:
+    1. **Model uncertainty methods**
+    2. **Data uncertainty methods**
+    3. **Combined model + data uncertainty methods**  
+  - This top-level taxonomy is arguably the main intellectual contribution of the paper. :contentReference[oaicite:11]{index=11}
+
+---
+
+## 4. Detailed Taxonomy of UQ Methods
+
+### 4.1 Model Uncertainty Methods
+
+The survey divides model uncertainty methods into three main subfamilies.
+
+#### A. Bayesian Neural Networks (BNNs)
+- The Bayesian view places a prior over network parameters and seeks a posterior distribution over weights instead of a single point estimate. Uncertainty is then reflected in the predictive distribution obtained by integrating over parameter uncertainty. :contentReference[oaicite:12]{index=12}
+- The paper reviews several approximations because exact posterior inference is intractable in modern DNNs:
+  - **Variational Inference (VI):**
+    - Approximates the posterior with a tractable family, often Gaussian.
+    - Advantage: principled and flexible.
+    - Limitation: capturing full covariance is computationally expensive, and simplifying covariance structure can reduce fidelity. :contentReference[oaicite:13]{index=13}
+  - **Laplace Approximation:**
+    - Approximates the posterior locally around the MAP estimate using a Gaussian based on the Hessian.
+    - Advantage: can be applied post hoc to a trained model.
+    - Limitation: local approximation, difficulty handling multimodal posteriors, Hessian inversion issues, and calibration challenges. :contentReference[oaicite:14]{index=14}
+  - **MCMC-based approximations:**
+    - Theoretically attractive because they can converge to the exact posterior with enough samples.
+    - Limitation: prohibitively expensive and often slow to converge in high-dimensional DNN settings. :contentReference[oaicite:15]{index=15}
+  - **MC Dropout:**
+    - Included as a practical approximation to BNN-style uncertainty.
+    - Advantage: easy to implement with minimal architecture changes.
+    - Limitation: often less calibrated than stronger baselines, despite its popularity. :contentReference[oaicite:16]{index=16}
+
+#### B. Ensemble Methods
+- Ensembles estimate uncertainty from variation across multiple independently trained models. The survey treats them as capturing uncertainty from architecture choice, parameter initialization, data sampling, and training hyperparameters. :contentReference[oaicite:17]{index=17}
+- Variants include:
+  - **Bootstrap ensembles**
+  - **Architecture ensembles**
+  - **Hyperensembles**  
+- Strengths:
+  - Simple idea,
+  - Scalable conceptually,
+  - Can capture several dimensions of model uncertainty.  
+- Weaknesses:
+  - High computation and memory cost,
+  - Dependence on model diversity; if ensemble members collapse to similar solutions, uncertainty estimates weaken. :contentReference[oaicite:18]{index=18}
+
+#### C. Sample-density-aware Methods
+- The survey argues that BNNs and ensembles do not automatically solve uncertainty under low sample density or dataset shift. A model can still be overconfident far from the training support. :contentReference[oaicite:19]{index=19}
+- This leads to:
+  - **Gaussian Process (GP) hybrids**
+  - **Deep kernel learning**
+  - **Deep Gaussian processes**
+  - **Distance-aware neural networks**  
+- The central intuition is that uncertainty should increase when a test point lies far from known training regions. GP-inspired approaches naturally express this, but classical GP methods struggle with computational scaling and kernel design in high-dimensional settings. Hybrid methods try to combine DNN representation learning with GP uncertainty behaviour. :contentReference[oaicite:20]{index=20}
+- Distance-aware DNNs try to enforce meaningful latent distances so that OOD points do not collapse into in-distribution-looking representations. This is appealing for robust uncertainty estimation, but the paper notes these methods are difficult to enforce properly, especially when using Lipschitz-style constraints. :contentReference[oaicite:21]{index=21}
+
+---
+
+### 4.2 Data Uncertainty Methods
+
+The survey next reviews methods aimed at capturing irreducible or observation-related uncertainty.
+
+#### A. Deep Discriminative Models
+These directly model predictive uncertainty in supervised learning.
+
+- **Parametric predictive distributions**
+  - For classification, output distributions are often categorical.
+  - For regression, models frequently assume Gaussian noise with mean and variance predicted by the network, giving heteroscedastic regression.
+  - Mixture density networks extend this to multimodal outputs.  
+- Strength:
+  - Direct and intuitive.
+  - Naturally suited to heteroscedastic regression problems.
+- Limitation:
+  - Requires choosing a parametric family, which may not match the true data-generating uncertainty.  
+  The survey is careful to note that distribution choice matters greatly. :contentReference[oaicite:22]{index=22}
+
+- **Non-parametric prediction interval methods**
+  - These avoid committing to an explicit distributional form and instead estimate intervals directly.
+  - The survey discusses methods such as lower-upper bound estimation and constrained optimization views of interval learning, including the trade-off between interval width and coverage probability. :contentReference[oaicite:23]{index=23}
+- Strength:
+  - More flexible when the true distribution is hard to specify.
+- Limitation:
+  - Often harder to optimize well, and interval-based uncertainty may provide less full information than a full predictive density. :contentReference[oaicite:24]{index=24}
+
+#### B. Deep Generative Models
+- The survey then covers deep generative approaches that learn complex predictive distributions in high-dimensional spaces, especially via conditional deep generative models. :contentReference[oaicite:25]{index=25}
+- These methods use latent variables to represent predictive variability and can generate multiple outputs for the same input, from which uncertainty can be derived.
+- Broadly, the survey positions them as attractive when:
+  - the predictive distribution is highly complex,
+  - a simple Gaussian or interval assumption is too restrictive,
+  - and one wants richer uncertainty structure.
+- But these methods also bring their own practical burdens:
+  - training complexity,
+  - stability concerns,
+  - and more difficult interpretation. :contentReference[oaicite:26]{index=26}
+
+---
+
+### 4.3 Combined Model + Data Uncertainty
+
+- The survey emphasizes that many real-world problems require capturing both data and model uncertainty simultaneously. :contentReference[oaicite:27]{index=27}
+- One route is simply to combine a model-uncertainty method with a data-uncertainty method, but this increases computation and storage demands.
+- Another route is **evidential deep learning**, which the paper highlights as a more efficient single-network framework for representing total uncertainty. :contentReference[oaicite:28]{index=28}
+- This part of the survey is important conceptually because it recognizes that real deployment does not neatly separate aleatoric and epistemic effects.
+
+---
+
+## 5. Application Domains & Why They Matter
+
+A strong feature of the paper is that it does not stay purely abstract. It grounds the taxonomy in application domains.
+
+- **Medical diagnosis**
+  - Both uncertainty types are critical.
+  - Data uncertainty appears through ambiguous labels, noisy measurements, and registration errors.
+  - Model uncertainty appears when patient populations are not well represented in training data.
+  - The survey also points out that interpretability of uncertainty is especially important here. :contentReference[oaicite:29]{index=29}
+
+- **Geoscience**
+  - Spatiotemporal data bring sensor noise, registration uncertainty, heterogeneous distributions across space and time, and sparse observations.
+  - This domain strongly illustrates why dataset shift and sample density matter. :contentReference[oaicite:30]{index=30}
+
+- **Transportation**
+  - Traffic and autonomous driving problems contain temporal dynamics, measurement loss, environmental perturbations, and safety-critical decisions.
+  - This domain nicely motivates both stochastic uncertainty and robustness under unusual events. :contentReference[oaicite:31]{index=31}
+
+- **Biochemical engineering**
+  - Here the survey highlights partial scientific knowledge, biological heterogeneity, and uncertain mechanistic relationships.
+  - This is relevant to your kind of research mindset, because it shows UQ is not only about model performance but about supporting scientific decision-making where domain knowledge is incomplete. :contentReference[oaicite:32]{index=32}
+
+- **Deep reinforcement learning**
+  - The paper later shows how both data uncertainty and model uncertainty matter in RL:
+    - stochastic rewards/transitions imply data uncertainty,
+    - limited state-space coverage implies model uncertainty.
+  - This matters for exploration, policy learning, and safe decision-making. :contentReference[oaicite:33]{index=33}
+
+---
+
+## 6. Validation Strategy / How the Survey Judges Methods
+
+- **This is a survey, not a benchmark paper.**
+  - It does not perform one unified empirical benchmark across all methods.
+  - Instead, its “validation” is conceptual and comparative:
+    - defining uncertainty sources,
+    - mapping methods to those sources,
+    - listing strengths and weaknesses,
+    - and discussing how these methods relate to application needs. 
+
+- **What it does well:**
+  - It provides a clear framework for method selection.
+  - It avoids treating all UQ techniques as interchangeable.
+  - It makes the literature easier to reason about from a deployment perspective. :contentReference[oaicite:35]{index=35}
+
+- **What it does not do:**
+  - It does not empirically establish which family is best under standardized tasks.
+  - It does not provide a unified quantitative benchmark of calibration, sharpness, OOD detection, or computational burden across all methods.
+  - So its value is primarily taxonomic and interpretive, not experimental.
+
+---
+
+## 7. Thoughts, Criticisms & Unstated Limitations
+
+- **Criticism 1 (AI): Strong conceptual framing, but not a comparative benchmark**
+  - The taxonomy is genuinely useful, but the paper stops short of giving a rigorous cross-method empirical benchmark. That means a reader still has to do substantial downstream work to decide which UQ method is best for a given forecasting problem.
+
+- **Criticism 2 (AI): The survey is broad, but less deep on forecasting-specific metrics**
+  - Since this is a general DNN UQ survey, it does not deeply specialize in forecasting metrics such as CRPS, interval score decomposition, coverage-width trade-offs in operational forecasting, calibration under temporal dependence, or multi-horizon uncertainty quality.
+  - For your work in probabilistic forecasting, this paper is better as a conceptual scaffold than as a forecasting-methods playbook.
+
+- **Criticism 3 (AI): Some sections prioritize categorization over deployment nuance**
+  - The taxonomy is clean, but in practice many methods blur boundaries.
+  - For example, ensembles can partially reflect data effects indirectly, and some generative approaches can capture both uncertainty families depending on training design.
+  - The categories are useful, but reality is messier than the diagram.
+
+- **Criticism 4 (AI): Limited treatment of explanation-quality evaluation**
+  - The future directions note that combining UQ and explainability is important, which is excellent, but the survey does not yet give a concrete framework for evaluating that interaction.
+  - This is especially relevant if one wants not just calibrated uncertainty, but interpretable uncertainty attribution. :contentReference[oaicite:36]{index=36}
+
+- **Criticism 5 (AI): Computational practicality remains a central unresolved problem**
+  - The survey repeatedly acknowledges that many theoretically attractive methods, especially BNNs, MCMC, GP hybrids, and combinations of model and data uncertainty, are computationally expensive or difficult to scale. :contentReference[oaicite:37]{index=37}
+  - This is important because the “best” UQ method on paper may still be unusable in large operational settings.
+
+---
+
+## 8. Relevance to My Research / Why This Paper Matters for Me
+
+- **Why this paper is useful for probabilistic energy forecasting:**
+  - It gives a strong theoretical basis for distinguishing:
+    - irreducible uncertainty in the data generating process,
+    - from reducible uncertainty caused by limited coverage, model misspecification, or distribution shift.
+  - That distinction is extremely relevant in electricity, load, and renewable forecasting, where weather-driven stochasticity and OOD operating regimes coexist.
+
+- **How I can use it in my literature review:**
+  - I can cite this paper to justify why uncertainty should not be treated as one scalar concept.
+  - I can use its taxonomy to structure my review section:
+    1. data uncertainty methods,
+    2. model uncertainty methods,
+    3. joint methods,
+    4. application-driven method choice.
+
+- **How it helps position my work:**
+  - If I am developing a forecasting model for real-world deployment, this paper supports the argument that:
+    - calibration alone is not enough,
+    - model family alone is not enough,
+    - and uncertainty-method choice must align with the dominant uncertainty source in the operational setting. 
+
+- **Why it matters for OOD and shift-aware forecasting:**
+  - The survey explicitly recognizes dataset shift and low sample density as sources of model uncertainty.
+  - That directly supports research directions involving:
+    - OOD detection,
+    - epistemic uncertainty,
+    - ensemble disagreement,
+    - density-aware representations,
+    - and robustness under temporal or climatic regime shift. :contentReference[oaicite:39]{index=39}
+
+---
+
+## 9. Future Directions Highlighted by the Paper
+
+One of the most useful parts of the survey is that it explicitly identifies open gaps.
+
+- **Combine UQ with DNN explainability**
+  - The paper argues that uncertainty quantification and explanation are both central to trustworthy AI, but are still mostly treated separately.
+  - It suggests that combining them could produce more robust and trustworthy systems. This is a particularly important insight for XAI-driven forecasting research. :contentReference[oaicite:40]{index=40}
+
+- **Methodological gaps**
+  - Although not all future directions are fully elaborated in the snippets retrieved, the paper clearly frames open issues around:
+    - calibration,
+    - scalability,
+    - trustworthy deployment,
+    - handling multiple uncertainty sources coherently,
+    - and application-specific method selection. 
+
+- **My interpretation of the most important unresolved challenge:**
+  - The field still lacks a clean, scalable, interpretable, and empirically robust framework that simultaneously:
+    - separates aleatoric and epistemic uncertainty,
+    - handles OOD data well,
+    - scales to modern deep learning,
+    - and is understandable enough for operators in high-stakes domains.
+
+---
+

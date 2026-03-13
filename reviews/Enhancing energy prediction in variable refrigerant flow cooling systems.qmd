@@ -1,0 +1,19 @@
+---
+title: "Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning"
+description: "Energy prediction with explicit aleatoric and epistemic uncertainty handling. Review in progress."
+date: 2026-01-01
+categories:
+  - Review in progress
+  - Aleatoric vs epistemic uncertainty
+---
+
+## Citation
+
+- **Authors & Year:** Reshaeel, M., et al. (2026)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Enhancing+energy+prediction+in+variable+refrigerant+flow+cooling+systems%3A+A+hybrid+grey-box+model+integrating+thermodynamic+knowledge%2C+experimental+data+and+machine+learning)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

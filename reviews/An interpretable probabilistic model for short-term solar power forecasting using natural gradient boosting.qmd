@@ -1,0 +1,83 @@
+---
+title: "An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting"
+description: "Review of an Applied Energy paper combining NGBoost and SHAP for interpretable probabilistic solar power forecasting."
+date: 2024-05-18
+categories:
+  - Reviewed
+  - Probabilistic forecasting
+  - Explainable AI
+  - Solar power
+  - NGBoost
+---
+
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Georgios Mitrentsis, Hendrik Lens (2022)
+- **Venue (Journal/Conference):** Applied Energy *(Highly reputable, Tier 1 journal in energy)*
+- **Link/DOI:** [https://doi.org/10.1016/j.apenergy.2021.118473](https://doi.org/10.1016/j.apenergy.2021.118473)
+- **Code/Data Available?:** [Yes - GitHub Repository](https://github.com/mitre7/ngboost_pv_forecasting)
+- **Proximity/Threat Level:** High / Direct Competition
+- **Date Reviewed:** 2024-05-18
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+- **The Motivation (Why Probabilistic?):**
+  - PV power is inherently stochastic due to volatile weather, which threatens grid stability and requires higher reserve capacities. Deterministic (single-point) forecasts are insufficient. Probabilistic forecasts quantify uncertainty, allowing TSOs/DSOs to estimate optimal reserve requirements and helping energy traders minimize risk in day-ahead markets.
+- **The Motivation (Why Explainable?):**
+  - **Trust & Safety:** Grid operations are safety-critical, so operators cannot blindly trust black-box models. Furthermore, TSOs/DSOs have a societal duty to be transparent with the public.
+  - **Debugging & Bidding:** Debugging ML models is notoriously difficult. Traders need to know when a model is uncertain or biased so they can adjust their bidding strategies.
+- **Their claim to fame / Novelty:**
+  - They claim this is the *first attempt* to fully interpret a probabilistic machine learning model in the context of power systems.
+  - They combine Natural Gradient Boosting (NGBoost) with SHAP and SHAP interaction values to peek inside the black box.
+- **The Value Derived from Explainability (What did XAI actually do?):**
+  - **Physics Verification:** It proved the model didn't just memorize data but learned actual physical relationships (e.g., PV efficiency dropping at high temperatures).
+  - **Uncertainty Interpretation:** SHAP helped explain what drives predictive uncertainty (e.g., lower confidence during mid-day high radiation; high confidence during low-humidity or night hours).
+  - **Model Improvement (Feature Selection):** SHAP revealed that certain weather features (precipitation, temperature, wind speed) were actually confusing the model's uncertainty estimations. By dropping them, **the model's CRPS improved by 10%**.
+- **Their ultimate result:**
+  - NGBoost vastly outperformed Gaussian Process (GP) and LUBE in point accuracy, interval sharpness (**75% narrower than LUBE**), and training time (**109s vs ~25 mins for LUBE**).
+
+---
+
+## 3. Methodology & Technical Details
+- **Datasets / Testbed:**
+  - 1.5 years of 15-minute data from two PV parks (PVP1, PVP2) in Southern Germany. Night hours (22:00-06:00) were excluded.
+- **Key Variables:**
+  - Lagged power (t-15, t-30, t-45), radiation, temperature, humidity, precipitation, wind speed, month (sin/cos), and hour.
+- **Baselines Compared Against:**
+  - **Persistence** (point only).
+  - **Gaussian Process (GP)** with a Rational Quadratic (RQ) kernel.
+  - **LUBE (Lower Upper Bound Estimation)** for prediction intervals. Configured with a shallow network (20 neurons) and set to a target coverage ($\mu$) of 95%.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+- **Validating the Predictions (Forecasting Quality):**
+  - **Data Split:** Sliding-horizon validation. Trained on 1 whole year, tested on the following month. They created 4 different train/test pairs (one for each season) to ensure robustness.
+  - **Metrics:** MAE, RMSE, MBE (Point); PICP, PINAW, CRPS, and PIT histograms (Probabilistic).
+- **Validating the Explanations (XAI Quality):**
+  - The paper relies entirely on *qualitative domain-knowledge checks* rather than formal XAI evaluation metrics.
+  - *Example 1 (Temperature):* SHAP interaction plots showed that under high radiation, high temperatures negatively impact power output, perfectly matching the physics of PV panel efficiency loss.
+  - *Example 2 (Humidity):* SHAP revealed high humidity decreases efficiency.
+  - *Example 3 (Time/Radiation):* Explanations aligned with the known diurnal bell-shape curve of solar generation.
+
+---
+
+## 5. My Thoughts, Criticisms & Unstated Limitations
+- **Criticism 1: Qualitative vs. Quantitative XAI Validation:** 
+  - While their domain-knowledge validation is persuasive and reads well, it is strictly qualitative. They do not use any rigorous XAI evaluation metrics (e.g., explanation fidelity, robustness, stability). If the model contained subtle biases, qualitative "sanity checks" might easily miss them.
+- **Criticism 2: The "Non-Parametric" Contradiction & Gaussian Assumption:** 
+  - The authors frame NGBoost as highly flexible, but it is essentially *semi-parametric*. While the trees don't assume a rigid functional form for features, the model *strictly assumes the output uncertainty follows a Gaussian distribution*. It forces predictive uncertainty into a parametric box, failing to capture complex, asymmetric empirical distributions.
+- **Criticism 3: A Strawman Baseline for Neural Networks (LUBE):** 
+  - Their LUBE baseline looks incredibly outdated and weak by current standards. Because the standard CWC loss function is a non-differentiable step function, they used a shallow network trained via *simulated annealing*. This perfectly explains why LUBE took 25 minutes to train and performed so poorly—sacrificing sharpness (terrible PINAW) just to achieve ~100% PICP. 
+- **Criticism 4: Apples-to-Oranges Comparison:** 
+  - They compared a distributional model (NGBoost optimizing a log score) against an interval-bound model (LUBE optimizing CWC via metaheuristics). They completely omitted stronger, modern baselines, such as Quantile Regression Neural Networks (QRNN) or deep neural networks trained with *differentiable* CWC-style losses (e.g., Expanded Interval Minimization or Tube Loss).
+- **Observation on Dimensionality:**
+  - The model struggled with high dimensionality. Removing variables actually *improved* performance, indicating the algorithm easily falls into suboptimal solutions if fed too much data.
+
+---
+
+## 6. Action Items & Integration
+- [ ] Clone their GitHub repo (`mitre7/ngboost_pv_forecasting`) to run their NGBoost implementation as a baseline.
+- [ ] Ensure my validation metrics explicitly include both PICP (Coverage) and PINAW (Width) to directly prove my model achieves better sharpness than their NGBoost while maintaining proper ~95% coverage.
+- [ ] Incorporate strong quantitative XAI validation metrics to show a more rigorous validation of explanations than their purely qualitative domain-knowledge approach.
+- [ ] Add a note in my literature review regarding the limitations of rigid parametric assumptions for distributions (NGBoost) and computationally heavy, non-differentiable baselines (LUBE), clearly positioning my approach as the solution.

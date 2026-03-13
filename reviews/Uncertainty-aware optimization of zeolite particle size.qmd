@@ -1,0 +1,19 @@
+---
+title: "Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis"
+description: "Quantile regression and SHAP analysis for confidence interval fluctuations. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Explaining uncertainty with SHAP
+---
+
+## Citation
+
+- **Authors & Year:** He, S., et al. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-aware+optimization+of+zeolite+particle+size%3A+Utilizing+quantile+regression+and+SHAP+analysis)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

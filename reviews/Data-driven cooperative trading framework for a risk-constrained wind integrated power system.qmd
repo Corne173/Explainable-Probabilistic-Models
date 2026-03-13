@@ -1,0 +1,19 @@
+---
+title: "Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties"
+description: "Quantile-based uncertainty modeling and Shapley values for wind-integrated power systems. Review in progress."
+date: 2023-01-01
+categories:
+  - Review in progress
+  - Power systems baselines
+---
+
+## Citation
+
+- **Authors & Year:** Zhang, R., et al. (2023)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Data-driven+cooperative+trading+framework+for+a+risk-constrained+wind+integrated+power+system+considering+market+uncertainties)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

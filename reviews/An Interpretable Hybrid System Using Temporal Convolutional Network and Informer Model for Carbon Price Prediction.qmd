@@ -1,0 +1,19 @@
+---
+title: "An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction"
+description: "TCN-Informer forecasting with interval prediction and SHAP interpretation. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Power systems baselines
+---
+
+## Citation
+
+- **Authors & Year:** Du, P., et al. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=An+Interpretable+Hybrid+System+Using+Temporal+Convolutional+Network+and+Informer+Model+for+Carbon+Price+Prediction)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

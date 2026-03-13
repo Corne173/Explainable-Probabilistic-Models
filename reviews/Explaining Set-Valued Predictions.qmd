@@ -1,0 +1,19 @@
+---
+title: "Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification"
+description: "SHAP analysis for conformal set-valued predictions. Review in progress."
+date: 2025-01-01
+categories:
+  - Review in progress
+  - Explaining uncertainty with SHAP
+---
+
+## Citation
+
+- **Authors & Year:** Johansson, U., et al. (2025)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Explaining+Set-Valued+Predictions%3A+SHAP+Analysis+for+Conformal+Classification)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

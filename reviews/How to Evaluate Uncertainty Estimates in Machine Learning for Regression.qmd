@@ -1,0 +1,399 @@
+---
+title: "How to Evaluate Uncertainty Estimates in Machine Learning for Regression"
+description: "Review of a methodological paper critiquing standard uncertainty evaluation practices in regression and proposing simulation-based testing for pointwise coverage."
+date: 2026-03-13
+categories:
+  - Uncertainty Quantification
+  - Probabilistic Regression
+  - Calibration
+  - Prediction Intervals
+  - Explainable Evaluation
+---
+
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** *How to Evaluate Uncertainty Estimates in Machine Learning for Regression?*
+- **Authors & Year:** Laurens Sluijterman, Eric Cator, Tom Heskes (2023)
+- **Venue (Journal/Conference):** arXiv methodological paper
+- **Primary Topic/Concept:** Evaluation of uncertainty estimates for regression models
+- **Link/Identifier:** arXiv:2106.03395
+- **Code/Data Available?:** Not emphasized
+- **Proximity/Threat Level:** High relevance / methodological foundation
+- **Date Reviewed:** 2026-03-13
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+### The Motivation (Why this paper matters)
+As machine learning models increasingly produce probabilistic predictions rather than single point forecasts, it becomes essential to evaluate the quality of their uncertainty estimates. In regression problems, uncertainty is typically expressed through predictive distributions, prediction intervals, or confidence intervals. However, the authors argue that current evaluation practice is fundamentally flawed and may incorrectly rank uncertainty estimation methods.
+
+Two dominant evaluation strategies are widely used:
+
+1. **Predictive density evaluation** using test log-likelihood.
+2. **Interval evaluation** using metrics such as Prediction Interval Coverage Probability (PICP).
+
+The paper demonstrates that both approaches are insufficient for assessing the correctness of uncertainty estimates.
+
+---
+
+### Central Problem Identified
+The authors argue that commonly used metrics evaluate **aggregate predictive performance**, not whether the estimated uncertainty is actually correct. As a result, a model may appear well-calibrated even if its uncertainty estimates behave incorrectly across different regions of the input space.
+
+For example:
+
+- A model may produce intervals that are **too narrow in some regions** and **too wide in others**, yet still achieve correct average coverage.
+- Log-likelihood improvements may arise from better mean predictions rather than improved uncertainty estimation.
+
+Thus, existing evaluation metrics fail to isolate the true quality of uncertainty estimates.
+
+---
+
+### Key Novelty
+The main contribution of the paper is not a new predictive model, but a **new evaluation framework** for uncertainty estimates in regression.
+
+The authors propose a **simulation-based evaluation strategy** that measures **pointwise coverage** instead of relying solely on average test-set metrics.
+
+Their approach highlights that:
+
+- Proper evaluation requires **repeated training experiments**
+- Coverage should be analyzed **for each input location**, not only on average.
+
+---
+
+### Deeper Conceptual Contribution
+A key insight of the paper is the separation between two types of uncertainty:
+
+**Model uncertainty (epistemic)**  
+Uncertainty arising from limited training data and imperfect model estimation.
+
+**Data noise variance (aleatoric)**  
+Intrinsic randomness in the data generation process.
+
+Standard evaluation metrics combine these components into a single predictive uncertainty measure, making it impossible to determine whether either component is estimated correctly.
+
+---
+
+### Ultimate Result
+The authors show that models can achieve strong performance according to traditional metrics such as PICP or log-likelihood while still producing **poorly calibrated uncertainty estimates locally**.
+
+Their proposed evaluation framework reveals these hidden weaknesses.
+
+---
+
+## 3. Theoretical Framework & Technical Setup
+
+### Regression Formulation
+
+The paper considers the standard regression setting:
+
+\[
+Y \mid X = x \sim \mathcal{N}(f(x), \sigma^2(x))
+\]
+
+Where:
+
+- \(f(x)\) is the true regression function
+- \(\sigma^2(x)\) is the noise variance
+
+The goal of probabilistic regression models is therefore to estimate both:
+
+- the mean prediction \(\hat{f}(x)\)
+- the predictive uncertainty around it.
+
+---
+
+### Two Explicit Sources of Uncertainty
+
+The paper distinguishes between two components:
+
+**Model uncertainty**
+
+Uncertainty due to imperfect estimation of the regression function. This uncertainty decreases with more training data.
+
+**Noise variance**
+
+Irreducible variability inherent in the data.
+
+Many probabilistic models estimate both simultaneously, but existing evaluation metrics do not verify whether either estimate is correct.
+
+---
+
+### Pointwise vs Marginal Coverage
+
+This distinction is central to the paper.
+
+**Marginal coverage**
+
+Coverage averaged over the entire input distribution.
+
+Example:  
+A 95% prediction interval should contain approximately 95% of the observations in the dataset.
+
+**Pointwise coverage**
+
+Coverage evaluated **for each input location**.
+
+Example:  
+For a specific input \(x\), the interval should contain the true value 95% of the time across repeated training experiments.
+
+The authors argue that **pointwise coverage is the correct target**, because marginal coverage can hide large local errors.
+
+---
+
+## 4. Existing Evaluation Strategies Reviewed
+
+### PICP-Based Testing
+
+For interval-based methods, the most common metric is:
+
+**Prediction Interval Coverage Probability (PICP)**
+
+\[
+PICP = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}(y_i \in PI_i)
+\]
+
+Where \(PI_i\) is the prediction interval for observation \(i\).
+
+Coverage is usually reported alongside **interval width metrics**, because narrower intervals are preferred if coverage remains correct.
+
+---
+
+### Log-Likelihood Evaluation
+
+Methods that produce full predictive distributions are usually evaluated using **test log-likelihood**.
+
+This benchmark methodology became popular following probabilistic backpropagation experiments on common regression datasets.
+
+Typical benchmark datasets include:
+
+- Boston Housing
+- Energy Efficiency
+- Combined Cycle Power Plant
+- Protein Structure
+- Wine Quality
+- Year Prediction MSD
+
+Performance is measured using:
+
+- average log-likelihood
+- RMSE
+
+---
+
+## 5. Major Criticisms of Existing Evaluation
+
+### Criticism 1: Predictive Performance ≠ Correct Uncertainty
+
+Even if a method produces good predictive distributions, it does not mean its uncertainty estimates are correct.
+
+Errors in estimating model uncertainty may be compensated by incorrect estimates of noise variance.
+
+Thus improved predictive metrics do not necessarily reflect improved uncertainty estimation.
+
+---
+
+### Criticism 2: Single Test Sets Cannot Evaluate Coverage
+
+Prediction intervals depend on:
+
+- the sampled training data
+- stochastic training procedures
+
+Therefore interval evaluation must consider **repeated experiments**.
+
+The authors show that even perfectly calibrated intervals may appear badly calibrated when evaluated on a single test split.
+
+---
+
+### Criticism 3: PICP Only Measures Marginal Coverage
+
+PICP measures average coverage across the dataset.
+
+This means a model may have:
+
+- overly wide intervals in some regions
+- overly narrow intervals in others
+
+yet still achieve the desired average coverage.
+
+Such behavior is undesirable in practice.
+
+---
+
+### Criticism 4: Log-Likelihood Conflates Mean Accuracy and Uncertainty
+
+Log-likelihood evaluates the full predictive distribution.
+
+However, improvements in log-likelihood may arise from:
+
+- better mean predictions
+- not necessarily better uncertainty estimates.
+
+Therefore it is not a reliable metric for evaluating uncertainty quality.
+
+---
+
+## 6. Proposed Solution: Simulation-Based Testing
+
+### Main Idea
+
+The authors propose evaluating uncertainty estimation methods through **controlled simulation experiments**.
+
+Instead of relying on a single dataset split, the procedure repeatedly generates training data from a known data-generating process.
+
+This allows the true regression function and variance to be known.
+
+---
+
+### Evaluation Procedure
+
+1. Define a data-generating distribution.
+2. Generate a fixed test dataset.
+3. Repeatedly sample training datasets.
+4. Fit the uncertainty estimation method each time.
+5. Compute coverage statistics across repetitions.
+
+---
+
+### New Metrics Introduced
+
+**Prediction Interval Coverage Fraction (PICF)**  
+Measures coverage probability for each input point across repeated experiments.
+
+**Confidence Interval Coverage Fraction (CICF)**  
+Evaluates the correctness of confidence intervals for the estimated regression function.
+
+**Average Interval Width**
+
+Measures sharpness of intervals.
+
+**Brier Score**
+
+Used to quantify deviations between empirical coverage and the desired coverage level.
+
+The Brier score also penalizes large variations in coverage across different inputs.
+
+---
+
+## 7. Experimental Demonstrations
+
+### Methods Compared
+
+The paper uses two uncertainty estimation approaches:
+
+- **Naïve bootstrap**
+- **Concrete dropout**
+
+These methods were chosen because they are simple to implement and illustrate weaknesses of standard evaluation.
+
+---
+
+### Homoscedastic Noise Simulation
+
+The authors simulate the function:
+
+\[
+f(x) = (2x - 1)^3
+\]
+
+with constant Gaussian noise.
+
+Both bootstrap and dropout achieve correct PICP values.
+
+However, analysis of pointwise coverage reveals large variations in interval quality across different input locations.
+
+---
+
+### Heteroscedastic Noise Simulation
+
+The noise variance is defined as:
+
+\[
+\sigma(x) = 0.1 + x^2
+\]
+
+Bootstrap assumes constant noise while dropout can estimate heteroscedastic variance.
+
+Although bootstrap achieves similar PICP values, pointwise evaluation shows significantly worse performance.
+
+The Brier score correctly identifies dropout as the superior method.
+
+---
+
+### Sparse Data Regions
+
+The authors simulate bimodal input distributions to create regions with limited training data.
+
+In these regions, uncertainty estimation becomes particularly important.
+
+Conventional metrics such as PICP and log-likelihood incorrectly rank models, whereas pointwise coverage metrics reveal the true behavior.
+
+---
+
+### Boston Housing Simulation
+
+To demonstrate realism, the authors design simulations based on the Boston Housing dataset.
+
+They:
+
+1. Train a random forest to approximate the true regression function.
+2. Train another model to estimate noise variance.
+3. Simulate new response variables.
+
+Both bootstrap and dropout appear acceptable under traditional metrics, yet detailed analysis reveals significant interval miscalibration.
+
+---
+
+## 8. Criticisms and Limitations
+
+### Limitation 1: Simulation Design Becomes Critical
+
+The proposed evaluation framework depends on the quality of simulated data-generating processes.
+
+If simulations do not reflect realistic conditions, evaluation results may not generalize.
+
+---
+
+### Limitation 2: Dependence on Gaussian Noise Assumptions
+
+Most experiments assume Gaussian noise distributions.
+
+Real-world uncertainty distributions may be skewed or multi-modal.
+
+---
+
+### Limitation 3: Limited Direct Applicability to Real Deployments
+
+Simulation-based evaluation is ideal for research benchmarking.
+
+However, it cannot be directly applied in real-world deployments where the true function is unknown.
+
+---
+
+## 9. Relevance for Probabilistic Forecasting Research
+
+This paper is highly relevant for research involving probabilistic forecasting models.
+
+It provides strong methodological justification for several important arguments:
+
+- Aggregate calibration metrics may hide local failures.
+- Predictive likelihood improvements do not necessarily imply better uncertainty estimation.
+- Coverage evaluation should consider **local behavior across the input space**.
+
+These insights are particularly important for forecasting models used in critical infrastructure such as power systems.
+
+---
+
+## 10. Action Items for Research Integration
+
+- Cite this paper when discussing limitations of PICP-based interval evaluation.
+- Emphasize the distinction between **marginal and pointwise coverage**.
+- Avoid relying solely on log-likelihood or coverage metrics when evaluating probabilistic forecasts.
+- Consider simulation-based stress testing for uncertainty estimation methods.
+- Use this paper to justify more rigorous evaluation protocols in probabilistic forecasting research.
+
+---
+
+## 11. One-Paragraph Literature Review Summary
+
+Sluijterman, Cator, and Heskes analyze how uncertainty estimates are evaluated in regression machine learning and argue that the two dominant evaluation strategies, namely prediction interval coverage probability and test log-likelihood, are insufficient for assessing the correctness of uncertainty estimates. They demonstrate that models may appear well calibrated under traditional metrics while producing poorly calibrated intervals locally across the input space. The authors introduce a simulation-based evaluation framework that measures pointwise coverage using repeated training experiments, along with metrics such as prediction interval coverage fraction and Brier scores. Through experiments with bootstrap and dropout methods, they show that aggregate metrics can favor inferior models and fail to reveal important miscalibration behavior. Their work provides a methodological foundation for more rigorous evaluation of probabilistic regression models and highlights the importance of analyzing uncertainty behavior across the entire input domain.

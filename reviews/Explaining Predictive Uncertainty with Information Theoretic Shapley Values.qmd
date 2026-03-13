@@ -1,0 +1,19 @@
+---
+title: "Explaining Predictive Uncertainty with Information Theoretic Shapley Values"
+description: "Information-theoretic Shapley values for predictive uncertainty. Review in progress."
+date: 2023-01-01
+categories:
+  - Review in progress
+  - Explaining uncertainty with SHAP
+---
+
+## Citation
+
+- **Authors & Year:** Watson, D.S., et al. (2023)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Explaining+Predictive+Uncertainty+with+Information+Theoretic+Shapley+Values)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

@@ -1,0 +1,19 @@
+---
+title: "Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants"
+description: "Trust, uncertainty, and SHAP in safety-critical power-system operations. Review in progress."
+date: 2024-01-01
+categories:
+  - Review in progress
+  - Aleatoric vs epistemic uncertainty
+---
+
+## Citation
+
+- **Authors & Year:** Reddy, B., et al. (2024)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-Aware+and+Explainable+Human+Error+Detection+in+the+Operation+of+Nuclear+Power+Plants)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

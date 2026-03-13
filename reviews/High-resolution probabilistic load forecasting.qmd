@@ -1,0 +1,19 @@
+---
+title: "High-resolution probabilistic load forecasting: A learning ensemble approach"
+description: "Probabilistic load forecasting with a learning ensemble and Shapley-based analysis. Review in progress."
+date: 2023-01-01
+categories:
+  - Review in progress
+  - Power systems baselines
+---
+
+## Citation
+
+- **Authors & Year:** Lu, C., et al. (2023)
+- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=High-resolution+probabilistic+load+forecasting%3A+A+learning+ensemble+approach)
+
+## Review Status
+
+> Review in progress.
+
+This page is a placeholder for a future full review using the site template.

@@ -1,0 +1,47 @@
+---
+title: "Paper title"
+description: "Short summary of the paper."
+date: 2026-03-12
+categories:
+  - Review template
+  - In progress
+---
+
+## Citation
+
+- **Authors & Year:** TODO
+- **Venue (Journal/Conference):** TODO
+- **Link/DOI:** TODO
+
+## Review Status
+
+> Review in progress.
+
+## 1. Quick Reference & Meta-Data
+
+- **Problem addressed:** TODO
+- **Method/model:** TODO
+- **Main domain:** TODO
+- **Why it matters to my work:** TODO
+
+## 2. Core Contributions, Novelty & Motivation
+
+- TODO
+
+## 3. Methodology & Technical Details
+
+- TODO
+
+## 4. Validation Strategy
+
+- TODO
+
+## 5. My Thoughts, Criticisms & Limitations
+
+- TODO
+
+## 6. Action Items & Integration
+
+- [ ] Add detailed notes
+- [ ] Add methodological critique
+- [ ] Link to related papers on this site
