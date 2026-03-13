@@ -31,8 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./about.html" rel="next">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -70,66 +68,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-description','listing-date','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      page: 25,
-    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -434,958 +373,344 @@ window.Quarto = {
 
 <section id="welcome" class="level1">
 <h1>Welcome</h1>
-<p>This website collects my review articles on probabilistic models and related topics.</p>
-<p>The main page gives a summary of all the papers I have reviewed, while each paper has its own dedicated review page.</p>
+<p>This website collects my review articles on probabilistic models, uncertainty quantification, and explainability.</p>
+<p>Each paper has its own dedicated review page, and this index groups the papers by the main ideas shaping the review.</p>
 <p>Some entries are already fully reviewed, while others are placeholder pages marked <strong>Review in progress</strong> so I can keep track of papers I still want to summarize.</p>
-<section id="all-reviews" class="level2">
-<h2 class="anchored" data-anchor-id="all-reviews">All Reviews</h2>
-<p>The entries below are generated automatically from the metadata in each review page.</p>
-
+<blockquote class="blockquote">
+<p><strong>Note</strong></p>
+<p>The citation counts below are manual placeholders so I can update them over time. The <strong>Published</strong> column is also manual for now. Where I have not yet verified the exact publication month, I use a month-year placeholder format such as <code>Jan 2025</code>.</p>
+</blockquote>
+<section id="browse-by-idea" class="level2">
+<h2 class="anchored" data-anchor-id="browse-by-idea">Browse by idea</h2>
+<ul>
+<li><a href="#explaining-prediction-intervals-and-quantiles-with-shap">Explaining prediction intervals and quantiles with SHAP</a></li>
+<li><a href="#decomposing-aleatoric-vs-epistemic-uncertainty-with-xai">Decomposing aleatoric vs.&nbsp;epistemic uncertainty with XAI</a></li>
+<li><a href="#status-quo-baseline-deep-learning--intervalsquantiles--shap-in-power-systems">Status quo baseline: deep learning + intervals/quantiles + SHAP in power systems</a></li>
+<li><a href="#related-load--demand-forecasting-with-prediction-intervals-and-xai">Related load / demand forecasting with prediction intervals and XAI</a></li>
+<li><a href="#critical-papers-on-uncertainty-quantification-in-deep-learning">Critical papers on uncertainty quantification in deep learning</a></li>
+<li><a href="#explaining-uncertainty-and-explainability-of-uq">Explaining uncertainty and explainability of UQ</a></li>
+</ul>
+</section>
+<section id="explaining-prediction-intervals-and-quantiles-with-shap" class="level2">
+<h2 class="anchored" data-anchor-id="explaining-prediction-intervals-and-quantiles-with-shap">Explaining prediction intervals and quantiles with SHAP</h2>
+<p>These papers support the move from explaining only the point forecast to explaining the <strong>distribution, interval width, and risk profile</strong> itself.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>7</td>
+<td><a href="./reviews/Uncertainty-aware optimization of zeolite particle size.html">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</a></td>
+<td>Direct precedent for comparing SHAP contributions across upper and lower bounds to study interval fluctuations.</td>
+</tr>
+<tr class="even">
+<td>Jan 2025</td>
+<td>5</td>
+<td><a href="./reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</a></td>
+<td>Uses quantile methods and SHAP specifically to identify the drivers of predictive uncertainty.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>30</td>
+<td><a href="./reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html">Interpretable building energy performance prediction using XGBoost Quantile Regression</a></td>
+<td>Shows that feature importance changes across different quantiles, supporting distribution-aware interpretation.</td>
+</tr>
+<tr class="even">
+<td>Jan 2022</td>
+<td>181</td>
+<td><a href="./reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</a></td>
+<td>Important domain example explaining both point forecasts and prediction intervals, with a useful contrast to non-parametric approaches.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>0</td>
+<td><a href="./reviews/Explaining Set-Valued Predictions.html">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</a></td>
+<td>Extends SHAP toward explaining set-valued predictions rather than only single-label outputs.</td>
+</tr>
+<tr class="even">
+<td>Dec 2023</td>
+<td>76</td>
+<td><a href="./reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</a></td>
+<td>Foundational theoretical basis for adapting Shapley values to predictive uncertainty.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2024</td>
+<td>53</td>
+<td><a href="./reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</a></td>
+<td>Supports the combination of deep neural networks, quantile regression, and SHAP.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decomposing-aleatoric-vs.-epistemic-uncertainty-with-xai" class="level2">
+<h2 class="anchored" data-anchor-id="decomposing-aleatoric-vs.-epistemic-uncertainty-with-xai">Decomposing aleatoric vs.&nbsp;epistemic uncertainty with XAI</h2>
+<p>These papers motivate the stronger claim that uncertainty should not only be estimated, but also <strong>split into model ignorance vs.&nbsp;irreducible system variability</strong>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 2026</td>
+<td>2</td>
+<td><a href="./reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html">UbiQTree: Uncertainty quantification in XAI with tree ensembles</a></td>
+<td>Most direct methodological support for separating SHAP uncertainty into aleatoric and epistemic components.</td>
+</tr>
+<tr class="even">
+<td>Jan 2026</td>
+<td>0</td>
+<td><a href="./reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</a></td>
+<td>Uses Bayesian deep learning and uncertainty decomposition to distinguish environmental variability from model limitations.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2026</td>
+<td>1</td>
+<td><a href="./reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</a></td>
+<td>Energy-systems example explicitly reducing and interpreting both aleatoric and epistemic uncertainty.</td>
+</tr>
+<tr class="even">
+<td>Jan 2025</td>
+<td>6</td>
+<td><a href="./reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</a></td>
+<td>Connects uncertainty bounds directly to feature contributions using a Bayesian neural model with SHAP.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2024</td>
+<td>4</td>
+<td><a href="./reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</a></td>
+<td>Strong support for trust, operator interaction, and explaining both prediction accuracy and uncertainty in safety-critical settings.</td>
+</tr>
+<tr class="even">
+<td>Jan 2025</td>
+<td>0</td>
+<td><a href="./reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</a></td>
+<td>Combines SHAP with intervals that explicitly capture both epistemic and aleatoric uncertainty in an energy application.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="status-quo-baseline-deep-learning-intervalsquantiles-shap-in-power-systems" class="level2">
+<h2 class="anchored" data-anchor-id="status-quo-baseline-deep-learning-intervalsquantiles-shap-in-power-systems">Status quo baseline: deep learning + intervals/quantiles + SHAP in power systems</h2>
+<p>These papers define the immediate baseline: strong probabilistic forecasting systems that still often explain the <strong>forecast</strong> more clearly than the <strong>uncertainty width itself</strong>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>23</td>
+<td><a href="./reviews/Explainable deeply-fused nets electricity demand prediction model.html">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</a></td>
+<td>A close baseline: combines deep learning, intervals, and SHAP, but focuses interpretability more on the point forecast than on interval width.</td>
+</tr>
+<tr class="even">
+<td>Jan 2023</td>
+<td>19</td>
+<td><a href="./reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</a></td>
+<td>Uses SHAP mainly for feature selection before forecasting rather than for explaining uncertainty dynamically after prediction.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2026</td>
+<td>0</td>
+<td><a href="./reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</a></td>
+<td>Relevant example of deep learning with adaptive prediction bands and SHAP-based meteorological interpretation.</td>
+</tr>
+<tr class="even">
+<td>Jan 2024</td>
+<td>26</td>
+<td><a href="./reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</a></td>
+<td>Interval prediction in electricity markets with interpretability for exogenous drivers.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>0</td>
+<td><a href="./reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html">An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction</a></td>
+<td>Uses deep forecasting, interval estimation, and SHAP in a market-oriented energy setting.</td>
+</tr>
+<tr class="even">
+<td>Jan 2023</td>
+<td>4</td>
+<td><a href="./reviews/High-resolution probabilistic load forecasting.html">High-resolution probabilistic load forecasting: A learning ensemble approach</a></td>
+<td>Probabilistic load forecasting using a learning ensemble and Shapley-style contribution analysis.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2023</td>
+<td>27</td>
+<td><a href="./reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</a></td>
+<td>Applies quantile-style uncertainty modeling and Shapley analysis in wind-integrated power system decision-making.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="related-load-demand-forecasting-with-prediction-intervals-and-xai" class="level2">
+<h2 class="anchored" data-anchor-id="related-load-demand-forecasting-with-prediction-intervals-and-xai">Related load / demand forecasting with prediction intervals and XAI</h2>
+<p>These papers round out the broader energy and building-load literature around probabilistic prediction and interpretability.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 2024</td>
+<td>18</td>
+<td><a href="./reviews/Hybrid model for robust and accurate forecasting building electricity demand.html">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</a></td>
+<td>Hybrid building-demand forecasting with Monte Carlo intervals and SHAP interpretability.</td>
+</tr>
+<tr class="even">
+<td>Jan 2025</td>
+<td>10</td>
+<td><a href="./reviews/High-resolution energy consumption forecasting of a university campus power plant.html">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</a></td>
+<td>Campus energy forecasting with probabilistic outputs and SHAP-based interpretation.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2022</td>
+<td>3</td>
+<td><a href="./reviews/Weighted residual clustering-based building load prediction interval estimation.html">Weighted residual clustering-based building load prediction interval estimation</a></td>
+<td>Uses SHAP contributions as part of the pipeline for prediction interval estimation.</td>
+</tr>
+<tr class="even">
+<td>Jan 2024</td>
+<td>29</td>
+<td><a href="./reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</a></td>
+<td>Useful for probabilistic postprocessing and contribution analysis in electricity-price forecasting.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="critical-papers-on-uncertainty-quantification-in-deep-learning" class="level2">
+<h2 class="anchored" data-anchor-id="critical-papers-on-uncertainty-quantification-in-deep-learning">Critical papers on uncertainty quantification in deep learning</h2>
+<p>These papers help frame the broader methodological caution: uncertainty estimates can look convincing while still being poorly calibrated, brittle under shift, or conceptually ambiguous.</p>
+<section id="evaluation-robustness-and-dataset-shift" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-robustness-and-dataset-shift">Evaluation, robustness, and dataset shift</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jun 2019</td>
+<td>TBD</td>
+<td><a href="./reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html">Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift</a></td>
+<td>Foundational evidence that many uncertainty methods degrade badly under dataset shift.</td>
+</tr>
+<tr class="even">
+<td>Jan 2019</td>
+<td>TBD</td>
+<td><a href="./reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a></td>
+<td>Relevant when connecting predictive uncertainty to reliability monitoring.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2019</td>
+<td>TBD</td>
+<td><a href="./reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</a></td>
+<td>Important for judging whether interval estimates are genuinely informative rather than superficially calibrated.</td>
+</tr>
+<tr class="even">
+<td>Jan 2022</td>
+<td>TBD</td>
+<td><a href="./reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</a></td>
+<td>Helps anchor discussions of metric validity and uncertainty-quality assessment.</td>
+</tr>
+<tr class="odd">
+<td>Jan 2025</td>
+<td>TBD</td>
+<td><a href="./reviews/Preventing dataset shift from breaking machine-learning biomarkers.html">Preventing dataset shift from breaking machine-learning biomarkers</a></td>
+<td>Useful supporting reference on robustness and the practical consequences of shift.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="surveys-and-broader-framing" class="level3">
+<h3 class="anchored" data-anchor-id="surveys-and-broader-framing">Surveys and broader framing</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 2023</td>
+<td>TBD</td>
+<td><a href="./reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</a></td>
+<td>Broad survey for positioning the deep-learning UQ landscape, strengths, and open problems.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="explaining-uncertainty-and-explainability-of-uq" class="level2">
+<h2 class="anchored" data-anchor-id="explaining-uncertainty-and-explainability-of-uq">Explaining uncertainty and explainability of UQ</h2>
+<p>These papers sit closest to the conceptual bridge between <strong>uncertainty quantification</strong> and <strong>explainability</strong>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Published</th>
+<th>Citations</th>
+<th>Paper</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dec 2023</td>
+<td>76</td>
+<td><a href="./reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</a></td>
+<td>Core theoretical paper for uncertainty-focused Shapley explanations.</td>
+</tr>
+<tr class="even">
+<td>Jan 2025</td>
+<td>TBD</td>
+<td><a href="./reviews/Explaining Set-Valued Predictions.html">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</a></td>
+<td>Useful extension from scalar uncertainty to set-valued predictions.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="notes-for-future-additions" class="level2">
+<h2 class="anchored" data-anchor-id="notes-for-future-additions">Notes for future additions</h2>
+<ul>
+<li>Add more critique papers on evidential deep learning, deterministic epistemic uncertainty, calibration, and Bayesian alternatives.</li>
+<li>Add more papers on explainability–uncertainty links as those review pages are created.</li>
+<li>Update citation counts periodically as placeholders are refined.</li>
+</ul>
+<p>This page is now organized manually so the literature review can follow the argument structure more closely than a simple chronological list.</p>
 
 
 </section>
 </section>
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="UmV2aWV3ZWQlMkNVbmNlcnRhaW50eSUyMFF1YW50aWZpY2F0aW9uJTJDRGVlcCUyMExlYXJuaW5nJTJDRXhwbGFpbmFibGUlMjBBSSUyQ1RydXN0d29ydGh5JTIwQUklMkNCYXllc2lhbiUyME5ldXJhbCUyME5ldHdvcmtzJTJDT3V0LW9mLURpc3RyaWJ1dGlvbiUyMERldGVjdGlvbg==" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773431178396" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2839">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="no-external">A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3ZWQ='); return false;">Reviewed</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBRdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty Quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMExlYXJuaW5n'); return false;">Deep Learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJ1c3R3b3J0aHklMjBBSQ=='); return false;">Trustworthy AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBOZXVyYWwlMjBOZXR3b3Jrcw=='); return false;">Bayesian Neural Networks</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('T3V0LW9mLURpc3RyaWJ1dGlvbiUyMERldGVjdGlvbg=='); return false;">Out-of-Distribution Detection</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="no-external">
-<p>Detailed literature review of a survey paper that organizes deep learning uncertainty quantification methods by uncertainty source rather than by model family alone.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="QmF0dGVyeSUyMHN0YXRlJTIwb2YlMjBoZWFsdGglMkNFeHBsYWluYWJsZSUyMEFJJTJDVW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbiUyQ0RlZXAlMjBsZWFybmluZyUyQ0xpdGhpdW0taW9uJTIwYmF0dGVyaWVzJTJDTUMlMjBkcm9wb3V0JTJDRGVlcCUyMGVuc2VtYmxlcw==" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773431496165" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2040">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="no-external">A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF0dGVyeSUyMHN0YXRlJTIwb2YlMjBoZWFsdGg='); return false;">Battery state of health</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TGl0aGl1bS1pb24lMjBiYXR0ZXJpZXM='); return false;">Lithium-ion batteries</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TUMlMjBkcm9wb3V0'); return false;">MC dropout</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGVuc2VtYmxlcw=='); return false;">Deep ensembles</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="no-external">
-<p>Review of an APSIPA ASC 2025 paper proposing a unified XAI and uncertainty quantification framework for battery SOH estimation using deep neural networks.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="QmF5ZXNpYW4lMjBkZWVwJTIwbGVhcm5pbmclMkNQcm9iYWJpbGlzdGljJTIwZm9yZWNhc3RpbmclMkNVbmNlcnRhaW50eSUyMHF1YW50aWZpY2F0aW9uJTJDRXhwbGFpbmFibGUlMjBBSSUyQ0dyb3VuZHdhdGVyJTJDQXF1aWZlciUyMHZ1bG5lcmFiaWxpdHk=" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773432186530" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2385">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="no-external">Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBkZWVwJTIwbGVhcm5pbmc='); return false;">Bayesian deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3JvdW5kd2F0ZXI='); return false;">Groundwater</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QXF1aWZlciUyMHZ1bG5lcmFiaWxpdHk='); return false;">Aquifer vulnerability</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="no-external">
-<p>Review of a Scientific Reports paper proposing a Bayesian CNN with SHAP-based explainability for probabilistic aquifer vulnerability assessment.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="V2luZCUyMHBvd2VyJTIwdHJhZGluZyUyQ0VsZWN0cmljaXR5JTIwbWFya2V0cyUyQ1Byb2JhYmlsaXN0aWMlMjBmb3JlY2FzdGluZyUyQ0Nvb3BlcmF0aXZlJTIwYmlkZGluZyUyQ1Jpc2stY29uc3RyYWluZWQlMjBvcHRpbWl6YXRpb24lMkNGaXJlZmx5JTIwYWxnb3JpdGht" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773434962774" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3109">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="no-external">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2luZCUyMHBvd2VyJTIwdHJhZGluZw=='); return false;">Wind power trading</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWxlY3RyaWNpdHklMjBtYXJrZXRz'); return false;">Electricity markets</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29vcGVyYXRpdmUlMjBiaWRkaW5n'); return false;">Cooperative bidding</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Umlzay1jb25zdHJhaW5lZCUyMG9wdGltaXphdGlvbg=='); return false;">Risk-constrained optimization</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RmlyZWZseSUyMGFsZ29yaXRobQ=='); return false;">Firefly algorithm</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="no-external">
-<p>Review of a 2023 IJEPES paper proposing a data-driven, risk-constrained cooperative bidding framework for wind-integrated power systems under market uncertainty.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDRXhwbGFpbmFibGUlMjBBSSUyQ0VsZWN0cmljaXR5JTIwcHJpY2UlMjBmb3JlY2FzdGluZyUyQ1NIQVAlMkNMU1ROZXQlMkNRdWFudGlsZSUyMHJlZ3Jlc3Npb24=" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773434611692" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2650">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="no-external">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWxlY3RyaWNpdHklMjBwcmljZSUyMGZvcmVjYXN0aW5n'); return false;">Electricity price forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TFNUTmV0'); return false;">LSTNet</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjByZWdyZXNzaW9u'); return false;">Quantile regression</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="no-external">
-<p>Review of an Energies paper combining SHAP-based feature selection with LSTNet quantile regression and KDE for probabilistic day-ahead electricity price forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="SFZBQyUyQ1ZhcmlhYmxlJTIwUmVmcmlnZXJhbnQlMjBGbG93JTJDR3JleS1ib3glMjBtb2RlbGxpbmclMkNQaHlzaWNzLWluZm9ybWVkJTIwbWFjaGluZSUyMGxlYXJuaW5nJTJDWEdCb29zdCUyQ1VuY2VydGFpbnR5JTIwcXVhbnRpZmljYXRpb24lMkNTSEFQ" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773432432680" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2795">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="no-external">Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SFZBQw=='); return false;">HVAC</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VmFyaWFibGUlMjBSZWZyaWdlcmFudCUyMEZsb3c='); return false;">Variable Refrigerant Flow</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3JleS1ib3glMjBtb2RlbGxpbmc='); return false;">Grey-box modelling</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGh5c2ljcy1pbmZvcm1lZCUyMG1hY2hpbmUlMjBsZWFybmluZw=='); return false;">Physics-informed machine learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('WEdCb29zdA=='); return false;">XGBoost</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="no-external">
-<p>Review of an Energy paper comparing black-box and hybrid grey-box XGBoost models for VRF compressor power prediction, with uncertainty quantification and SHAP-based interpretability.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="RWxlY3RyaWNpdHklMjBkZW1hbmQlMjBmb3JlY2FzdGluZyUyQ1Byb2JhYmlsaXN0aWMlMjBmb3JlY2FzdGluZyUyQ0V4cGxhaW5hYmxlJTIwQUklMkNEZWVwJTIwbGVhcm5pbmclMkNGTkVUJTJDU0hBUCUyQ0Jvb3RzdHJhcCUyMHVuY2VydGFpbnR5" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773432932638" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2478">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="no-external">Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWxlY3RyaWNpdHklMjBkZW1hbmQlMjBmb3JlY2FzdGluZw=='); return false;">Electricity demand forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rk5FVA=='); return false;">FNET</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Qm9vdHN0cmFwJTIwdW5jZXJ0YWludHk='); return false;">Bootstrap uncertainty</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="no-external">
-<p>Review of an Applied Energy study proposing an explainable deeply fused CNN-BILSTM model for daily electricity demand forecasting with bootstrap-based uncertainty quantification and SHAP analysis.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Explainable deeply-fused nets electricity demand prediction model.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="RXhwbGFpbmFibGUlMjBBSSUyQ1VuY2VydGFpbnR5JTIwcXVhbnRpZmljYXRpb24lMkNTaGFwbGV5JTIwdmFsdWVzJTJDSW5mb3JtYXRpb24lMjB0aGVvcnklMkNBY3RpdmUlMjBsZWFybmluZw==" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773434768335" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2457">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="no-external">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hhcGxleSUyMHZhbHVlcw=='); return false;">Shapley values</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW5mb3JtYXRpb24lMjB0aGVvcnk='); return false;">Information theory</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWN0aXZlJTIwbGVhcm5pbmc='); return false;">Active learning</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="no-external">
-<p>Review of a NeurIPS 2023 paper that extends Shapley-based explanations from point predictions to predictive uncertainty using information theoretic value functions.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDUXVhbnRpbGUlMjByZWdyZXNzaW9uJTJDVmFsdWUtYXQtUmlzayUyQ0RlZXAlMjBsZWFybmluZyUyQ0V4cGxhaW5hYmxlJTIwQUklMkNGaW5hbmNl" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773432976383" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2712">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="no-external">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjByZWdyZXNzaW9u'); return false;">Quantile regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VmFsdWUtYXQtUmlzaw=='); return false;">Value-at-Risk</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RmluYW5jZQ=='); return false;">Finance</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="no-external">
-<p>Review of a Journal of Financial Econometrics paper proposing deep neural network quantile regression for non-linear Value-at-Risk forecasting, with mixed-frequency extensions and interpretability via SHAP and partial derivatives.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-categories="UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDTG9hZCUyMGZvcmVjYXN0aW5nJTJDRW5zZW1ibGUlMjBsZWFybmluZyUyQ1NoYXBsZXklMjB2YWx1ZSUyQ0RlZXAlMjBsZWFybmluZyUyQ1F1YW50aWxlJTIwZm9yZWNhc3Rpbmc=" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773432236635" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2526">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/High-resolution probabilistic load forecasting.html" class="no-external">High-resolution probabilistic load forecasting: A learning ensemble approach</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TG9hZCUyMGZvcmVjYXN0aW5n'); return false;">Load forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RW5zZW1ibGUlMjBsZWFybmluZw=='); return false;">Ensemble learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hhcGxleSUyMHZhbHVl'); return false;">Shapley value</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVlcCUyMGxlYXJuaW5n'); return false;">Deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjBmb3JlY2FzdGluZw=='); return false;">Quantile forecasting</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/High-resolution probabilistic load forecasting.html" class="no-external">
-<p>Review of a 2023 Journal of the Franklin Institute paper proposing a nonlinear learning ensemble for high-resolution probabilistic load forecasting, with theoretical guarantees and Shapley-based model contribution analysis.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/High-resolution probabilistic load forecasting.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="10" data-categories="VW5jZXJ0YWludHklMjBRdWFudGlmaWNhdGlvbiUyQ1Byb2JhYmlsaXN0aWMlMjBSZWdyZXNzaW9uJTJDQ2FsaWJyYXRpb24lMkNQcmVkaWN0aW9uJTIwSW50ZXJ2YWxzJTJDRXhwbGFpbmFibGUlMjBFdmFsdWF0aW9u" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773431178543" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1525">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="no-external">How to Evaluate Uncertainty Estimates in Machine Learning for Regression</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBRdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty Quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMFJlZ3Jlc3Npb24='); return false;">Probabilistic Regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2FsaWJyYXRpb24='); return false;">Calibration</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJlZGljdGlvbiUyMEludGVydmFscw=='); return false;">Prediction Intervals</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBFdmFsdWF0aW9u'); return false;">Explainable Evaluation</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="no-external">
-<p>Review of a methodological paper critiquing standard uncertainty evaluation practices in regression and proposing simulation-based testing for pointwise coverage.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="11" data-categories="RWxlY3RyaWNpdHklMjBwcmljZSUyMGZvcmVjYXN0aW5nJTJDUHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDSW50ZXJ2YWwlMjBwcmVkaWN0aW9uJTJDRXhwbGFpbmFibGUlMjBBSSUyQ1NIQVAlMkNMU1ROZXQlMkNFbmVyZ3klMjBtYXJrZXRz" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773433531200" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2568">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="no-external">Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWxlY3RyaWNpdHklMjBwcmljZSUyMGZvcmVjYXN0aW5n'); return false;">Electricity price forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW50ZXJ2YWwlMjBwcmVkaWN0aW9u'); return false;">Interval prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TFNUTmV0'); return false;">LSTNet</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RW5lcmd5JTIwbWFya2V0cw=='); return false;">Energy markets</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="no-external">
-<p>Review of an IEEE TII paper proposing a GMM-LightGBM + LSTNet-KDE + SHAP framework for interpretable, outlier-adaptive day-ahead electricity price forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="12" data-categories="V2luZCUyMGZvcmVjYXN0aW5nJTJDUHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDRXhwbGFpbmFibGUlMjBBSSUyQ1F1YW50aWxlJTIwcmVncmVzc2lvbiUyQ1ZNRCUyQ0NOTi1CaUxTVE0=" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773434036673" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3035">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="no-external">Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2luZCUyMGZvcmVjYXN0aW5n'); return false;">Wind forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjByZWdyZXNzaW9u'); return false;">Quantile regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Vk1E'); return false;">VMD</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q05OLUJpTFNUTQ=='); return false;">CNN-BiLSTM</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="no-external">
-<p>Review of an Applied Sciences paper proposing an adaptive VMD, dual-stream CNN–BiLSTM, and quantile regression framework for uncertainty-aware and explainable short-term wind speed forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-categories="UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5nJTJDRWxlY3RyaWNpdHklMjBwcmljZSUyMGZvcmVjYXN0aW5nJTJDUG9zdHByb2Nlc3NpbmclMkNJc290b25pYyUyMGRpc3RyaWJ1dGlvbmFsJTIwcmVncmVzc2lvbiUyQ0NvbmZvcm1hbCUyMHByZWRpY3Rpb24lMkNRdWFudGlsZSUyMHJlZ3Jlc3Npb24lMjBhdmVyYWdpbmc=" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773433464047" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2563">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="no-external">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWxlY3RyaWNpdHklMjBwcmljZSUyMGZvcmVjYXN0aW5n'); return false;">Electricity price forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UG9zdHByb2Nlc3Npbmc='); return false;">Postprocessing</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SXNvdG9uaWMlMjBkaXN0cmlidXRpb25hbCUyMHJlZ3Jlc3Npb24='); return false;">Isotonic distributional regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uZm9ybWFsJTIwcHJlZGljdGlvbg=='); return false;">Conformal prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjByZWdyZXNzaW9uJTIwYXZlcmFnaW5n'); return false;">Quantile regression averaging</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="no-external">
-<p>Review of an Energy Economics paper comparing QRA, Conformal Prediction, and Isotonic Distributional Regression for probabilistic day-ahead electricity price forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="14" data-categories="RXhwbGFpbmFibGUlMjBBSSUyQ1VuY2VydGFpbnR5JTIwcXVhbnRpZmljYXRpb24lMkNTSEFQJTJDVHJlZSUyMGVuc2VtYmxlcyUyQ0hlYWx0aGNhcmUlMjBBSQ==" data-listing-date-sort="1773352800000" data-listing-file-modified-sort="1773434066961" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2364">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="no-external">UbiQTree: Uncertainty quantification in XAI with tree ensembles</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJlZSUyMGVuc2VtYmxlcw=='); return false;">Tree ensembles</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZSUyMEFJ'); return false;">Healthcare AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="no-external">
-<p>Review of a Patterns paper proposing UbiQTree, a framework for decomposing uncertainty in SHAP explanations for tree ensembles.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="no-external">
-<div class="listing-date">
-Mar 13, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="15" data-categories="Q2FyYm9uJTIwcHJpY2UlMjBmb3JlY2FzdGluZyUyQ1RpbWUlMjBzZXJpZXMlMjBmb3JlY2FzdGluZyUyQ0V4cGxhaW5hYmxlJTIwQUklMkNIeWJyaWQlMjBkZWVwJTIwbGVhcm5pbmclMkNVbmNlcnRhaW50eSUyMHF1YW50aWZpY2F0aW9uJTJDU0hBUCUyQ0luZm9ybWVyJTJDVENO" data-listing-date-sort="1762898400000" data-listing-file-modified-sort="1773432210125" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2951">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="no-external">An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2FyYm9uJTIwcHJpY2UlMjBmb3JlY2FzdGluZw=='); return false;">Carbon price forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGltZSUyMHNlcmllcyUyMGZvcmVjYXN0aW5n'); return false;">Time series forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHlicmlkJTIwZGVlcCUyMGxlYXJuaW5n'); return false;">Hybrid deep learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SW5mb3JtZXI='); return false;">Informer</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VENO'); return false;">TCN</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="no-external">
-<p>Review of a 2025 Systems paper proposing a Boruta-BiTCN-Informer framework with SHAP interpretability and Monte Carlo dropout for interval carbon price forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.html" class="no-external">
-<div class="listing-date">
-Nov 12, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="16" data-categories="VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbiUyQ0V4cGxhaW5hYmxlJTIwQUklMkNCYXllc2lhbiUyMG5ldXJhbCUyMG5ldHdvcmslMkNNYW51ZmFjdHVyaW5nJTIwcXVhbGl0eSUyMHByZWRpY3Rpb24lMkNTSEFQ" data-listing-date-sort="1754344800000" data-listing-file-modified-sort="1773434109282" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3076">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="no-external">Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBuZXVyYWwlMjBuZXR3b3Jr'); return false;">Bayesian neural network</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFudWZhY3R1cmluZyUyMHF1YWxpdHklMjBwcmVkaWN0aW9u'); return false;">Manufacturing quality prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="no-external">
-<p>Review of an Advanced Engineering Informatics paper combining a Bayesian neural network, uncertainty quantification, and SHAP for interpretable assembly quality prediction in diesel engine manufacturing.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.html" class="no-external">
-<div class="listing-date">
-Aug 5, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-categories="RW5lcmd5JTIwZm9yZWNhc3RpbmclMkNVbml2ZXJzaXR5JTIwY2FtcHVzJTIwZGVtYW5kJTJDWEdCb29zdCUyQ0V4cGxhaW5hYmxlJTIwQUklMkNQcm9iYWJpbGlzdGljJTIwZXZhbHVhdGlvbg==" data-listing-date-sort="1748901600000" data-listing-file-modified-sort="1773433478662" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2081">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="no-external">High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RW5lcmd5JTIwZm9yZWNhc3Rpbmc='); return false;">Energy forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5pdmVyc2l0eSUyMGNhbXB1cyUyMGRlbWFuZA=='); return false;">University campus demand</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('WEdCb29zdA=='); return false;">XGBoost</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGV2YWx1YXRpb24='); return false;">Probabilistic evaluation</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="no-external">
-<p>Review of an Energy Strategy Reviews paper on long-term campus energy forecasting using XGBoost, SHAP, and likelihood-based evaluation.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/High-resolution energy consumption forecasting of a university campus power plant.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="18" data-categories="QnVpbGRpbmclMjBlbmVyZ3klMjBwZXJmb3JtYW5jZSUyQ0V4cGxhaW5hYmxlJTIwQUklMkNYR0Jvb3N0JTJDUXVhbnRpbGUlMjByZWdyZXNzaW9uJTJDU0hBUCUyQ0VuZXJneSUyMGVmZmljaWVuY3k=" data-listing-date-sort="1746050400000" data-listing-file-modified-sort="1773433501917" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2840">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="no-external">Interpretable building energy performance prediction using XGBoost Quantile Regression</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QnVpbGRpbmclMjBlbmVyZ3klMjBwZXJmb3JtYW5jZQ=='); return false;">Building energy performance</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('WEdCb29zdA=='); return false;">XGBoost</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjByZWdyZXNzaW9u'); return false;">Quantile regression</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RW5lcmd5JTIwZWZmaWNpZW5jeQ=='); return false;">Energy efficiency</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="no-external">
-<p>Review of an Energy &amp; Buildings paper on interpretable BEPR prediction using XGBoost, SHAP, and XGBoost Quantile Regression.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.html" class="no-external">
-<div class="listing-date">
-May 1, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="19" data-categories="UmV2aWV3JTIwaW4lMjBwcm9ncmVzcyUyQ0V4cGxhaW5pbmclMjB1bmNlcnRhaW50eSUyMHdpdGglMjBTSEFQ" data-listing-date-sort="1735682400000" data-listing-file-modified-sort="1773431178645" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="32">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Uncertainty-aware optimization of zeolite particle size.html" class="no-external">Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3JTIwaW4lMjBwcm9ncmVzcw=='); return false;">Review in progress</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmluZyUyMHVuY2VydGFpbnR5JTIwd2l0aCUyMFNIQVA='); return false;">Explaining uncertainty with SHAP</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Uncertainty-aware optimization of zeolite particle size.html" class="no-external">
-<p>Quantile regression and SHAP analysis for confidence interval fluctuations. Review in progress.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Uncertainty-aware optimization of zeolite particle size.html" class="no-external">
-<div class="listing-date">
-Jan 1, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="20" data-categories="QnVpbGRpbmclMjBsb2FkJTIwZm9yZWNhc3RpbmclMkNIeWJyaWQlMjBtb2RlbHMlMkNFeHBsYWluYWJsZSUyMEFJJTJDVHJhbnNmZXIlMjBsZWFybmluZyUyQ1BoeXNpY2FsJTIwc2ltdWxhdGlvbg==" data-listing-date-sort="1727560800000" data-listing-file-modified-sort="1773434930933" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2576">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="no-external">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QnVpbGRpbmclMjBsb2FkJTIwZm9yZWNhc3Rpbmc='); return false;">Building load forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHlicmlkJTIwbW9kZWxz'); return false;">Hybrid models</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmZXIlMjBsZWFybmluZw=='); return false;">Transfer learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGh5c2ljYWwlMjBzaW11bGF0aW9u'); return false;">Physical simulation</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="no-external">
-<p>Review of an Energy paper proposing a hybrid building electricity demand forecasting framework that combines physical simulation, EMD, K-means, deep learning, SHAP, Monte Carlo prediction intervals, and transfer learning.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Hybrid model for robust and accurate forecasting building electricity demand.html" class="no-external">
-<div class="listing-date">
-Sep 29, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="21" data-categories="VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbiUyQ0V4cGxhaW5hYmxlJTIwQUklMkNOdWNsZWFyJTIwcG93ZXIlMjBwbGFudHMlMkNIdW1hbiUyMGVycm9yJTIwZGV0ZWN0aW9uJTJDQmF5ZXNpYW4lMjBuZXVyYWwlMjBuZXR3b3Jrcw==" data-listing-date-sort="1721685600000" data-listing-file-modified-sort="1773434087772" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3136">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="no-external">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TnVjbGVhciUyMHBvd2VyJTIwcGxhbnRz'); return false;">Nuclear power plants</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SHVtYW4lMjBlcnJvciUyMGRldGVjdGlvbg=='); return false;">Human error detection</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBuZXVyYWwlMjBuZXR3b3Jrcw=='); return false;">Bayesian neural networks</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="no-external">
-<p>Review of a Nuclear Technology paper integrating Bayesian uncertainty quantification and SHAP explanations for multiclass human error detection in nuclear power plant operation.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="no-external">
-<div class="listing-date">
-Jul 23, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="22" data-categories="UmV2aWV3ZWQlMkNQcm9iYWJpbGlzdGljJTIwZm9yZWNhc3RpbmclMkNFeHBsYWluYWJsZSUyMEFJJTJDU29sYXIlMjBwb3dlciUyQ05HQm9vc3Q=" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178424" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="918">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="no-external">An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3ZWQ='); return false;">Reviewed</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U29sYXIlMjBwb3dlcg=='); return false;">Solar power</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TkdCb29zdA=='); return false;">NGBoost</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="no-external">
-<p>Review of an Applied Energy paper combining NGBoost and SHAP for interpretable probabilistic solar power forecasting.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="23" data-categories="UmV2aWV3ZWQlMkNUaGVvcnklMkNNZXRob2RvbG9neSUyMEp1c3RpZmljYXRpb24lMkNQcm9iYWJpbGlzdGljJTIwRm9yZWNhc3RpbmclMkNFcGlzdGVtaWMlMjB2cyUyMEFsZWF0b3JpYyUyMFVuY2VydGFpbnR5JTJDRGF0YXNldCUyMFNoaWZ0" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178441" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="848">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="no-external">Tier 2 Research Review: Theory &amp; Justification</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3ZWQ='); return false;">Reviewed</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGhlb3J5'); return false;">Theory</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWV0aG9kb2xvZ3klMjBKdXN0aWZpY2F0aW9u'); return false;">Methodology Justification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMEZvcmVjYXN0aW5n'); return false;">Probabilistic Forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXBpc3RlbWljJTIwdnMlMjBBbGVhdG9yaWMlMjBVbmNlcnRhaW50eQ=='); return false;">Epistemic vs Aleatoric Uncertainty</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YXNldCUyMFNoaWZ0'); return false;">Dataset Shift</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="no-external">
-<strong>Golden Quotes:</strong> - &gt; <em>“Better calibration and accuracy on the i.i.d. test dataset does not usually translate to better calibration under dataset shift (shifted versions as well…</em><em></em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="24" data-categories="Q29uZm9ybWFsJTIwcHJlZGljdGlvbiUyQ0V4cGxhaW5hYmxlJTIwQUklMkNVbmNlcnRhaW50eSUyMHF1YW50aWZpY2F0aW9uJTJDQ2xhc3NpZmljYXRpb24lMkNTSEFQ" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773432957164" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2646">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Explaining Set-Valued Predictions.html" class="no-external">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uZm9ybWFsJTIwcHJlZGljdGlvbg=='); return false;">Conformal prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBxdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2xhc3NpZmljYXRpb24='); return false;">Classification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U0hBUA=='); return false;">SHAP</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Explaining Set-Valued Predictions.html" class="no-external">
-<p>Review of a 2025 study proposing SHAP-based explanations for conformal classification outputs, especially class-wise p-values, set inclusion, confidence, and credibility.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Explaining Set-Valued Predictions.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="25" data-categories="RGF0YXNldCUyMFNoaWZ0JTJDT3V0LW9mLURpc3RyaWJ1dGlvbiUyMERldGVjdGlvbiUyQ01hY2hpbmUlMjBMZWFybmluZyUyME9wZXJhdGlvbnMlMjAoTUxPcHMpJTJDVHJ1c3R3b3J0aHklMjBBSQ==" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178509" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1173">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="no-external">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YXNldCUyMFNoaWZ0'); return false;">Dataset Shift</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('T3V0LW9mLURpc3RyaWJ1dGlvbiUyMERldGVjdGlvbg=='); return false;">Out-of-Distribution Detection</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5nJTIwT3BlcmF0aW9ucyUyMChNTE9wcyk='); return false;">Machine Learning Operations (MLOps)</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJ1c3R3b3J0aHklMjBBSQ=='); return false;">Trustworthy AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="no-external">
-<p>Review of a NeurIPS 2019 paper establishing a practical pipeline for dataset shift detection, characterization, and malignancy assessment using dimensionality reduction and two-sample testing.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="26" data-categories="VGhlb3J5JTJDTWV0aG9kb2xvZ3klMjBKdXN0aWZpY2F0aW9uJTJDRGF0YXNldCUyMFNoaWZ0JTJDQ292YXJpYXRlJTIwU2hpZnQ=" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178594" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="861">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="no-external">Tier 2 Research Review: Theory &amp; Justification</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGhlb3J5'); return false;">Theory</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWV0aG9kb2xvZ3klMjBKdXN0aWZpY2F0aW9u'); return false;">Methodology Justification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YXNldCUyMFNoaWZ0'); return false;">Dataset Shift</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q292YXJpYXRlJTIwU2hpZnQ='); return false;">Covariate Shift</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="no-external">
-<strong>Golden Quotes:</strong> - &gt; <em>“If the goal of the data analysis is purely predictive, no adjustment for confounding is necessary… applying procedures meant to adjust for confounding…</em><em></em><em></em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Preventing dataset shift from breaking machine-learning biomarkers.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="27" data-categories="UmV2aWV3ZWQlMkNQcm9iYWJpbGlzdGljJTIwZm9yZWNhc3RpbmclMkNFeHBsYWluYWJsZSUyMEFJJTIwKFhBSSklMkNQcmVkaWN0aXZlJTIwcHJvY2VzcyUyMG1vbml0b3JpbmclMkNRdWFudGlsZSUyMFJlZ3Jlc3Npb24lMjBGb3Jlc3RzJTJDT3BlcmF0aW9ucyUyMFJlc2VhcmNo" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178602" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1175">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="no-external">Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3ZWQ='); return false;">Reviewed</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMGZvcmVjYXN0aW5n'); return false;">Probabilistic forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSSUyMChYQUkp'); return false;">Explainable AI (XAI)</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJlZGljdGl2ZSUyMHByb2Nlc3MlMjBtb25pdG9yaW5n'); return false;">Predictive process monitoring</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpbGUlMjBSZWdyZXNzaW9uJTIwRm9yZXN0cw=='); return false;">Quantile Regression Forests</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('T3BlcmF0aW9ucyUyMFJlc2VhcmNo'); return false;">Operations Research</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="no-external">
-<p>Review of an Annals of Operations Research paper combining Quantile Regression Forests (QRF) and SHAP to explain predictive uncertainty in manufacturing.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="28" data-categories="VW5jZXJ0YWludHklMjBRdWFudGlmaWNhdGlvbiUyQ0NhbGlicmF0aW9uJTJDQWRhcHRpdml0eSUyQ0NvbnNpc3RlbmN5JTJDUHJvYmFiaWxpc3RpYyUyMEZvcmVjYXN0aW5nJTJDRXhwbGFpbmFibGUlMjBBSQ==" data-listing-date-sort="1715983200000" data-listing-file-modified-sort="1773431178653" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1229">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="no-external">Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VW5jZXJ0YWludHklMjBRdWFudGlmaWNhdGlvbg=='); return false;">Uncertainty Quantification</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2FsaWJyYXRpb24='); return false;">Calibration</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWRhcHRpdml0eQ=='); return false;">Adaptivity</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uc2lzdGVuY3k='); return false;">Consistency</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpc3RpYyUyMEZvcmVjYXN0aW5n'); return false;">Probabilistic Forecasting</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXhwbGFpbmFibGUlMjBBSQ=='); return false;">Explainable AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="no-external">
-<p>Review of Pascal Pernot’s framework for validating uncertainty quantification using calibration, consistency, and adaptivity.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.html" class="no-external">
-<div class="listing-date">
-May 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="29" data-categories="UmV2aWV3JTIwaW4lMjBwcm9ncmVzcyUyQ1JlbGF0ZWQlMjBsb2FkJTIwYW5kJTIwZGVtYW5kJTIwZm9yZWNhc3Rpbmc=" data-listing-date-sort="1640988000000" data-listing-file-modified-sort="1773431178661" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="32">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="no-external">Weighted residual clustering-based building load prediction interval estimation</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmV2aWV3JTIwaW4lMjBwcm9ncmVzcw=='); return false;">Review in progress</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVsYXRlZCUyMGxvYWQlMjBhbmQlMjBkZW1hbmQlMjBmb3JlY2FzdGluZw=='); return false;">Related load and demand forecasting</div>
-
-</div>
-<div class="delink listing-description"><a href="./reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="no-external">
-<p>Building load interval estimation using SHAP-guided residual clustering. Review in progress.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./reviews/Weighted residual clustering-based building load prediction interval estimation.html" class="no-external">
-<div class="listing-date">
-Jan 1, 2022
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
-  <ul class="pagination"></ul>
-</nav>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
