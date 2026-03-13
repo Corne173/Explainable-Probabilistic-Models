@@ -3,6 +3,7 @@ title: "A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty
 description: "Detailed literature review of a survey paper that organizes deep learning uncertainty quantification methods by uncertainty source rather than by model family alone."
 date: 2026-03-13
 categories:
+  - Reviewed
   - Uncertainty Quantification
   - Deep Learning
   - Explainable AI
