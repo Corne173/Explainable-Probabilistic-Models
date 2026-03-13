@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-01-01">
-<meta name="description" content="Building electricity demand forecasting with prediction intervals and SHAP. Review in progress.">
+<meta name="dcterms.date" content="2024-09-29">
+<meta name="description" content="Review of an Energy paper proposing a hybrid building electricity demand forecasting framework that combines physical simulation, EMD, K-means, deep learning, SHAP, Monte Carlo prediction intervals, and transfer learning.">
 
 <title>Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods – Review Articles</title>
 <style>
@@ -359,14 +359,17 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Review in progress</div>
-    <div class="quarto-category">Related load and demand forecasting</div>
+    <div class="quarto-category">Building load forecasting</div>
+    <div class="quarto-category">Hybrid models</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Transfer learning</div>
+    <div class="quarto-category">Physical simulation</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Building electricity demand forecasting with prediction intervals and SHAP. Review in progress.
+    Review of an Energy paper proposing a hybrid building electricity demand forecasting framework that combines physical simulation, EMD, K-means, deep learning, SHAP, Monte Carlo prediction intervals, and transfer learning.
   </div>
 </div>
 
@@ -377,7 +380,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
+      <p class="date">September 29, 2024</p>
     </div>
   </div>
   
@@ -389,19 +392,342 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="citation" class="level2">
-<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
 <ul>
-<li><strong>Authors &amp; Year:</strong> Dong, X., et al.&nbsp;(2024)</li>
-<li><strong>Working link:</strong> <a href="https://scholar.google.com/scholar?q=Hybrid+model+for+robust+and+accurate+forecasting+building+electricity+demand+combining+physical+and+data-driven+methods">Google Scholar search</a></li>
+<li><strong>Authors &amp; Year:</strong> Xianzhou Dong, Weiyong Guo, Cheng Zhou, Yongqiang Luo, Zhiyong Tian, Limao Zhang, Xiaoying Wu, Baobing Liu (2024)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Energy</em></li>
+<li><strong>DOI:</strong> https://doi.org/10.1016/j.energy.2024.133309</li>
+<li><strong>Application Domain:</strong> Building electricity demand forecasting</li>
+<li><strong>Core Methods:</strong> Physical simulation + EMD + K-means + LSTM / TCN-GRU + SHAP + Monte Carlo + transfer learning</li>
+<li><strong>Case Study:</strong> Glodon Xi’an Digital Architecture R&amp;D Building, China</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High / Relevant methodological inspiration</li>
+<li><strong>Date Reviewed:</strong> 2026-03-13</li>
 </ul>
+<hr>
 </section>
-<section id="review-status" class="level2">
-<h2 class="anchored" data-anchor-id="review-status">Review Status</h2>
-<blockquote class="blockquote">
-<p>Review in progress.</p>
-</blockquote>
-<p>This page is a placeholder for a future full review using the site template.</p>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (Why hybrid modeling?):</strong>
+<ul>
+<li>The paper starts from a very practical tension in building energy forecasting:
+<ul>
+<li><strong>Pure physical simulation</strong> is interpretable and grounded in real building physics, but it often fails to match actual operational behavior accurately.</li>
+<li><strong>Pure data-driven models</strong> can fit measured demand more accurately, but they behave like black boxes and ignore explicit physical structure.</li>
+</ul></li>
+<li>Their central argument is that building electricity demand is fundamentally governed by physical mechanisms, but actual usage also contains hidden operational patterns that only data-driven learning can uncover.</li>
+</ul></li>
+<li><strong>The Motivation (Why this matters specifically for buildings?):</strong>
+<ul>
+<li>Building electricity forecasting supports optimal control, energy management, and cost reduction.</li>
+<li>Even small forecasting improvements can translate into meaningful operational and economic benefits.</li>
+<li>In commercial buildings, actual demand is shaped not only by climate and HVAC physics, but also by occupancy behavior and irregular working patterns, which are difficult to represent in a purely simulation-based framework.</li>
+</ul></li>
+<li><strong>Their claim to fame / Novelty:</strong>
+<ul>
+<li>They propose a <strong>hybrid forecasting framework</strong> that explicitly combines:
+<ol type="1">
+<li><strong>Physical software simulation</strong> for heating and cooling loads,</li>
+<li><strong>EMD</strong> for decomposing complex demand signals,</li>
+<li><strong>K-means clustering</strong> for inferring work-state intensity,</li>
+<li><strong>Deep learning</strong> via LSTM or TCN-GRU,</li>
+<li><strong>SHAP + Pearson correlation</strong> for interpretability,</li>
+<li><strong>Monte Carlo weather-error propagation</strong> for prediction intervals,</li>
+<li><strong>Transfer learning</strong> for floors with limited historical data.</li>
+</ol></li>
+<li>The novelty is not any single component alone, but the <strong>system-level integration</strong> of physical priors, data decomposition, learned representations, interpretability, uncertainty quantification, and data-efficiency strategies into one building forecasting pipeline.</li>
+</ul></li>
+<li><strong>The Value Derived from Explainability and Hybridization:</strong>
+<ul>
+<li><strong>Physical relevance:</strong> The model does not rely purely on opaque learned correlations; it explicitly incorporates simulated heating and cooling loads.</li>
+<li><strong>Operational relevance:</strong> It discovers a more realistic “work” feature from the electricity data itself, rather than relying only on fixed calendar schedules.</li>
+<li><strong>Interpretability:</strong> SHAP and correlation analysis show which features matter most, especially work-state, lag terms, and cooling load.</li>
+<li><strong>Practical deployment value:</strong> The framework is extended beyond point forecasting to include uncertainty intervals and transfer learning for incomplete-data settings.</li>
+</ul></li>
+<li><strong>Their ultimate result:</strong>
+<ul>
+<li>The hybrid models achieve <strong>R² above 0.85, reaching up to about 0.9</strong>, while pure physical simulation alone only reaches about <strong>0.3</strong>.</li>
+<li><strong>MAE, MSE, and RMSE remain below 0.07</strong>, and <strong>SMAPE stays around 0.2</strong> in the main hybrid setup.</li>
+<li>In transfer learning settings, <strong>R² remains above 0.8</strong>, with somewhat higher errors but still workable performance.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<ul>
+<li><strong>Dataset / Testbed:</strong>
+<ul>
+<li>The study uses hourly electricity demand data from the air-conditioning terminals on each floor of the <strong>Glodon Xi’an Digital Architecture R&amp;D Building</strong>.</li>
+<li>The building is a large office building with <strong>12 floors above ground and 3 below</strong>, with substantial HVAC infrastructure and a central ecological atrium.</li>
+<li>The example time span shown in the paper covers data from <strong>April 17, 2023 to November 27, 2023</strong>.</li>
+</ul></li>
+<li><strong>Physical Model Component:</strong>
+<ul>
+<li>A <strong>BIM model</strong> is constructed in Autodesk Revit and imported into the <strong>Hongye Building Performance Analysis Platform</strong>, which uses <strong>EnergyPlus, OpenFOAM, and Radiance</strong> as core engines.</li>
+<li>The software computes annual dynamic heating and cooling loads based on building envelope, weather, HVAC design, and occupancy-related conditions.</li>
+<li>From this simulation, the paper extracts:
+<ul>
+<li><strong>Cooling load</strong>: (L_c)</li>
+<li><strong>Heating load</strong>: (L_h)</li>
+</ul></li>
+</ul></li>
+<li><strong>Deep Learning Component:</strong>
+<ul>
+<li>Two learning backbones are tested:
+<ul>
+<li><strong>LSTM</strong></li>
+<li><strong>TCN-GRU</strong></li>
+</ul></li>
+<li>Both models include dropout and dense layers, and use <strong>Adam</strong> optimization with <strong>MSE</strong> as validation loss.</li>
+<li>The paper positions:
+<ul>
+<li><strong>LSTM</strong> as stronger for long-range temporal dependencies and expressive sequence learning,</li>
+<li><strong>TCN-GRU</strong> as combining local temporal extraction through dilated convolutions with sequential memory through GRU units.</li>
+</ul></li>
+</ul></li>
+<li><strong>Input Features:</strong>
+<ul>
+<li>The hybrid model uses six main external features:
+<ul>
+<li>Temperature</li>
+<li>Humidity</li>
+<li>Holiday</li>
+<li>Work-state</li>
+<li>Cooling load (L_c)</li>
+<li>Heating load (L_h)</li>
+</ul></li>
+<li>Lagged demand features are also used in the interpretability analysis, particularly <strong>lag-1</strong> and <strong>lag-2</strong>.</li>
+</ul></li>
+<li><strong>EMD Pre-processing:</strong>
+<ul>
+<li>They use <strong>Empirical Mode Decomposition (EMD)</strong> to break complex electricity demand data into simpler <strong>Intrinsic Mode Functions (IMFs)</strong>.</li>
+<li>The motivation is that raw electricity demand contains overlapping oscillatory structures that are difficult for deep learning models to learn directly.</li>
+<li>The IMFs are ranked by energy, and the higher-energy modes are selected to reduce computational cost while preserving most of the informative structure.</li>
+<li>Prediction is done IMF-by-IMF, and the final forecast is reconstructed by summing the predicted IMFs.</li>
+</ul></li>
+<li><strong>K-means Work-State Extraction:</strong>
+<ul>
+<li>A major contribution is the introduction of a learned “<strong>work</strong>” feature.</li>
+<li>Instead of assuming that working hours are fixed by calendar, they cluster electricity demand behavior using <strong>K-means</strong>.</li>
+<li>The electricity demand is first split into clusters, then mapped into <strong>three work-intensity classes</strong>: 0, 1, and 2.</li>
+<li>This lets the model infer actual operational intensity from load patterns rather than imposing a rigid schedule.</li>
+</ul></li>
+<li><strong>Prediction Interval Method:</strong>
+<ul>
+<li>Instead of using residual-based prediction intervals, they use <strong>weather forecast error intervals</strong> and a <strong>Monte Carlo</strong> process.</li>
+<li>The idea is to perturb the weather inputs, generate many temperature scenarios, run them through the model, and then derive the forecast interval from the resulting predictive distribution.</li>
+<li>This is conceptually different from the more standard residual-distribution approach.</li>
+</ul></li>
+<li><strong>Transfer Learning Setup:</strong>
+<ul>
+<li>Transfer learning is tested between floors.</li>
+<li>The paper uses decomposed IMFs from one floor as the source task and fine-tunes models for another floor with limited data.</li>
+<li>Initial layers are frozen, source weights are transferred, and remaining layers are fine-tuned.</li>
+<li>They specifically compare training with <strong>5 IMFs</strong> versus <strong>8 IMFs</strong>.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="validation-strategy-predictions-interpretability-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-interpretability-uncertainty">4. Validation Strategy (Predictions, Interpretability &amp; Uncertainty)</h2>
+<ul>
+<li><strong>Validating the Predictions (Forecasting Quality):</strong>
+<ul>
+<li>The paper evaluates performance using:
+<ul>
+<li><strong>MAE</strong></li>
+<li><strong>MSE</strong></li>
+<li><strong>RMSE</strong></li>
+<li><strong>SMAPE</strong></li>
+<li><strong>R²</strong></li>
+</ul></li>
+<li>These are used both to assess the effect of pre-processing and the final hybrid forecasting models.</li>
+</ul></li>
+<li><strong>Validating EMD Pre-processing:</strong>
+<ul>
+<li>They test model performance with and without EMD.</li>
+<li>For <strong>LSTM</strong>, adding EMD reduces errors and increases <strong>R² from 0.056 to 0.2938</strong>.</li>
+<li>For <strong>TCN-GRU</strong>, EMD also improves performance, increasing <strong>R² from 0.2964 to 0.3588</strong>.</li>
+<li>Their interpretation is that EMD makes hidden structure easier for the models to learn.</li>
+</ul></li>
+<li><strong>Validating the Work-State Feature:</strong>
+<ul>
+<li>Two approaches are compared:
+<ol type="1">
+<li>A manually fixed work-hour schedule,</li>
+<li>A K-means-derived work-state.</li>
+</ol></li>
+<li>The fixed schedule gives <strong>R² = 0.3040</strong>.</li>
+<li>The K-means-derived feature improves performance dramatically to <strong>R² = 0.8417</strong>.</li>
+<li>Residual plots, Q-Q plots, and residual density plots all favor the K-means approach, suggesting that it captures real operational regimes more faithfully.</li>
+</ul></li>
+<li><strong>Validating the Final Hybrid Model:</strong>
+<ul>
+<li>On the 8th-floor dataset, both hybrid models achieve roughly <strong>R² ≈ 0.85</strong>.</li>
+<li>Errors are low, with <strong>RMSE and MAE below 0.07</strong>, and <strong>SMAPE below 0.25</strong>.</li>
+<li>The paper says <strong>TCN-GRU appears slightly better overall</strong> in the main hybrid forecasting experiment, especially from residual distribution behavior.</li>
+</ul></li>
+<li><strong>Validating the Explanations (XAI Quality):</strong>
+<ul>
+<li>They use <strong>SHAP values</strong> and <strong>Pearson correlation heatmaps</strong>.</li>
+<li>This is not a formal XAI benchmarking framework; it is mainly a feature-importance and domain-consistency analysis.</li>
+<li>For the <strong>third floor</strong>, the top features are:
+<ul>
+<li>work</li>
+<li>(L_c)</li>
+<li>lag-1</li>
+<li>lag-2</li>
+</ul></li>
+<li>For the <strong>eighth floor</strong>, the top features are:
+<ul>
+<li>work</li>
+<li>lag-1</li>
+<li>lag-2</li>
+<li>(L_c)</li>
+</ul></li>
+<li>The ranking shift is interpreted as a time-scale effect: lag terms dominate at shorter scales, while physically simulated cooling load becomes more influential at larger scales.</li>
+</ul></li>
+<li><strong>Validating Prediction Intervals:</strong>
+<ul>
+<li>They generate intervals using Monte Carlo propagation of weather uncertainty.</li>
+<li>The reported <strong>PINAW</strong> is <strong>0.7513</strong> for the shown LSTM interval example.</li>
+<li>The paper argues that this is more practically aligned with real forecasting conditions than intervals based only on residual assumptions.</li>
+</ul></li>
+<li><strong>Validating Transfer Learning:</strong>
+<ul>
+<li>With transfer learning, <strong>R² remains above 0.8</strong>.</li>
+<li>Increasing IMF count from 5 to 8 improves <strong>R²</strong>, for example from <strong>0.83 to 0.88</strong> in the LSTM setup.</li>
+<li>Errors remain below <strong>0.2</strong>, while <strong>SMAPE stays around 0.4</strong>.</li>
+<li>The paper concludes that <strong>LSTM performs slightly better than TCN-GRU in the transfer learning setting</strong>, especially in residual normality and generalization.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">5. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<ul>
+<li><strong>Criticism 1: The “hybrid” idea is strong, but causality is still limited.</strong>
+<ul>
+<li>The paper is better than a purely black-box demand model because it injects physically simulated cooling and heating loads.</li>
+<li>However, the final predictive mechanism is still primarily correlational rather than causal.</li>
+<li>The physical model provides useful priors, but the deep model does not explicitly enforce thermodynamic consistency or energy-balance constraints during learning.</li>
+</ul></li>
+<li><strong>Criticism 2: The XAI is useful, but still shallow.</strong>
+<ul>
+<li>SHAP and Pearson correlation are helpful for identifying influential features, but this is still a relatively lightweight form of interpretability.</li>
+<li>The paper does not evaluate:
+<ul>
+<li>explanation stability,</li>
+<li>sensitivity to perturbations,</li>
+<li>faithfulness/fidelity,</li>
+<li>robustness across retraining runs.</li>
+</ul></li>
+<li>So the interpretability story is persuasive, but not especially rigorous.</li>
+</ul></li>
+<li><strong>Criticism 3: Their strongest gain may come from feature engineering, not necessarily architecture.</strong>
+<ul>
+<li>A big jump in performance comes from the <strong>K-means-derived work-state feature</strong>.</li>
+<li>That suggests the paper’s real contribution may be less about LSTM vs TCN-GRU and more about constructing better operational features.</li>
+<li>In that sense, the “hybrid” framework is partly a feature-engineering framework disguised as a forecasting architecture.</li>
+</ul></li>
+<li><strong>Criticism 4: The comparison against pure physical simulation is somewhat easy to win.</strong>
+<ul>
+<li>The paper emphasizes that pure physical simulation only reaches <strong>R² ≈ 0.3</strong>.</li>
+<li>That result is believable, but it is also not surprising.</li>
+<li>Whole-building or floor-level electricity demand includes many operational irregularities, occupancy deviations, and control behaviors that calibrated simulation alone often misses.</li>
+<li>So the comparison is valid, but not especially demanding as a benchmark.</li>
+</ul></li>
+<li><strong>Criticism 5: The uncertainty modeling is interesting, but incomplete.</strong>
+<ul>
+<li>Their Monte Carlo interval method based on weather forecast error is novel in context and practically meaningful.</li>
+<li>But it only propagates uncertainty from weather forecasts, mainly temperature and humidity.</li>
+<li>It does <strong>not</strong> fully capture:
+<ul>
+<li>model uncertainty,</li>
+<li>occupancy uncertainty,</li>
+<li>control-system uncertainty,</li>
+<li>sensor noise,</li>
+<li>structural misspecification.</li>
+</ul></li>
+<li>So the interval is not a full predictive uncertainty distribution, but rather a partial uncertainty analysis.</li>
+</ul></li>
+<li><strong>Criticism 6: The transfer learning claim is promising, but narrow.</strong>
+<ul>
+<li>Transfer learning is only demonstrated across floors within the same building.</li>
+<li>This is useful, but still a relatively favorable transfer setting because the floors share infrastructure, climate, schedule patterns, and building envelope assumptions.</li>
+<li>True generalization to different buildings, HVAC systems, climates, or usage types is not shown.</li>
+</ul></li>
+<li><strong>Criticism 7: The weather feature set is thin.</strong>
+<ul>
+<li>The authors themselves acknowledge that only <strong>temperature and humidity</strong> are used from weather data.</li>
+<li>For building electricity demand, especially cooling-dominated operation, omitted variables such as:
+<ul>
+<li>solar radiation,</li>
+<li>wind speed,</li>
+<li>cloud cover,</li>
+<li>occupancy proxies,</li>
+<li>internal equipment gains, could materially affect performance and feature interpretation.</li>
+</ul></li>
+</ul></li>
+<li><strong>Criticism 8: Residual normality is slightly overused as a quality signal.</strong>
+<ul>
+<li>The paper repeatedly treats approximately normal residuals as evidence of good generalization and model validity.</li>
+<li>That is not completely wrong, but it is a weak standard on its own.</li>
+<li>A model can still have operationally important biases, heteroscedasticity, or poor tail behavior even if residual plots look roughly normal.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="why-this-paper-matters-for-my-research" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-paper-matters-for-my-research">6. Why This Paper Matters for My Research</h2>
+<ul>
+<li><strong>What is genuinely useful here:</strong>
+<ul>
+<li>It offers a strong example of how to combine:
+<ul>
+<li>physical priors,</li>
+<li>decomposed time-series structure,</li>
+<li>learned operational states,</li>
+<li>explainability,</li>
+<li>interval forecasting,</li>
+<li>and data-efficiency techniques.</li>
+</ul></li>
+<li>This is especially valuable if I want to argue that interpretable forecasting should not be framed as purely “post-hoc XAI on black-box models,” but can also come from <strong>hybridization with domain structure</strong>.</li>
+</ul></li>
+<li><strong>What I would borrow:</strong>
+<ul>
+<li>The idea of using <strong>derived operational-state features</strong> instead of relying only on calendar variables.</li>
+<li>The use of <strong>simulation outputs as explanatory auxiliary features</strong> rather than as standalone forecasts.</li>
+<li>The framing that interpretability can also be about verifying whether physically meaningful variables rise in importance.</li>
+</ul></li>
+<li><strong>What I would improve:</strong>
+<ul>
+<li>Add stronger baselines.</li>
+<li>Add formal explanation-quality tests.</li>
+<li>Compare residual-based vs weather-error-based intervals more directly.</li>
+<li>Use richer exogenous features.</li>
+<li>Test transfer learning across more diverse domains, not just neighboring floors.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">7. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper in the part of my literature review dealing with <strong>hybrid physical + ML forecasting frameworks</strong> for energy systems.</label></li>
+<li><label><input type="checkbox">Use it as an example of <strong>interpretable hybrid forecasting</strong>, but note that its XAI evaluation remains largely descriptive rather than rigorous.</label></li>
+<li><label><input type="checkbox">Reference its <strong>K-means work-state feature engineering</strong> idea when discussing operational-state extraction from electricity demand.</label></li>
+<li><label><input type="checkbox">Mention its <strong>weather-error-driven Monte Carlo interval approach</strong> as an alternative to residual-based uncertainty estimation.</label></li>
+<li><label><input type="checkbox">Position my own work as extending beyond this by using stronger uncertainty modeling, more formal XAI validation, richer feature sets, or broader transfer tests.</label></li>
+<li><label><input type="checkbox">Note that this paper shows an important principle: <strong>physical simulation is often most valuable as a structured input to ML, rather than as a standalone forecasting engine</strong>.</label></li>
+</ul>
+<hr>
+</section>
+<section id="one-sentence-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="one-sentence-takeaway">8. One-Sentence Takeaway</h2>
+<p>This paper is a strong example of a practically motivated hybrid forecasting framework: it shows that physically simulated HVAC loads, data-driven decomposition, learned work-state features, and post-hoc interpretability can be combined to produce accurate and operationally meaningful building electricity forecasts, but its claims about interpretability, uncertainty, and transferability remain more promising than fully proven.</p>
 
 
 </section>

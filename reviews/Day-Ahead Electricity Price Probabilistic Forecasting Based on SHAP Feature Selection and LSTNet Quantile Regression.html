@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-01-01">
-<meta name="description" content="LSTNet quantile regression with SHAP-based feature selection. Review in progress.">
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of an Energies paper combining SHAP-based feature selection with LSTNet quantile regression and KDE for probabilistic day-ahead electricity price forecasting.">
 
 <title>Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression – Review Articles</title>
 <style>
@@ -359,14 +359,18 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Review in progress</div>
-    <div class="quarto-category">Power systems baselines</div>
+    <div class="quarto-category">Probabilistic forecasting</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Electricity price forecasting</div>
+    <div class="quarto-category">SHAP</div>
+    <div class="quarto-category">LSTNet</div>
+    <div class="quarto-category">Quantile regression</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    LSTNet quantile regression with SHAP-based feature selection. Review in progress.
+    Review of an Energies paper combining SHAP-based feature selection with LSTNet quantile regression and KDE for probabilistic day-ahead electricity price forecasting.
   </div>
 </div>
 
@@ -377,7 +381,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2023</p>
+      <p class="date">March 13, 2026</p>
     </div>
   </div>
   
@@ -389,19 +393,516 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="citation" class="level2">
-<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
 <ul>
-<li><strong>Authors &amp; Year:</strong> Liu, H., et al.&nbsp;(2023)</li>
-<li><strong>Working link:</strong> <a href="https://scholar.google.com/scholar?q=Day-Ahead+Electricity+Price+Probabilistic+Forecasting+Based+on+SHAP+Feature+Selection+and+LSTNet+Quantile+Regression">Google Scholar search</a></li>
+<li><strong>Authors &amp; Year:</strong> Huixin Liu, Xiaodong Shen, Xisheng Tang, Junyong Liu (2023)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>Energies</em></li>
+<li><strong>DOI:</strong> <code>10.3390/en16135152</code></li>
+<li><strong>Main Topic:</strong> Probabilistic day-ahead electricity price forecasting</li>
+<li><strong>Core Methods:</strong> SHAP feature selection, LSTNet quantile regression, kernel density estimation (KDE)</li>
+<li><strong>Dataset / Market:</strong> Danish electricity market, forecasting the DK1 day-ahead tariff</li>
+<li><strong>Time Span of Data:</strong> 1 May 2019 to 31 August 2019</li>
+<li><strong>Train/Test Split:</strong> Training: 1 May 2019 to 31 July 2019; Testing: 1 August 2019 to 31 August 2019</li>
+<li><strong>Primary Contribution Type:</strong> Hybrid forecasting framework combining interpretability, feature selection, and probabilistic forecasting</li>
+<li><strong>Proximity / Threat Level:</strong> Moderate to High, especially for research involving SHAP-based feature selection in energy-market forecasting</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (Why electricity price forecasting matters):</strong>
+<ul>
+<li>Electricity prices are central to electricity-market decision making and directly influence resource allocation, bidding, and operational planning.</li>
+<li>Rising renewable penetration has increased volatility and uncertainty, making price behavior harder to model accurately.</li>
+<li>The authors argue that deterministic forecasting alone is insufficient because it produces only a single point estimate and does not quantify uncertainty.</li>
+</ul></li>
+<li><strong>The Motivation (Why probabilistic forecasting):</strong>
+<ul>
+<li>Electricity prices in modern power systems are noisy, volatile, and influenced by many interacting drivers.</li>
+<li>Probabilistic forecasting provides richer information than point forecasts by estimating quantiles, intervals, and density functions.</li>
+<li>This is especially useful for market participants making risk-sensitive decisions under uncertainty.</li>
+</ul></li>
+<li><strong>The Motivation (Why SHAP / interpretability):</strong>
+<ul>
+<li>The input feature space in integrated electricity markets can become large and redundant.</li>
+<li>The authors use SHAP not only as an interpretation tool, but also as a feature selection mechanism.</li>
+<li>Their framing is that SHAP helps reveal both <strong>which variables matter most</strong> and <strong>how they influence the final forecast</strong>, including directionality.</li>
+</ul></li>
+<li><strong>Their claim to novelty:</strong>
+<ul>
+<li>They propose a <strong>new probabilistic electricity price forecasting framework</strong> that combines:
+<ol type="1">
+<li>SHAP-based feature selection,</li>
+<li>LSTNet quantile regression,</li>
+<li>KDE-based recovery of probability density functions and prediction intervals.</li>
+</ol></li>
+<li>Their novelty is less about inventing a brand-new model family and more about integrating <strong>interpretable feature selection</strong> with <strong>nonparametric probabilistic forecasting</strong> in a structured pipeline.</li>
+</ul></li>
+<li><strong>What the paper is really contributing:</strong>
+<ul>
+<li>A feature-selection stage using SHAP values to reduce redundancy and overfitting.</li>
+<li>A probabilistic forecasting stage where LSTNet predicts multiple quantiles.</li>
+<li>A nonparametric density reconstruction step using Gaussian kernel density estimation.</li>
+<li>Qualitative market interpretation through SHAP feature-importance and dependence analysis.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<section id="forecasting-philosophy" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting-philosophy">3.1 Forecasting Philosophy</h3>
+<ul>
+<li>The paper positions itself explicitly in the <strong>nonparametric probabilistic forecasting</strong> camp.</li>
+<li>The authors criticize parametric probabilistic methods because real power-system outputs can be highly stochastic, fat-tailed, and polymorphic, making rigid parametric assumptions unreliable.</li>
+<li>Their workaround is:
+<ul>
+<li>estimate quantiles directly via quantile regression,</li>
+<li>then reconstruct the implied probability density using KDE.</li>
+</ul></li>
 </ul>
 </section>
-<section id="review-status" class="level2">
-<h2 class="anchored" data-anchor-id="review-status">Review Status</h2>
-<blockquote class="blockquote">
-<p>Review in progress.</p>
-</blockquote>
-<p>This page is a placeholder for a future full review using the site template.</p>
+<section id="shap-for-feature-selection-and-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="shap-for-feature-selection-and-analysis">3.2 SHAP for Feature Selection and Analysis</h3>
+<ul>
+<li>SHAP is used in <strong>two distinct ways</strong>:
+<ol type="1">
+<li><strong>Feature selection</strong>: rank variables by average absolute SHAP value,</li>
+<li><strong>Feature analysis</strong>: inspect whether features increase or decrease price and how this depends on feature magnitude.</li>
+</ol></li>
+<li>The feature importance score is computed as the average absolute SHAP contribution for a feature across samples.</li>
+<li>Unlike plain correlation-based ranking, SHAP preserves both:
+<ul>
+<li><strong>magnitude of influence</strong>, and</li>
+<li><strong>direction of influence</strong>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="lstnet-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="lstnet-architecture">3.3 LSTNet Architecture</h3>
+<ul>
+<li>The forecasting backbone is <strong>LSTNet</strong>, chosen because electricity prices exhibit:
+<ul>
+<li>short-term local dependencies,</li>
+<li>long-term cyclical dependencies,</li>
+<li>nonlinear behavior.</li>
+</ul></li>
+<li>LSTNet contains:
+<ul>
+<li>a <strong>CNN module</strong> for short-term local feature extraction,</li>
+<li>a <strong>recurrent / recurrent-skip module</strong> for long-term temporal dependence,</li>
+<li>an <strong>autoregressive linear module</strong> to restore sensitivity to scale changes.</li>
+</ul></li>
+<li>This last point is important: the authors explicitly note that the nonlinear components can become insensitive to input scale, so the AR branch is added to correct that weakness.</li>
+</ul>
+</section>
+<section id="quantile-regression-layer" class="level3">
+<h3 class="anchored" data-anchor-id="quantile-regression-layer">3.4 Quantile Regression Layer</h3>
+<ul>
+<li>The paper explains quantile regression from the ground up:
+<ul>
+<li>standard linear quantile regression,</li>
+<li>neural-network quantile regression,</li>
+<li>then LSTNet quantile regression.</li>
+</ul></li>
+<li>In practice, the model predicts a set of electricity-price quantiles rather than a single expected value.</li>
+<li>The paper states that the <strong>inter-quantile interval is 0.1</strong>, so they appear to forecast quantiles on a coarse grid such as 0.1, 0.2, …, 0.9.</li>
+</ul>
+</section>
+<section id="density-reconstruction-with-kde" class="level3">
+<h3 class="anchored" data-anchor-id="density-reconstruction-with-kde">3.5 Density Reconstruction with KDE</h3>
+<ul>
+<li>After obtaining predicted quantiles, the authors use <strong>Gaussian kernel density estimation</strong> to reconstruct a continuous predictive distribution.</li>
+<li>Bandwidth is chosen via the <strong>Rule-of-Thumb</strong> formula.</li>
+<li>This step lets them move from a discrete set of predicted quantiles to:
+<ul>
+<li>a probability density function,</li>
+<li>and prediction intervals at different confidence levels.</li>
+</ul></li>
+</ul>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">3.6 Evaluation Metrics</h3>
+<ul>
+<li><strong>Point forecasting metrics:</strong> RMSE and MAPE</li>
+<li><strong>Interval / probabilistic metrics:</strong>
+<ul>
+<li>PICP: Prediction Interval Coverage Probability</li>
+<li>PINAW: Prediction Interval Average Width</li>
+<li>AL: Average pinball loss</li>
+</ul></li>
+<li>The paper emphasizes the trade-off between:
+<ul>
+<li><strong>coverage / reliability</strong> and</li>
+<li><strong>sharpness / narrow intervals</strong></li>
+</ul></li>
+<li>They use <strong>average pinball loss</strong> as the tie-breaker when PICP and PINAW point in opposite directions.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="dataset-testbed" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-testbed">4. Dataset / Testbed</h2>
+<ul>
+<li><strong>Market:</strong> Danish electricity market</li>
+<li><strong>Target:</strong> DK1 day-ahead tariff</li>
+<li><strong>Data source:</strong> <code>www.energidataservice.dk</code></li>
+<li><strong>Time span:</strong> 1 May 2019 to 31 August 2019</li>
+<li><strong>Training period:</strong> 1 May 2019 to 31 July 2019</li>
+<li><strong>Testing period:</strong> 1 August 2019 to 31 August 2019</li>
+</ul>
+<section id="input-features" class="level3">
+<h3 class="anchored" data-anchor-id="input-features">Input Features</h3>
+<p>The paper includes lagged regional electricity prices and market/renewable/exchange variables such as: - DK1, DK2 lagged prices, - neighboring market prices: DE, NO2, SE3, SE4, SYS, - DK1 production and consumption, - wind, solar, and hydropower, - exchange variables between DK1 and neighboring regions/countries.</p>
+</section>
+<section id="important-practical-note" class="level3">
+<h3 class="anchored" data-anchor-id="important-practical-note">Important practical note</h3>
+<ul>
+<li>This is a <strong>very short study period</strong> for electricity price forecasting: only about four months in total, with roughly three months used for training.</li>
+<li>That makes the paper more of a <strong>method demonstration</strong> than a strong stress-test across seasons, years, structural breaks, and market regime shifts.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="feature-selection-findings-interpretability-results" class="level2">
+<h2 class="anchored" data-anchor-id="feature-selection-findings-interpretability-results">5. Feature Selection Findings &amp; Interpretability Results</h2>
+<section id="top-ranked-features" class="level3">
+<h3 class="anchored" data-anchor-id="top-ranked-features">5.1 Top-ranked Features</h3>
+<p>The top SHAP-ranked inputs are: 1. <code>DK2_7</code> 2. <code>DK1_7</code> 3. <code>DK1_1</code> 4. <code>DE_1</code> 5. <code>DK2_1</code> 6. <code>ExGE_1</code> 7. <code>HydroPower_1</code></p>
+<p>The authors then keep the <strong>top seven features</strong> as the final input set.</p>
+</section>
+<section id="market-interpretation-from-shap" class="level3">
+<h3 class="anchored" data-anchor-id="market-interpretation-from-shap">5.2 Market Interpretation from SHAP</h3>
+<ul>
+<li><strong>DK2_7</strong> was the most influential feature overall.</li>
+<li>Among neighboring-country variables, <strong>Germany (<code>DE_1</code>)</strong> had the strongest influence on Danish prices.</li>
+<li>Among renewables, <strong>hydropower</strong> ranked above wind and solar.</li>
+<li>Among exchange variables, <strong>ExGE_1</strong> (exchange between DK1 and Germany) was most important.</li>
+</ul>
+</section>
+<section id="directional-effects-found-by-shap" class="level3">
+<h3 class="anchored" data-anchor-id="directional-effects-found-by-shap">5.3 Directional effects found by SHAP</h3>
+<ul>
+<li>For <code>DK2_7</code>:
+<ul>
+<li>lower historical DK2 prices tended to push predictions down,</li>
+<li>higher historical DK2 prices tended to push predictions up.</li>
+</ul></li>
+<li>For <code>SE4_1</code>:
+<ul>
+<li>lower values tended to increase predicted DK1 prices,</li>
+<li>higher values tended to reduce them.</li>
+</ul></li>
+<li>For <code>Wind_1</code>:
+<ul>
+<li>the paper identifies a threshold around <strong>1000</strong>,</li>
+<li>below this value, wind tended to reduce price,</li>
+<li>above it, wind tended to increase price.</li>
+</ul></li>
+<li>For <code>ExGE_1</code>:
+<ul>
+<li>below roughly <strong>800</strong>, exchange with Germany increased price,</li>
+<li>above roughly <strong>1000</strong>, it decreased price.</li>
+</ul></li>
+</ul>
+</section>
+<section id="what-is-useful-here" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-useful-here">5.4 What is useful here</h3>
+<ul>
+<li>This is one of the stronger parts of the paper.</li>
+<li>The authors do not just rank features; they try to interpret market mechanisms.</li>
+<li>Even if the interpretations are simplified, the workflow is useful:
+<ul>
+<li>global ranking,</li>
+<li>local directional analysis,</li>
+<li>threshold-style dependence plots.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="forecasting-results" class="level2">
+<h2 class="anchored" data-anchor-id="forecasting-results">6. Forecasting Results</h2>
+<section id="point-forecasting-results" class="level3">
+<h3 class="anchored" data-anchor-id="point-forecasting-results">6.1 Point Forecasting Results</h3>
+<p>The paper compares BPNN, LSTM, LSTNet, and their SHAP-selected variants.</p>
+<section id="table-point-forecasting-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="table-point-forecasting-metrics">Table: Point forecasting metrics</h4>
+<ul>
+<li><strong>BPNN:</strong> RMSE = 8.35, MAPE = 13.02</li>
+<li><strong>LSTM:</strong> RMSE = 7.80, MAPE = 14.62</li>
+<li><strong>LSTNet:</strong> RMSE = 4.96, MAPE = 8.39</li>
+<li><strong>SHAP–BPNN:</strong> RMSE = 4.27, MAPE = 10.34</li>
+<li><strong>SHAP–LSTM:</strong> RMSE = 3.62, MAPE = 9.28</li>
+<li><strong>SHAP–LSTNet:</strong> RMSE = 2.35, MAPE = 5.39</li>
+</ul>
+</section>
+</section>
+<section id="key-takeaway" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaway">Key takeaway</h3>
+<ul>
+<li>LSTNet was the best base model.</li>
+<li>SHAP-based feature selection improved all three model families.</li>
+<li>The best overall point forecasting model was <strong>SHAP–LSTNet</strong>.</li>
+</ul>
+</section>
+<section id="probabilistic-forecasting-results" class="level3">
+<h3 class="anchored" data-anchor-id="probabilistic-forecasting-results">6.2 Probabilistic Forecasting Results</h3>
+<p>The benchmark probabilistic models are SHAP–BPNN, SHAP–LSTM, and SHAP–LSTNet.</p>
+<section id="at-confidence-level-0.9" class="level4">
+<h4 class="anchored" data-anchor-id="at-confidence-level-0.9">At confidence level 0.9:</h4>
+<ul>
+<li><strong>SHAP–BPNN:</strong> PINAW = 22.22, PICP = 10.87, AL = 2.61</li>
+<li><strong>SHAP–LSTM:</strong> PINAW = 72.22, PICP = 32.74, AL = 0.88</li>
+<li><strong>SHAP–LSTNet:</strong> PINAW = 97.22, PICP = 35.79, AL = 0.41</li>
+</ul>
+</section>
+<section id="at-confidence-level-0.8" class="level4">
+<h4 class="anchored" data-anchor-id="at-confidence-level-0.8">At confidence level 0.8:</h4>
+<ul>
+<li><strong>SHAP–BPNN:</strong> PINAW = 15.28, PICP = 7.42, AL = 2.25</li>
+<li><strong>SHAP–LSTM:</strong> PINAW = 44.44, PICP = 25.72, AL = 1.58</li>
+<li><strong>SHAP–LSTNet:</strong> PINAW = 80.56, PICP = 27.13, AL = 0.80</li>
+</ul>
+</section>
+<section id="at-confidence-level-0.7" class="level4">
+<h4 class="anchored" data-anchor-id="at-confidence-level-0.7">At confidence level 0.7:</h4>
+<ul>
+<li><strong>SHAP–BPNN:</strong> PINAW = 9.72, PICP = 5.77, AL = 4.88</li>
+<li><strong>SHAP–LSTM:</strong> PINAW = 34.72, PICP = 17.42, AL = 1.85</li>
+<li><strong>SHAP–LSTNet:</strong> PINAW = 77.78, PICP = 24.13, AL = 1.14</li>
+</ul>
+</section>
+</section>
+<section id="their-conclusion-from-probabilistic-results" class="level3">
+<h3 class="anchored" data-anchor-id="their-conclusion-from-probabilistic-results">Their conclusion from probabilistic results</h3>
+<ul>
+<li>The authors conclude that <strong>SHAP–LSTNet at 0.9 confidence</strong> is the best probabilistic model, mainly because it achieves the <strong>smallest average pinball loss</strong>.</li>
+<li>They argue that narrow intervals alone are not desirable if they fail to cover the actual observations.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="validation-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy">7. Validation Strategy</h2>
+<ul>
+<li><strong>Forecasting validation:</strong> straightforward hold-out split
+<ul>
+<li>train on May–July 2019,</li>
+<li>test on August 2019.</li>
+</ul></li>
+<li><strong>Point forecasting validation:</strong> RMSE and MAPE</li>
+<li><strong>Probabilistic validation:</strong> PICP, PINAW, AL</li>
+<li><strong>Interpretability validation:</strong> qualitative SHAP plots and market-based reasoning</li>
+</ul>
+<section id="what-is-missing" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-missing">What is missing</h3>
+<ul>
+<li>No rolling-origin evaluation</li>
+<li>No walk-forward backtesting across multiple months or seasons</li>
+<li>No repeated experiments across years</li>
+<li>No robustness analysis under price spikes, regime shifts, or extreme events</li>
+<li>No formal quantitative validation of explanations</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">8. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<section id="criticism-1-the-dataset-is-too-short-for-strong-claims" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-1-the-dataset-is-too-short-for-strong-claims">Criticism 1: The dataset is too short for strong claims</h3>
+<ul>
+<li>The training window is only three months and the test window is only one month.</li>
+<li>Electricity price forecasting is highly regime-sensitive.</li>
+<li>A model that works over one August test month may not generalize across winter, fuel shocks, transmission events, or unusual renewable conditions.</li>
+<li>This is a serious limitation if the paper is read as evidence of broad practical superiority.</li>
+</ul>
+</section>
+<section id="criticism-2-shap-is-used-on-top-of-a-small-sample-setup" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-2-shap-is-used-on-top-of-a-small-sample-setup">Criticism 2: SHAP is used on top of a small-sample setup</h3>
+<ul>
+<li>SHAP rankings can be useful, but with limited data, feature-importance estimates can become unstable.</li>
+<li>The paper does not test whether the selected top-seven feature set is stable across:
+<ul>
+<li>different train/test splits,</li>
+<li>different random seeds,</li>
+<li>or different model initializations.</li>
+</ul></li>
+<li>So the feature-selection conclusions may be more fragile than the paper suggests.</li>
+</ul>
+</section>
+<section id="criticism-3-the-probabilistic-evaluation-looks-odd" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-3-the-probabilistic-evaluation-looks-odd">Criticism 3: The probabilistic evaluation looks odd</h3>
+<ul>
+<li>The reported PICP values are surprisingly low relative to the stated confidence levels.</li>
+<li>For example, at a 0.9 confidence level, a PICP of <strong>35.79</strong> is far below what one would expect if the intervals were calibrated in the usual sense.</li>
+<li>That raises at least one of three possibilities:
+<ol type="1">
+<li>unusual scaling/definition,</li>
+<li>reporting inconsistency,</li>
+<li>poor calibration despite low pinball loss.</li>
+</ol></li>
+<li>The paper does not fully unpack this tension.</li>
+</ul>
+</section>
+<section id="criticism-4-kde-after-quantile-prediction-is-a-practical-workaround-not-a-fully-coherent-probabilistic-model" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-4-kde-after-quantile-prediction-is-a-practical-workaround-not-a-fully-coherent-probabilistic-model">Criticism 4: KDE after quantile prediction is a practical workaround, not a fully coherent probabilistic model</h3>
+<ul>
+<li>The framework first predicts quantiles and then reconstructs a density with KDE.</li>
+<li>This can be useful, but it is a somewhat stitched-together pipeline.</li>
+<li>It does not guarantee the same degree of internal probabilistic coherence as methods that directly learn a full conditional distribution.</li>
+</ul>
+</section>
+<section id="criticism-5-baselines-are-weak-and-narrow" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-5-baselines-are-weak-and-narrow">Criticism 5: Baselines are weak and narrow</h3>
+<ul>
+<li>The comparison set is mainly BPNN, LSTM, and LSTNet variants.</li>
+<li>That is not enough to establish state-of-the-art superiority in electricity price forecasting.</li>
+<li>Stronger baselines could have included:
+<ul>
+<li>quantile gradient boosting,</li>
+<li>quantile random forests,</li>
+<li>LightGBM/XGBoost quantile models,</li>
+<li>conformalized interval methods,</li>
+<li>transformer-based time-series models,</li>
+<li>modern probabilistic deep learning baselines.</li>
+</ul></li>
+</ul>
+</section>
+<section id="criticism-6-interpretability-is-descriptive-not-rigorously-validated" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-6-interpretability-is-descriptive-not-rigorously-validated">Criticism 6: Interpretability is descriptive, not rigorously validated</h3>
+<ul>
+<li>The SHAP analysis is interesting and readable.</li>
+<li>But the paper treats plausible feature plots as sufficient evidence of interpretability quality.</li>
+<li>It does not test:
+<ul>
+<li>explanation stability,</li>
+<li>explanation fidelity,</li>
+<li>sensitivity to background distribution choice,</li>
+<li>or whether the explanations remain consistent across retraining runs.</li>
+</ul></li>
+</ul>
+</section>
+<section id="criticism-7-no-explicit-treatment-of-quantile-crossing" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-7-no-explicit-treatment-of-quantile-crossing">Criticism 7: No explicit treatment of quantile crossing</h3>
+<ul>
+<li>Since the method predicts multiple quantiles, quantile crossing is a natural concern.</li>
+<li>The paper does not clearly discuss whether the predicted quantiles were constrained or post-processed to remain monotonic.</li>
+<li>That matters if the quantiles are later fed into KDE.</li>
+</ul>
+</section>
+<section id="criticism-8-market-interpretation-may-be-overly-literal" class="level3">
+<h3 class="anchored" data-anchor-id="criticism-8-market-interpretation-may-be-overly-literal">Criticism 8: Market interpretation may be overly literal</h3>
+<ul>
+<li>The paper interprets SHAP dependence plots as if they reveal stable market thresholds, such as wind = 1000 or exchange = 800.</li>
+<li>These thresholds may just reflect local patterns in this dataset rather than deep structural market truths.</li>
+<li>The paper could have been more careful in separating:
+<ul>
+<li>data-specific empirical patterns,</li>
+<li>from broadly generalizable market mechanisms.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="what-this-paper-does-well" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-paper-does-well">9. What This Paper Does Well</h2>
+<ul>
+<li>It gives a clean and understandable pipeline from feature selection to probabilistic output.</li>
+<li>It uses SHAP in a more meaningful way than many papers that only include one generic feature-importance plot.</li>
+<li>It combines prediction and interpretation in a way that is easy to explain to readers.</li>
+<li>It shows clearly that feature selection can materially improve forecasting accuracy.</li>
+<li>It is a useful reference paper if your own work involves:
+<ul>
+<li>SHAP-based screening,</li>
+<li>quantile forecasting,</li>
+<li>probabilistic time-series modeling,</li>
+<li>or energy-market XAI.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="where-this-paper-sits-in-the-literature" class="level2">
+<h2 class="anchored" data-anchor-id="where-this-paper-sits-in-the-literature">10. Where This Paper Sits in the Literature</h2>
+<p>This paper sits at the intersection of three threads:</p>
+<ol type="1">
+<li><strong>Electricity price forecasting</strong>
+<ul>
+<li>moving from classical statistical models toward deep learning.</li>
+</ul></li>
+<li><strong>Probabilistic forecasting</strong>
+<ul>
+<li>shifting away from deterministic point prediction toward quantiles, intervals, and densities.</li>
+</ul></li>
+<li><strong>Explainable AI for forecasting</strong>
+<ul>
+<li>using SHAP not just for post hoc explanation, but also as a feature-selection mechanism.</li>
+</ul></li>
+</ol>
+<p>Its strongest identity is probably: &gt; a hybrid <strong>XAI + probabilistic forecasting</strong> paper for electricity markets, where SHAP is used both to reduce dimensionality and to interpret price drivers.</p>
+<hr>
+</section>
+<section id="relevance-to-my-own-research-how-i-could-use-it" class="level2">
+<h2 class="anchored" data-anchor-id="relevance-to-my-own-research-how-i-could-use-it">11. Relevance to My Own Research / How I Could Use It</h2>
+<ul>
+<li><strong>Useful as a citation for:</strong>
+<ul>
+<li>SHAP-based feature selection in energy forecasting,</li>
+<li>probabilistic forecasting using quantile regression,</li>
+<li>combining interpretability with deep temporal models,</li>
+<li>nonparametric density reconstruction after quantile estimation.</li>
+</ul></li>
+<li><strong>Useful as a methodological stepping stone:</strong>
+<ul>
+<li>It provides a precedent for using SHAP before a deep forecasting model.</li>
+<li>It supports the idea that reducing redundant inputs can improve both accuracy and interpretability.</li>
+</ul></li>
+<li><strong>Useful as a paper to critique in a literature review:</strong>
+<ul>
+<li>small dataset,</li>
+<li>limited baselines,</li>
+<li>weak probabilistic calibration discussion,</li>
+<li>no rigorous XAI validation,</li>
+<li>no stability analysis for selected features.</li>
+</ul></li>
+<li><strong>Useful positioning angle for my own work:</strong>
+<ul>
+<li>I can argue that this paper demonstrates the promise of SHAP-guided feature selection, but that it stops short of:
+<ul>
+<li>robust large-scale validation,</li>
+<li>stronger probabilistic calibration checks,</li>
+<li>richer baselines,</li>
+<li>and formal explanation-quality evaluation.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">12. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper as an example of <strong>SHAP-based feature selection for probabilistic electricity price forecasting</strong>.</label></li>
+<li><label><input type="checkbox">Use it to support the argument that SHAP can serve both <strong>interpretation</strong> and <strong>feature reduction</strong> roles.</label></li>
+<li><label><input type="checkbox">Contrast my work against its short evaluation horizon and limited benchmark set.</label></li>
+<li><label><input type="checkbox">If relevant, mention that its probabilistic framework uses <strong>quantile regression + KDE</strong>, rather than directly learning a full conditional density.</label></li>
+<li><label><input type="checkbox">In my own experiments, test SHAP-selected features across multiple splits and seeds to show stronger robustness than this paper.</label></li>
+<li><label><input type="checkbox">Add a calibration-focused discussion if I want to improve on their probabilistic validation.</label></li>
+<li><label><input type="checkbox">Consider whether my own literature review should explicitly separate:</label>
+<ul>
+<li>feature selection value,</li>
+<li>interpretability value,</li>
+<li>and true probabilistic calibration value.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="final-verdict" class="level2">
+<h2 class="anchored" data-anchor-id="final-verdict">13. Final Verdict</h2>
+<p>This is a <strong>useful and well-structured applied paper</strong> rather than a definitive state-of-the-art benchmark. Its main strength is not that it proves the best possible probabilistic electricity price forecaster, but that it presents a clear and intuitive <strong>SHAP + LSTNet + quantile/KDE</strong> pipeline that is easy to understand, easy to cite, and reasonably convincing as a proof of concept.</p>
+<p>Its key message is: &gt; SHAP-guided dimensionality reduction can improve deep probabilistic electricity price forecasting, while also making the model more interpretable.</p>
+<p>Its main weakness is: &gt; the experimental setup is too limited to fully justify strong general claims about robustness, calibration, and state-of-the-art performance.</p>
 
 
 </section>

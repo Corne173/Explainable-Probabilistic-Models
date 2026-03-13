@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-01-01">
-<meta name="description" content="Information-theoretic Shapley values for predictive uncertainty. Review in progress.">
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of a NeurIPS 2023 paper that extends Shapley-based explanations from point predictions to predictive uncertainty using information theoretic value functions.">
 
 <title>Explaining Predictive Uncertainty with Information Theoretic Shapley Values – Review Articles</title>
 <style>
@@ -359,14 +359,17 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Explaining Predictive Uncertainty with Information Theoretic Shapley Values</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Review in progress</div>
-    <div class="quarto-category">Explaining uncertainty with SHAP</div>
+    <div class="quarto-category">Explainable AI</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">Shapley values</div>
+    <div class="quarto-category">Information theory</div>
+    <div class="quarto-category">Active learning</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Information-theoretic Shapley values for predictive uncertainty. Review in progress.
+    Review of a NeurIPS 2023 paper that extends Shapley-based explanations from point predictions to predictive uncertainty using information theoretic value functions.
   </div>
 </div>
 
@@ -377,7 +380,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2023</p>
+      <p class="date">March 13, 2026</p>
     </div>
   </div>
   
@@ -389,19 +392,342 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="citation" class="level2">
-<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
 <ul>
-<li><strong>Authors &amp; Year:</strong> Watson, D.S., et al.&nbsp;(2023)</li>
-<li><strong>Working link:</strong> <a href="https://scholar.google.com/scholar?q=Explaining+Predictive+Uncertainty+with+Information+Theoretic+Shapley+Values">Google Scholar search</a></li>
+<li><strong>Authors &amp; Year:</strong> David S. Watson, Joshua O’Hara, Niek Tax, Richard Mudd, Ido Guy (2023)</li>
+<li><strong>Venue (Journal/Conference):</strong> NeurIPS 2023</li>
+<li><strong>Paper Title:</strong> <em>Explaining Predictive Uncertainty with Information Theoretic Shapley Values</em></li>
+<li><strong>Code/Data Available?:</strong> Yes, the paper states that code for experiments and figures is available in their GitHub repository (<code>facebookresearch/infoshap</code>)</li>
+<li><strong>Primary Topic:</strong> Local explanation of predictive uncertainty rather than only point predictions</li>
+<li><strong>Core Framing:</strong> Extends Shapley-style feature attribution into an information-theoretic framework so that one can explain entropy, epistemic uncertainty, aleatoric uncertainty, and related uncertainty-driven behaviours</li>
+<li><strong>Proximity/Threat Level:</strong> Medium to High / Conceptually important for any research involving XAI for uncertainty-aware forecasting</li>
+<li><strong>Source:</strong> Based on the uploaded PDF :contentReference<span data-index="0">oaicite:0</span></li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (What problem are they solving?):</strong>
+<ul>
+<li>Most XAI methods explain <em>predictions</em>, meaning point estimates, but not the <em>uncertainty</em> around those predictions. The authors argue that this is a major blind spot because predictive uncertainty strongly affects real-world trust, safety, exploration, generalization, and decision-making under distribution shift. :contentReference<span data-index="1">oaicite:1</span></li>
+</ul></li>
+<li><strong>Why Uncertainty Explanations Matter:</strong>
+<ul>
+<li>Predictive uncertainty is central in active learning, reject-option classification, covariate shift detection, adversarial robustness, and other exploration-heavy settings. Knowing <em>why</em> a model is uncertain can guide data collection, debugging, feature selection, and model redesign. :contentReference<span data-index="2">oaicite:2</span></li>
+</ul></li>
+<li><strong>Their Main Novelty / Claim to Fame:</strong>
+<ul>
+<li>They adapt the Shapley framework so that features are no longer credited only for shifting the conditional expectation, but also for affecting the <em>conditional entropy</em> of the predictive distribution.</li>
+<li>They derive several alternative information-theoretic value functions and connect the resulting local Shapley attributions to entropy, conditional mutual information, KL divergence, and conditional independence.</li>
+<li>They also add a split conformal inference procedure for Shapley variables, giving finite-sample coverage guarantees for feature relevance tests. :contentReference<span data-index="3">oaicite:3</span></li>
+</ul></li>
+<li><strong>The Big Conceptual Shift:</strong>
+<ul>
+<li>Standard Shapley explanations can say a feature is irrelevant if it does not affect the mean prediction, even when it strongly affects predictive variance. The paper’s motivating example shows exactly this failure: a feature can be useless for the mean but crucial for uncertainty calibration. :contentReference<span data-index="4">oaicite:4</span></li>
+</ul></li>
+<li><strong>The Practical Value Derived from XAI:</strong>
+<ul>
+<li>The method helps identify what causes local uncertainty in images, text, and tabular models.</li>
+<li>It can explain why a sample is flagged under covariate shift or active learning.</li>
+<li>It can separate features that matter for conditional mean from those that matter for conditional variance.</li>
+<li>It can rank which missing feature values are most worth acquiring next. :contentReference<span data-index="5">oaicite:5</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<ul>
+<li><strong>Starting Point: Standard SHAP Limitation</strong>
+<ul>
+<li>Conventional Shapley values usually use a payoff like<br>
+<code>v0(S, x) = E[f(x) | X_S = x_S]</code>,<br>
+which is fundamentally tied to explaining a prediction or expected outcome.</li>
+<li>This ignores higher moments of the predictive distribution, especially variance or entropy. :contentReference<span data-index="6">oaicite:6</span></li>
+</ul></li>
+<li><strong>Their Core Idea: Change the Value Function</strong>
+<ul>
+<li>Instead of only explaining the mean prediction, they define alternative cooperative games whose payoffs depend on uncertainty-relevant quantities.</li>
+<li>The paper studies several value functions:
+<ul>
+<li><strong>KL-based game:</strong> <code>v_KL(S, x) = -D_KL(p(Y|x) || p(Y|x_S))</code></li>
+<li><strong>Cross-entropy game:</strong> <code>v_CE(S, x) = -H(p(Y|x), p(Y|x_S))</code></li>
+<li><strong>Information-gain game:</strong> <code>v_IG(S, x) = -H(Y|x_S)</code></li>
+<li><strong>Entropy game:</strong> <code>v_H(S, x) = H(Y|x_S)</code></li>
+<li><strong>Modified entropy game:</strong> <code>v_H*(S, x) = E[H(p(Y|x)) | X_S = x_S]</code> :contentReference<span data-index="7">oaicite:7</span></li>
+</ul></li>
+</ul></li>
+<li><strong>Important Theoretical Result:</strong>
+<ul>
+<li>Under these alternative games, a feature’s marginal contribution gets a clear information-theoretic meaning.</li>
+<li>For example, under the information-gain game, the marginal contribution equals local conditional mutual information: <code>Δ_IG(S, j, x) = I(Y; x_j | x_S)</code>. :contentReference<span data-index="8">oaicite:8</span></li>
+</ul></li>
+<li><strong>Why this is powerful:</strong>
+<ul>
+<li>The attributions are no longer just “how much this feature changed a prediction.”</li>
+<li>They become “how much this feature reduced or increased uncertainty, in bits, at this instance.”</li>
+</ul></li>
+<li><strong>Connection to Conditional Independence:</strong>
+<ul>
+<li>A major theoretical strength is the link to conditional independence and context-specific independence.</li>
+<li>The paper proves that, for the information-theoretic games, zero marginal payout corresponds closely to conditional independence structure, except for measure-zero pathologies. :contentReference<span data-index="9">oaicite:9</span></li>
+</ul></li>
+<li><strong>How Uncertainty is Estimated in Practice:</strong>
+<ul>
+<li>They introduce a generic uncertainty estimator <code>h(x)</code>.</li>
+<li>For classification, total predictive entropy is estimated from class probabilities.</li>
+<li>They decompose uncertainty into:
+<ul>
+<li><strong>Total entropy</strong></li>
+<li><strong>Aleatoric uncertainty</strong></li>
+<li><strong>Epistemic uncertainty</strong></li>
+</ul></li>
+<li>The decomposition is done using ensembles such as random forests or MC dropout style basis functions. :contentReference<span data-index="10">oaicite:10</span></li>
+</ul></li>
+<li><strong>Reference Distribution / Sampling Choices:</strong>
+<ul>
+<li>The framework is deliberately modular regarding how out-of-coalition features are imputed.</li>
+<li>They do not insist on a single “correct” reference distribution, and acknowledge the long-standing debate around marginal vs conditional vs structurally informed sampling.</li>
+<li>They also note the usual caveat that Shapley methods can become unreliable if imputations force the model far off the data manifold. :contentReference<span data-index="11">oaicite:11</span></li>
+</ul></li>
+<li><strong>Computational Strategy:</strong>
+<ul>
+<li>Exact Shapley computation is combinatorial and quickly infeasible.</li>
+<li>They therefore use coalition sampling, noting that most total weight lies near extreme coalition sizes.</li>
+<li>They also use paired sampling to reduce variance and improve convergence. :contentReference<span data-index="12">oaicite:12</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="validation-strategy-predictions-explanations-and-inference" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy-predictions-explanations-and-inference">4. Validation Strategy (Predictions, Explanations, and Inference)</h2>
+<ul>
+<li><strong>What they validate:</strong>
+<ul>
+<li>They validate not only whether the uncertainty explanations “look sensible,” but also whether the framework behaves coherently under known statistical structure and under real ML tasks like shift detection and feature selection.</li>
+</ul></li>
+<li><strong>Formal Statistical Validation:</strong>
+<ul>
+<li>One of the most important additions is a <strong>split conformal inference procedure</strong> for Shapley variables.</li>
+<li>They split data into one part for model fitting and one part for Shapley computation, then estimate empirical quantile bounds for the Shapley distribution of a feature.</li>
+<li>This gives finite-sample coverage guarantees for whether the Shapley value of a feature tends to stay near zero. :contentReference<span data-index="13">oaicite:13</span></li>
+</ul></li>
+<li><strong>Interpretation of This Inference Step:</strong>
+<ul>
+<li>This lets them ask a more statistically grounded question:
+<ul>
+<li><em>Is this feature’s uncertainty attribution typically close to zero?</em></li>
+</ul></li>
+<li>That is especially useful for feature selection and for distinguishing relevant from irrelevant predictors.</li>
+</ul></li>
+<li><strong>Limitations of the Guarantee:</strong>
+<ul>
+<li>The guarantee is not conditional on all covariates, so it is not a fully local confidence interval in the strongest possible sense.</li>
+<li>It is more of a PAC-style population guarantee for the distribution of Shapley values of a feature. :contentReference<span data-index="14">oaicite:14</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="experiments-empirical-results" class="level2">
+<h2 class="anchored" data-anchor-id="experiments-empirical-results">5. Experiments &amp; Empirical Results</h2>
+<section id="supervised-learning-proof-of-concept" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-learning-proof-of-concept">5.1 Supervised Learning Proof-of-Concept</h3>
+<ul>
+<li><strong>Image Data (MNIST):</strong>
+<ul>
+<li>They train binary CNN classifiers on hard-to-distinguish digit pairs: 1 vs 7, 3 vs 8, and 4 vs 9.</li>
+<li>Using a DeepSHAP-style pipeline with MC dropout, they visualize pixel contributions to predictive entropy.</li>
+<li>They show that epistemic uncertainty explanations highlight image regions that genuinely make the model more or less uncertain.</li>
+<li>Aleatoric uncertainty appears more diffuse, consistent with irreducible noise. :contentReference<span data-index="15">oaicite:15</span></li>
+</ul></li>
+<li><strong>Text Data (IMDB sentiment):</strong>
+<ul>
+<li>They apply the method to a transformer sentiment model on IMDB reviews.</li>
+<li>Token-level attributions indicate which words or phrases increase predictive ambiguity.</li>
+<li>The examples show that the model’s uncertainty rises around semantically mixed or contradictory expressions. :contentReference<span data-index="16">oaicite:16</span></li>
+</ul></li>
+<li><strong>Tabular Simulation:</strong>
+<ul>
+<li>They design a Gaussian simulation where Shapley values under the entropy game have a closed-form solution.</li>
+<li>This allows them to compare multiple imputation methods for out-of-coalition features:
+<ul>
+<li>KernelSHAP</li>
+<li>maximum likelihood</li>
+<li>copula</li>
+<li>empirical samplers</li>
+<li>ctree</li>
+</ul></li>
+<li>Result: no single sampler dominates universally, but methods that respect conditional dependencies generally perform better when features are correlated.</li>
+<li>Most methods converge toward the true value with increasing sample size. :contentReference<span data-index="17">oaicite:17</span></li>
+</ul></li>
 </ul>
 </section>
-<section id="review-status" class="level2">
-<h2 class="anchored" data-anchor-id="review-status">Review Status</h2>
-<blockquote class="blockquote">
-<p>Review in progress.</p>
-</blockquote>
-<p>This page is a placeholder for a future full review using the site template.</p>
+<section id="covariate-shift-and-active-learning" class="level3">
+<h3 class="anchored" data-anchor-id="covariate-shift-and-active-learning">5.2 Covariate Shift and Active Learning</h3>
+<ul>
+<li><strong>Datasets Used:</strong>
+<ul>
+<li>BreastCancer, Diabetes, Ionosphere, and Sonar from the UCI repository.</li>
+</ul></li>
+<li><strong>Setup:</strong>
+<ul>
+<li>XGBoost with 50 trees estimates class probabilities and predictive uncertainty.</li>
+<li>They perturb one random feature in the test set by adding Gaussian noise, creating a subtle covariate shift.</li>
+</ul></li>
+<li><strong>Main Result:</strong>
+<ul>
+<li>The information-theoretic Shapley values correctly identify the perturbed feature as the driver of excess uncertainty.</li>
+<li>Importantly, the perturbations are subtle and often remain within the observed support of training values, so this is not a trivial outlier-detection case.</li>
+</ul></li>
+<li><strong>Interpretation:</strong>
+<ul>
+<li>The method can be paired with shift-detection or active-learning systems to explain <em>why</em> a sample has been marked as uncertain or exploratory. :contentReference<span data-index="18">oaicite:18</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="feature-selection" class="level3">
+<h3 class="anchored" data-anchor-id="feature-selection">5.3 Feature Selection</h3>
+<ul>
+<li><strong>Benchmark Design:</strong>
+<ul>
+<li>They modify the Friedman benchmark so that:
+<ul>
+<li>the <strong>conditional mean</strong> depends on one group of features,</li>
+<li>the <strong>conditional variance</strong> depends on a different group.</li>
+</ul></li>
+</ul></li>
+<li><strong>Purpose:</strong>
+<ul>
+<li>This is a very clean test of whether the method can separate “features that matter for the mean” from “features that matter for uncertainty.”</li>
+</ul></li>
+<li><strong>Main Result:</strong>
+<ul>
+<li>It succeeds: Shapley values for the mean cluster around zero for irrelevant mean features, and Shapley values for the variance cluster around zero for irrelevant variance features.</li>
+<li>This supports the claim that the method can distinguish different modes of predictive information rather than collapsing everything into a single importance notion. :contentReference<span data-index="19">oaicite:19</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="active-feature-value-acquisition" class="level3">
+<h3 class="anchored" data-anchor-id="active-feature-value-acquisition">5.4 Active Feature-Value Acquisition</h3>
+<ul>
+<li><strong>Setup:</strong>
+<ul>
+<li>Using the same modified Friedman setup, they randomly delete entries in the design matrix to simulate missing data or costly feature acquisition.</li>
+</ul></li>
+<li><strong>Goal:</strong>
+<ul>
+<li>Rank which missing feature values are most useful to query next.</li>
+</ul></li>
+<li><strong>Main Result:</strong>
+<ul>
+<li>Absolute Shapley values provide informative feature rankings.</li>
+<li>Performance degrades as missingness increases, as expected, but remains useful.</li>
+<li>Even at 50% missingness, they report an AUC of <strong>0.682</strong>, which is still substantially above random. :contentReference<span data-index="20">oaicite:20</span></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">6. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<ul>
+<li><strong>Criticism 1: Strong Theory, but Less of a Head-to-Head with Modern Uncertainty-XAI Alternatives</strong>
+<ul>
+<li>The paper is theoretically elegant, but the empirical section is more proof-of-concept than benchmark-heavy.</li>
+<li>It demonstrates usefulness across tasks, but does not present a broad, modern comparison against a rich set of competing uncertainty explanation methods.</li>
+<li>Since the authors themselves note that very little prior work exists, this is understandable, but it still means the empirical dominance claim is modest rather than overwhelming.</li>
+</ul></li>
+<li><strong>Criticism 2: Modularity is a Strength, but also a Source of Ambiguity</strong>
+<ul>
+<li>The method is deliberately agnostic about uncertainty estimator choice, reference distribution, and imputation strategy.</li>
+<li>That makes the framework flexible and broadly applicable.</li>
+<li>But it also means practical performance can vary a lot depending on implementation choices. In other words, the “method” is partly a family of methods, not a single locked-down pipeline.</li>
+</ul></li>
+<li><strong>Criticism 3: Computational Burden is Still a Serious Issue</strong>
+<ul>
+<li>The paper openly acknowledges that Shapley computation is hard, and that dependency-aware imputations are statistically and computationally expensive.</li>
+<li>So while the theoretical framing is strong, scaling this cleanly to large, high-dimensional forecasting problems could still be painful.</li>
+</ul></li>
+<li><strong>Criticism 4: Local Information-Theoretic Meaning Does Not Fully Rescue Shapley Averaging</strong>
+<ul>
+<li>One of the strongest parts of the paper is that marginal payouts <code>Δv(S, j, x)</code> have a clean interpretation as local dependence measures.</li>
+<li>But the authors themselves note that once these quantities are averaged over coalitions into Shapley values, interpretability becomes murkier again.</li>
+<li>So the framework improves the semantics of local contributions, but does not completely solve all classic SHAP interpretability concerns.</li>
+</ul></li>
+<li><strong>Criticism 5: The Conformal Inference Result is Useful, but Not Fully Local</strong>
+<ul>
+<li>The coverage guarantee is over the distribution of Shapley values for a feature, not fully conditioned on the local feature context.</li>
+<li>So it gives population-style control, not the strongest possible instance-conditional uncertainty statement.</li>
+</ul></li>
+<li><strong>Observation on Relevance to Forecasting Research:</strong>
+<ul>
+<li>This paper is especially valuable conceptually for your area because it separates <em>prediction importance</em> from <em>uncertainty importance</em>.</li>
+<li>For probabilistic load, solar, or wind forecasting, that is a major distinction:
+<ul>
+<li>a feature may improve the conditional mean forecast,</li>
+<li>a different feature may tighten or widen the predictive distribution.</li>
+</ul></li>
+<li>That makes this work highly relevant if your research is trying to explain not only point forecasts but also predictive intervals, quantiles, CRPS behaviour, or uncertainty calibration.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="why-this-paper-matters-for-my-research-context" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-paper-matters-for-my-research-context">7. Why This Paper Matters for My Research Context</h2>
+<ul>
+<li><strong>If I work on probabilistic forecasting:</strong>
+<ul>
+<li>This paper gives a principled way to explain <em>why uncertainty changes across the input space</em>, not just why the expected forecast changes.</li>
+</ul></li>
+<li><strong>If I work on SHAP-based feature selection:</strong>
+<ul>
+<li>It suggests that feature selection should perhaps be task-specific:
+<ul>
+<li>one subset for point prediction,</li>
+<li>another subset for uncertainty estimation.</li>
+</ul></li>
+</ul></li>
+<li><strong>If I care about trust and robustness:</strong>
+<ul>
+<li>The connection to covariate shift detection is especially important.</li>
+<li>It is not just “the model is uncertain,” but “this feature is making the model uncertain here.”</li>
+</ul></li>
+<li><strong>If I care about rigorous XAI:</strong>
+<ul>
+<li>The information-theoretic grounding and conditional independence results are much stronger than many purely heuristic attribution stories.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">8. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Read the GitHub repository (<code>facebookresearch/infoshap</code>) and inspect how they implement entropy-based SHAP in practice.</label></li>
+<li><label><input type="checkbox">Consider whether my own work should distinguish explanations for <strong>point forecasts</strong> from explanations for <strong>predictive uncertainty</strong>.</label></li>
+<li><label><input type="checkbox">When using SHAP in probabilistic forecasting, explicitly state whether I am explaining the conditional mean, quantiles, interval width, entropy, variance, or another uncertainty functional.</label></li>
+<li><label><input type="checkbox">Explore whether a similar framework can be adapted to probabilistic energy forecasting models, especially where CRPS, coverage, or interval sharpness are important.</label></li>
+<li><label><input type="checkbox">In my literature review, position this paper as a foundational bridge between uncertainty quantification and local feature attribution.</label></li>
+<li><label><input type="checkbox">Note its practical limitation: the usefulness of the framework depends heavily on the quality of the uncertainty estimator and the chosen feature imputation/reference distribution.</label></li>
+<li><label><input type="checkbox">Consider citing this work when motivating why classic SHAP on point predictions is insufficient for uncertainty-aware forecasting research.</label></li>
+</ul>
+<hr>
+</section>
+<section id="bottom-line-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line-takeaway">9. Bottom-Line Takeaway</h2>
+<ul>
+<li><strong>One-sentence summary:</strong>
+<ul>
+<li>This paper is important because it upgrades Shapley explanations from “what changed the prediction?” to “what changed the model’s uncertainty, and by how much in information-theoretic terms?”</li>
+</ul></li>
+<li><strong>My overall assessment:</strong>
+<ul>
+<li>This is a strong conceptual and methodological contribution rather than a paper that wins by brute-force benchmarking.</li>
+<li>Its biggest value lies in the framing, theory, and transferability of the idea.</li>
+<li>For any uncertainty-aware ML or forecasting project, it is a very useful reference for justifying why XAI should move beyond point predictions alone. :contentReference<span data-index="21">oaicite:21</span></li>
+</ul></li>
+</ul>
 
 
 </section>

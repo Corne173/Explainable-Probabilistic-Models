@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-01-01">
-<meta name="description" content="Quantile-based uncertainty modeling and Shapley values for wind-integrated power systems. Review in progress.">
+<meta name="dcterms.date" content="2026-03-13">
+<meta name="description" content="Review of a 2023 IJEPES paper proposing a data-driven, risk-constrained cooperative bidding framework for wind-integrated power systems under market uncertainty.">
 
 <title>Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties – Review Articles</title>
 <style>
@@ -359,14 +359,18 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Review in progress</div>
-    <div class="quarto-category">Power systems baselines</div>
+    <div class="quarto-category">Wind power trading</div>
+    <div class="quarto-category">Electricity markets</div>
+    <div class="quarto-category">Probabilistic forecasting</div>
+    <div class="quarto-category">Cooperative bidding</div>
+    <div class="quarto-category">Risk-constrained optimization</div>
+    <div class="quarto-category">Firefly algorithm</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Quantile-based uncertainty modeling and Shapley values for wind-integrated power systems. Review in progress.
+    Review of a 2023 IJEPES paper proposing a data-driven, risk-constrained cooperative bidding framework for wind-integrated power systems under market uncertainty.
   </div>
 </div>
 
@@ -377,7 +381,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2023</p>
+      <p class="date">March 13, 2026</p>
     </div>
   </div>
   
@@ -389,19 +393,510 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="citation" class="level2">
-<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<section id="quick-reference-meta-data" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference-meta-data">1. Quick Reference &amp; Meta-Data</h2>
 <ul>
-<li><strong>Authors &amp; Year:</strong> Zhang, R., et al.&nbsp;(2023)</li>
-<li><strong>Working link:</strong> <a href="https://scholar.google.com/scholar?q=Data-driven+cooperative+trading+framework+for+a+risk-constrained+wind+integrated+power+system+considering+market+uncertainties">Google Scholar search</a></li>
+<li><strong>Authors &amp; Year:</strong> Rongquan Zhang, Gangqiang Li, Siqi Bu, Saddam Aziz, Rizwan Qureshi (2023)</li>
+<li><strong>Venue (Journal/Conference):</strong> <em>International Journal of Electrical Power and Energy Systems</em><br>
+</li>
+<li><strong>Study Focus:</strong> Risk-constrained cooperative bidding for a wind-integrated power system under market uncertainties</li>
+<li><strong>Core Technical Ingredients:</strong> Ridge regression, non-pooling CNN (NPCNN), linear quantile regression (LQR), improved firefly algorithm (IFA), Shapley value</li>
+<li><strong>Test System:</strong> Modified IEEE 30-bus system with 6 generators, including one 35 MW wind producer</li>
+<li><strong>Market Context:</strong> Two-settlement electricity market with day-ahead and real-time balancing interactions</li>
+<li><strong>Keywords Reported by Paper:</strong> Wind integrated power system, market uncertainties, risk, cooperative trading, improved firefly algorithm</li>
+</ul>
+<hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<ul>
+<li><strong>The Motivation (Why this problem matters):</strong>
+<ul>
+<li>As wind penetration increases, wind producers face greater exposure to uncertainty in both wind generation and electricity prices.</li>
+<li>These uncertainties directly affect bidding quality, imbalance penalties, and expected profit.</li>
+<li>The authors argue that many existing bidding models are still incomplete because they do not jointly consider three practical issues: <strong>market uncertainty</strong>, <strong>financial risk</strong>, and <strong>cooperative behavior</strong> among producers.</li>
+</ul></li>
+<li><strong>The Motivation (Why data-driven uncertainty modeling?):</strong>
+<ul>
+<li>Traditional statistical forecasting approaches can struggle with high-dimensional market behavior and nonlinear dynamics.</li>
+<li>The paper positions deep learning as better suited to capturing nonlinear price dynamics for day-ahead electricity price forecasting.</li>
+</ul></li>
+<li><strong>The Motivation (Why cooperation?):</strong>
+<ul>
+<li>Prior work had considered cooperation between wind and resources like demand response or storage, but the authors state that <strong>cooperative transactions among power producers themselves had received limited attention</strong>.</li>
+<li>Their framing is that cooperation can improve profits and reduce exposure to market uncertainty.</li>
+</ul></li>
+<li><strong>The Motivation (Why a new optimizer?):</strong>
+<ul>
+<li>Heuristic bidding approaches such as GA, PSO, and competitive co-evolutionary algorithms had been used before, but the paper argues they often suffer from <strong>slow convergence</strong> and <strong>local optima</strong>.</li>
+<li>This motivates the proposal of an <strong>improved firefly algorithm</strong> for the market bidding problem.</li>
+</ul></li>
+<li><strong>Their claim to fame / Novelty:</strong>
+<ul>
+<li>They propose a <strong>data-driven framework</strong> that combines:
+<ol type="1">
+<li>a day-ahead price uncertainty predictor using <strong>ridge regression + NPCNN + LQR</strong>,</li>
+<li>a <strong>risk-constrained cooperative bidding model</strong> for a price-maker wind producer,</li>
+<li>an <strong>improved firefly algorithm (IFA)</strong> inspired by Adam-style adaptive moments, and</li>
+<li><strong>Shapley-value-based profit allocation</strong> for coalition members.</li>
+</ol></li>
+<li>The paper explicitly claims the uncertainty predictor is modeled <strong>for the first time</strong> in this specific wind power bidding context.</li>
+</ul></li>
+<li><strong>The value actually delivered by the paper:</strong>
+<ul>
+<li>It is not just a forecasting paper and not just an optimization paper.</li>
+<li>Its real contribution is the <strong>integration</strong> of forecasting uncertainty, downside-risk control, strategic market bidding, coalition formation, and profit sharing into one framework.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="methodology-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<ul>
+<li><strong>Overall framework:</strong>
+<ul>
+<li>The proposed model is a <strong>bi-level framework</strong> for a wind-integrated power system participating in an electricity balancing market.</li>
+<li>The <strong>top level</strong> determines the bidding strategy of the wind producer while accounting for uncertainty, cooperation, and financial risk.</li>
+<li>The <strong>lower level</strong> represents the independent system operator’s security-constrained economic dispatch.</li>
+</ul></li>
+<li><strong>Market setting:</strong>
+<ul>
+<li>The paper assumes a <strong>two-settlement market</strong>:
+<ul>
+<li>wind is treated as a <strong>price-taker in the day-ahead market</strong>,</li>
+<li>and a <strong>price-maker in the real-time market</strong>.</li>
+</ul></li>
+<li>Wind producers are penalized for deviations between day-ahead scheduled energy and real-time delivery.</li>
+</ul></li>
+<li><strong>Top-level model:</strong>
+<ul>
+<li>The wind producer’s profit includes:
+<ul>
+<li>day-ahead market revenue,</li>
+<li>real-time balancing revenue,</li>
+<li>deviation penalty costs,</li>
+<li>and operating cost.</li>
+</ul></li>
+<li>Financial risk is incorporated using an <strong>acceptable downside risk tolerance</strong> constraint.</li>
+<li>The model lets the wind producer cooperate with some conventional generators while competing non-cooperatively with others.</li>
+</ul></li>
+<li><strong>Lower-level model:</strong>
+<ul>
+<li>The lower-level problem is a <strong>security-constrained economic dispatch</strong>.</li>
+<li>It includes:
+<ul>
+<li>system-wide power balance,</li>
+<li>transmission constraints,</li>
+<li>generation bounds,</li>
+<li>and system loss modeling.</li>
+</ul></li>
+<li>Locational marginal prices are then derived through Kuhn–Tucker conditions.</li>
+</ul></li>
+<li><strong>Uncertainty predictor:</strong>
+<ul>
+<li>The day-ahead electricity price uncertainty module has three parts:
+<ol type="1">
+<li><strong>Ridge regression recursive feature elimination</strong> for correlated feature selection,</li>
+<li><strong>NPCNN</strong> for deterministic day-ahead electricity price forecasting,</li>
+<li><strong>LQR</strong> for probabilistic prediction intervals and price uncertainty estimation.</li>
+</ol></li>
+<li>The paper uses NPCNN rather than standard CNN because there are relatively few relevant features, and the authors argue pooling may discard useful information in this setting.</li>
+</ul></li>
+<li><strong>Why NPCNN instead of standard CNN?</strong>
+<ul>
+<li>The authors argue that electricity price forecasting in this case has limited but important inputs such as load, weekly cycles, and price history.</li>
+<li>They therefore remove pooling layers and use a <strong>non-pooling CNN</strong> to better preserve feature information.</li>
+</ul></li>
+<li><strong>Why LQR?</strong>
+<ul>
+<li>The deterministic NPCNN forecast alone is not enough for bidding because point forecast errors remain.</li>
+<li>LQR is then used to construct prediction intervals and characterize day-ahead price uncertainty.</li>
+</ul></li>
+<li><strong>Optimization module:</strong>
+<ul>
+<li>The paper first reviews the standard firefly algorithm, then proposes an <strong>improved firefly algorithm (IFA)</strong>.</li>
+<li>The improvement is based on <strong>adaptive moment estimation</strong>, inspired by Adam.</li>
+<li>The goal is to reduce oscillation, improve exploitation near good solutions, and escape local optima more effectively.</li>
+</ul></li>
+<li><strong>Coalition profit allocation:</strong>
+<ul>
+<li>Once cooperation is modeled, the paper uses the <strong>Shapley value</strong> to distribute coalition profits among cooperating producers.</li>
+<li>This is important because otherwise coalition outcomes may be unstable or unfair.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="datasets-experimental-setup" class="level2">
+<h2 class="anchored" data-anchor-id="datasets-experimental-setup">4. Datasets / Experimental Setup</h2>
+<ul>
+<li><strong>Power-system testbed:</strong>
+<ul>
+<li>The bidding framework is evaluated on a <strong>modified IEEE 30-bus system</strong>.</li>
+<li>The system contains:
+<ul>
+<li>24 load buses,</li>
+<li>41 transmission lines,</li>
+<li>6 generators,</li>
+<li>including one 35 MW wind producer connected at bus 13.</li>
+</ul></li>
+<li>Wind penetration in the test system is approximately <strong>14.71%</strong> of total installed capacity.</li>
+</ul></li>
+<li><strong>Price forecasting dataset:</strong>
+<ul>
+<li>The uncertainty predictor is evaluated using <strong>PJM market data</strong>.</li>
+<li>The training and testing period spans <strong>June 2018 to July 2019</strong>.</li>
+<li>Two test weeks are emphasized:
+<ul>
+<li><strong>March 1–7, 2019</strong> for a lower-load case,</li>
+<li><strong>July 1–7, 2019</strong> for a higher-load case.</li>
+</ul></li>
+</ul></li>
+<li><strong>Forecasting comparison models:</strong>
+<ul>
+<li>The proposed uncertainty predictor is compared against:
+<ul>
+<li>KNN,</li>
+<li>SVR,</li>
+<li>decision tree,</li>
+<li>random forest,</li>
+<li>XGBoost,</li>
+<li>CatBoost,</li>
+<li>LightGBM,</li>
+<li>and BPNN.</li>
+</ul></li>
+</ul></li>
+<li><strong>Optimization comparison models:</strong>
+<ul>
+<li>IFA is compared against:
+<ul>
+<li>standard FA,</li>
+<li>Memetic FA (MFA),</li>
+<li>and FA with chaos (CFA).</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="validation-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="validation-strategy">5. Validation Strategy</h2>
+<ul>
+<li><strong>Forecasting validation:</strong>
+<ul>
+<li>The paper evaluates deterministic forecasting using <strong>MAPE</strong>.</li>
+<li>Probabilistic forecasting is assessed using:
+<ul>
+<li><strong>Average coverage percentage (ACP)</strong>,</li>
+<li><strong>Interval sharpness (IS)</strong>.</li>
+</ul></li>
+<li>The logic is straightforward:
+<ul>
+<li>MAPE evaluates point accuracy,</li>
+<li>ACP checks how often the actual price lies inside the interval,</li>
+<li>IS measures the sharpness and usefulness of intervals.</li>
+</ul></li>
+</ul></li>
+<li><strong>Optimization validation:</strong>
+<ul>
+<li>The IFA is tested on:
+<ul>
+<li>the full coalition bidding problem,</li>
+<li>and three benchmark functions:
+<ul>
+<li>Sphere,</li>
+<li>Ackley,</li>
+<li>Quartic with noise.</li>
+</ul></li>
+</ul></li>
+<li>The algorithms are run <strong>20 times</strong> to evaluate average performance and variance.</li>
+</ul></li>
+<li><strong>Bidding validation:</strong>
+<ul>
+<li>The paper compares:
+<ul>
+<li>individual bidding without coalitions,</li>
+<li>multiple coalition structures between the wind producer and one conventional producer,</li>
+<li>and profits obtained when different forecasting models are fed into the bidding framework.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="main-results" class="level2">
+<h2 class="anchored" data-anchor-id="main-results">6. Main Results</h2>
+<section id="forecasting-performance" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting-performance">6.1 Forecasting Performance</h3>
+<ul>
+<li><strong>Point forecasting results:</strong>
+<ul>
+<li>NPCNN achieves the best deterministic forecasting accuracy among the tested models on both the March and July test weeks.</li>
+<li>For March 1–7, 2019, NPCNN achieves an average MAPE of <strong>0.0685</strong> with variance <strong>8.60E-05</strong>.</li>
+<li>For July 1–7, 2019, NPCNN achieves an average MAPE of <strong>0.0732</strong> with variance <strong>4.80E-04</strong>.</li>
+<li>The paper reports that NPCNN clearly outperforms KNN, SVR, TREE, RF, XGBoost, CatBoost, LightGBM, and BPNN.</li>
+</ul></li>
+<li><strong>Probabilistic forecasting results:</strong>
+<ul>
+<li>With a 90% nominal confidence level, ACP values across models are fairly similar, around <strong>80–82%</strong>, meaning the intervals are not perfectly calibrated to the nominal level.</li>
+<li>Even so, the proposed NPCNN+LQR combination gives the <strong>best interval sharpness</strong> among the compared models:
+<ul>
+<li>March IS = <strong>-1.96</strong></li>
+<li>July IS = <strong>-1.70</strong></li>
+</ul></li>
+<li>The paper interprets this as better probabilistic quality under roughly similar coverage.</li>
+</ul></li>
 </ul>
 </section>
-<section id="review-status" class="level2">
-<h2 class="anchored" data-anchor-id="review-status">Review Status</h2>
-<blockquote class="blockquote">
-<p>Review in progress.</p>
-</blockquote>
-<p>This page is a placeholder for a future full review using the site template.</p>
+<section id="optimization-performance" class="level3">
+<h3 class="anchored" data-anchor-id="optimization-performance">6.2 Optimization Performance</h3>
+<ul>
+<li><strong>IFA performance:</strong>
+<ul>
+<li>IFA shows the best mean objective value and the smallest variance on the coalition optimization problem compared with FA, MFA, and CFA.</li>
+<li>For the main bidding objective (f_1), IFA achieves:
+<ul>
+<li>mean = <strong>4998.02</strong></li>
+<li>variance = <strong>1.28E-04</strong></li>
+</ul></li>
+<li>This is better than FA, MFA, and CFA in both solution quality and stability.</li>
+</ul></li>
+<li><strong>Convergence behavior:</strong>
+<ul>
+<li>The paper notes that IFA can start a little slower because adaptive memories need to accumulate.</li>
+<li>After roughly 10 iterations, however, IFA converges faster than the competing firefly variants.</li>
+<li>The authors argue that the adaptive moment mechanism reduces oscillations and improves final convergence accuracy.</li>
+</ul></li>
+</ul>
+</section>
+<section id="individual-vs-cooperative-bidding" class="level3">
+<h3 class="anchored" data-anchor-id="individual-vs-cooperative-bidding">6.3 Individual vs Cooperative Bidding</h3>
+<ul>
+<li><strong>Without coalitions:</strong>
+<ul>
+<li>In the non-cooperative case, the wind producer G6 has:
+<ul>
+<li>bid = <strong>30.5 U.S.$/MW</strong></li>
+<li>output = <strong>35 MW</strong></li>
+<li>LMP = <strong>49.2 U.S.$/MW</strong></li>
+<li>cost = <strong>412 U.S.$</strong></li>
+<li>profit = <strong>1168.1 U.S.$</strong></li>
+</ul></li>
+</ul></li>
+<li><strong>With coalitions:</strong>
+<ul>
+<li>The paper examines five coalition options between the wind producer G6 and one conventional producer:
+<ul>
+<li>C1 = (G6, G1)</li>
+<li>C2 = (G6, G2)</li>
+<li>C3 = (G6, G3)</li>
+<li>C4 = (G6, G4)</li>
+<li>C5 = (G6, G5)</li>
+</ul></li>
+</ul></li>
+<li><strong>Profit effect on wind producer:</strong>
+<ul>
+<li>Additional profit for the wind producer under each coalition is reported as:
+<ul>
+<li><strong>C1: +697.7 U.S.$</strong></li>
+<li><strong>C2: -21.3 U.S.$</strong></li>
+<li><strong>C3: -407.2 U.S.$</strong></li>
+<li><strong>C4: +70.8 U.S.$</strong></li>
+<li><strong>C5: +28.8 U.S.$</strong></li>
+</ul></li>
+</ul></li>
+<li><strong>Profit effect on cooperative partner:</strong>
+<ul>
+<li>Additional profit for the partnered conventional producer is:
+<ul>
+<li><strong>C1: -360.0 U.S.$</strong></li>
+<li><strong>C2: +1691.7 U.S.$</strong></li>
+<li><strong>C3: +367.8 U.S.$</strong></li>
+<li><strong>C4: +547.5 U.S.$</strong></li>
+<li><strong>C5: +111.6 U.S.$</strong></li>
+</ul></li>
+</ul></li>
+<li><strong>Most meaningful coalition:</strong>
+<ul>
+<li>The paper concludes that <strong>coalition C4</strong> is the most attractive because <strong>both members gain profit</strong>, making it the most likely stable coalition among those tested.</li>
+</ul></li>
+</ul>
+</section>
+<section id="value-of-better-uncertainty-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="value-of-better-uncertainty-prediction">6.4 Value of Better Uncertainty Prediction</h3>
+<ul>
+<li><strong>Forecasting-to-bidding integration result:</strong>
+<ul>
+<li>The paper reports that using the proposed uncertainty predictor in the bidding framework increases the daily profit by <strong>U.S.$ 777</strong> compared with the CatBoost-based uncertainty predictor.</li>
+<li>This is a strong result because it links forecasting quality to an economically meaningful market outcome, not just a prediction metric.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="what-the-paper-does-well" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-paper-does-well">7. What the Paper Does Well</h2>
+<ul>
+<li><strong>Strength 1: It connects forecasting to market value</strong>
+<ul>
+<li>Many studies stop at prediction accuracy.</li>
+<li>This paper goes further by showing how improved uncertainty modeling affects <strong>actual bidding profit</strong>.</li>
+</ul></li>
+<li><strong>Strength 2: It is genuinely multi-layered</strong>
+<ul>
+<li>The study combines:
+<ul>
+<li>probabilistic forecasting,</li>
+<li>risk-constrained optimization,</li>
+<li>coalition behavior,</li>
+<li>strategic market interaction,</li>
+<li>and profit allocation.</li>
+</ul></li>
+<li>That makes it much more holistic than papers that isolate one component.</li>
+</ul></li>
+<li><strong>Strength 3: Downside risk is explicitly modeled</strong>
+<ul>
+<li>Instead of only maximizing expected profit, the paper introduces an <strong>acceptable downside risk tolerance</strong>.</li>
+<li>This makes the framework more realistic for participants that care about risk, not just average return.</li>
+</ul></li>
+<li><strong>Strength 4: It treats coalition formation as an economic question</strong>
+<ul>
+<li>The use of Shapley value adds an economic fairness mechanism to coalition outcomes.</li>
+<li>That makes the cooperation story much more credible than simply claiming that cooperation is beneficial.</li>
+</ul></li>
+<li><strong>Strength 5: It validates both the predictor and the optimizer</strong>
+<ul>
+<li>The paper does not only claim the optimizer is better.</li>
+<li>It compares both the forecasting module and the optimization module against multiple benchmarks.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">8. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<ul>
+<li><strong>Criticism 1: The “probabilistic” forecasting calibration looks weaker than the headline might suggest</strong>
+<ul>
+<li>The prediction intervals are built for a <strong>90% confidence level</strong>, but ACP values are only around <strong>80–81%</strong>.</li>
+<li>That suggests the intervals are not well calibrated to the nominal level.</li>
+<li>So although the paper reports better sharpness, the uncertainty quantification may still be under-covering.</li>
+</ul></li>
+<li><strong>Criticism 2: Wind-generation uncertainty is not learned with the same depth as price uncertainty</strong>
+<ul>
+<li>The paper uses the new data-driven predictor for day-ahead electricity prices, but <strong>wind power generation scenarios are obtained via Monte Carlo</strong> rather than via a similarly rich probabilistic learning framework.</li>
+<li>That creates an imbalance: one uncertainty source is handled with sophisticated learning, while the other is handled more simply.</li>
+</ul></li>
+<li><strong>Criticism 3: The coalition space is very limited</strong>
+<ul>
+<li>The case study only examines coalitions where the wind producer teams up with <strong>one</strong> conventional producer at a time.</li>
+<li>That is a useful first step, but it does not explore richer coalition structures, multi-member coalitions, or broader market alliances.</li>
+</ul></li>
+<li><strong>Criticism 4: The market model relies on several simplifying assumptions</strong>
+<ul>
+<li>The framework ignores:
+<ul>
+<li>startup and shutdown costs,</li>
+<li>ramp-rate limits,</li>
+<li>demand-side bidding,</li>
+<li>contract trading,</li>
+<li>and load uncertainty.</li>
+</ul></li>
+<li>These assumptions keep the model tractable, but they also make the real-world market representation more idealized.</li>
+</ul></li>
+<li><strong>Criticism 5: Forecast-transfer realism is questionable</strong>
+<ul>
+<li>The uncertainty predictor is evaluated on <strong>PJM market data</strong>, while the bidding framework is tested on a <strong>modified IEEE 30-bus system</strong>.</li>
+<li>That separation is understandable for benchmarking, but it means the forecasting and bidding environments are not fully unified in one real market dataset.</li>
+</ul></li>
+<li><strong>Criticism 6: The optimizer comparison is still fairly narrow</strong>
+<ul>
+<li>IFA is compared against FA variants, but not against broader modern optimizers such as:
+<ul>
+<li>CMA-ES,</li>
+<li>differential evolution variants,</li>
+<li>Bayesian optimization,</li>
+<li>or gradient-based bilevel approximations where applicable.</li>
+</ul></li>
+<li>So the optimizer superiority is only established within a limited family.</li>
+</ul></li>
+<li><strong>Criticism 7: No formal game-theoretic stability analysis is presented</strong>
+<ul>
+<li>The paper refers to Nash equilibrium style stopping logic, but the treatment is computational rather than theoretically deep.</li>
+<li>There is no strong analytical treatment of coalition stability, incentive compatibility, or repeated-game dynamics.</li>
+</ul></li>
+<li><strong>Criticism 8: The profit gains are coalition-specific and asymmetric</strong>
+<ul>
+<li>Some coalitions help the wind producer while hurting its partner, and some do the opposite.</li>
+<li>This is actually an interesting result, but it also shows that “cooperation helps” is not universally true.</li>
+<li>Coalition success depends heavily on who cooperates with whom.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="positioning-relative-to-broader-literature" class="level2">
+<h2 class="anchored" data-anchor-id="positioning-relative-to-broader-literature">9. Positioning Relative to Broader Literature</h2>
+<ul>
+<li><strong>Where this paper fits:</strong>
+<ul>
+<li>It sits at the intersection of:
+<ul>
+<li>probabilistic electricity-price forecasting,</li>
+<li>wind market bidding,</li>
+<li>risk-aware optimization,</li>
+<li>and cooperative electricity-market strategy.</li>
+</ul></li>
+</ul></li>
+<li><strong>How it differs from pure forecasting papers:</strong>
+<ul>
+<li>Unlike papers that only report MAPE, RMSE, or interval scores, this one uses forecasts as an input to a strategic bidding engine.</li>
+</ul></li>
+<li><strong>How it differs from pure bidding papers:</strong>
+<ul>
+<li>Unlike papers that assume uncertainty scenarios are already known, this paper tries to <strong>construct the day-ahead price uncertainty model explicitly</strong>.</li>
+</ul></li>
+<li><strong>How it differs from classic cooperative trading papers:</strong>
+<ul>
+<li>It focuses specifically on <strong>wind-integrated systems</strong>, <strong>market uncertainty</strong>, and <strong>risk-constrained coalition behavior</strong>, rather than just deterministic cooperation or storage-assisted cooperation.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="relevance-to-my-own-research-why-this-paper-matters" class="level2">
+<h2 class="anchored" data-anchor-id="relevance-to-my-own-research-why-this-paper-matters">10. Relevance to My Own Research / Why This Paper Matters</h2>
+<ul>
+<li><strong>Why this paper is useful:</strong>
+<ul>
+<li>It is a strong reference if I want to argue that <strong>forecast quality must be evaluated in terms of downstream decision value</strong>, not only statistical accuracy.</li>
+<li>It is also useful for motivating <strong>risk-aware market participation</strong> in renewable-rich systems.</li>
+</ul></li>
+<li><strong>What I would cite it for:</strong>
+<ul>
+<li>Integrating probabilistic forecasting into electricity-market bidding.</li>
+<li>Showing that uncertainty-aware bidding can materially improve producer profits.</li>
+<li>Demonstrating that coalition behavior can change market outcomes and profit allocation.</li>
+<li>Providing an example of a hybrid framework that joins learning, optimization, and cooperative game concepts.</li>
+</ul></li>
+<li><strong>What I would not accept uncritically:</strong>
+<ul>
+<li>That the uncertainty quantification is fully convincing just because it improves IS.</li>
+<li>That the optimization comparison is exhaustive.</li>
+<li>That limited coalition experiments are enough to generalize about cooperative market structures.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="action-items-integration" class="level2">
+<h2 class="anchored" data-anchor-id="action-items-integration">11. Action Items &amp; Integration</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Cite this paper when discussing <strong>data-driven uncertainty-aware bidding frameworks</strong> for renewable producers.</label></li>
+<li><label><input type="checkbox">Use it as an example of how to connect <strong>forecast uncertainty</strong> to <strong>economic bidding outcomes</strong>.</label></li>
+<li><label><input type="checkbox">Note its value in combining <strong>risk tolerance</strong>, <strong>cooperative trading</strong>, and <strong>profit allocation</strong> in one framework.</label></li>
+<li><label><input type="checkbox">When writing my own review, explicitly mention that its probabilistic intervals appear <strong>under-calibrated relative to the 90% nominal level</strong>.</label></li>
+<li><label><input type="checkbox">Contrast its heuristic optimizer with more modern optimization baselines if I want to build a stronger methodological benchmark.</label></li>
+<li><label><input type="checkbox">Use coalition C4 as an example that <strong>mutually beneficial cooperation is possible, but coalition value is highly structure-dependent</strong>.</label></li>
+</ul>
+<hr>
+</section>
+<section id="bottom-line-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line-takeaway">12. Bottom-Line Takeaway</h2>
+<p>This paper is a strong systems-oriented contribution because it does not treat forecasting, risk, bidding, and cooperation as separate problems. Instead, it builds a single pipeline that starts from day-ahead price uncertainty, moves through risk-constrained strategic bidding, and ends with coalition profit allocation. Its biggest practical message is that better uncertainty modeling can create real market value for wind producers. Its biggest weakness is that some of the probabilistic calibration and market realism remain less convincing than the overall framework design.</p>
 
 
 </section>
