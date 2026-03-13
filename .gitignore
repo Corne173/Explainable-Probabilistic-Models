@@ -1,0 +1,15 @@
+# Quarto cache / temporary build state
+/.quarto/
+
+# Keep GitHub Pages output in docs/, but ignore stray root-level renders
+/index.html
+/about.html
+*_files/
+/site_libs/
+/docs-temp/
+
+# OS-generated files
+desktop.ini
+**/desktop.ini
+Thumbs.db
+.DS_Store
