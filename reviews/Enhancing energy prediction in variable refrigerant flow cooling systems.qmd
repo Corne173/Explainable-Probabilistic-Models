@@ -1,19 +1,473 @@
 ---
 title: "Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning"
-description: "Energy prediction with explicit aleatoric and epistemic uncertainty handling. Review in progress."
-date: 2026-01-01
+description: "Review of an Energy paper comparing black-box and hybrid grey-box XGBoost models for VRF compressor power prediction, with uncertainty quantification and SHAP-based interpretability."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Aleatoric vs epistemic uncertainty
+  - HVAC
+  - Variable Refrigerant Flow
+  - Grey-box modelling
+  - Physics-informed machine learning
+  - XGBoost
+  - Uncertainty quantification
+  - SHAP
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Muhammad Reshaeel, Mohamed I. Hassan Ali (2026)
+- **Venue (Journal/Conference):** *Energy*  
+- **DOI:** `10.1016/j.energy.2025.139895`
+- **Primary Domain:** HVAC / VRF system energy prediction
+- **Core Modelling Family:** XGBoost
+- **Model Types Compared:** Pure black-box ML vs hybrid grey-box ML
+- **Interpretability Tool:** SHAP, including SHAP interaction values
+- **Uncertainty Treatment:** Aleatoric and epistemic uncertainty quantification
+- **Dataset Type:** Limited experimental data from a VRF laboratory test bench
+- **Proximity/Threat Level:** High for any research involving interpretable, physics-informed HVAC or energy prediction under small-data conditions
+- **Why this paper matters:** It is one of the clearest demonstrations that embedding thermodynamic structure into a machine learning model can materially improve not only predictive accuracy, but also uncertainty behaviour and interpretability.
 
-- **Authors & Year:** Reshaeel, M., et al. (2026)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Enhancing+energy+prediction+in+variable+refrigerant+flow+cooling+systems%3A+A+hybrid+grey-box+model+integrating+thermodynamic+knowledge%2C+experimental+data+and+machine+learning)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation
+The paper starts from a very practical energy systems problem: HVAC systems account for a major fraction of building energy use, and VRF systems are increasingly attractive because of their energy efficiency and part-load performance. However, to operate, optimize, diagnose, or control VRF systems well, one needs accurate energy prediction models. The authors argue that existing modelling approaches each have serious weaknesses:
+- **White-box models** are physically grounded and generalizable, but they require detailed system knowledge and are computationally intensive.
+- **Black-box ML models** can be accurate, but they depend heavily on rich, representative data and are often hard to interpret.
+- **Existing grey-box models** help bridge the gap, but the literature still lacks a model that is simultaneously accurate, robust, uncertainty-aware, and interpretable when trained on **limited experimental data**.
 
-This page is a placeholder for a future full review using the site template.
+### Their Main Research Gap
+The paper identifies three specific gaps:
+1. **Small-data robustness** in VRF prediction is still weak.
+2. **Comprehensive uncertainty quantification** is rare in VRF energy prediction.
+3. **SHAP-based interpretability** had not yet been explored in this VRF prediction context.
+
+### Their Claim to Fame / Novelty
+The novelty is not just “use XGBoost for VRF prediction.” The real novelty is the **comparison framework**:
+- build a **pure black-box XGBoost model** using only operational variables,
+- build a **hybrid grey-box XGBoost model** using operational variables **plus thermodynamic state variables and engineered thermodynamic features**,
+- compare both on:
+  - predictive accuracy,
+  - residual behaviour,
+  - robustness under distribution shift,
+  - aleatoric uncertainty,
+  - epistemic uncertainty,
+  - interpretability via SHAP.
+
+### Why the Grey-Box Framing Matters
+The hybrid model embeds **VRF cycle domain knowledge** into the learning pipeline. This is not done by replacing ML with physics, but by **augmenting the feature space with physically meaningful quantities** such as:
+- suction and discharge temperatures,
+- pressure ratio,
+- part-load ratio,
+- degrees of subcooling and superheating,
+- refrigerant mass flow rates.
+
+This is the key philosophical contribution of the paper:  
+**the model remains data-driven, but the representation is physically informed.**
+
+---
+
+## 3. Technical Setup & Methodology
+
+## 3.1 Experimental Testbed
+The study uses a laboratory VRF test bench developed with LAB-TECH International. It includes:
+- two indoor units,
+- one outdoor unit,
+- an inverter-driven variable-speed compressor,
+- temperature, pressure, and refrigerant flow sensors,
+- a thermodynamic cycle simulation interface,
+- cooling-mode operation only.
+
+The system uses **R410A refrigerant** and has a rated cooling capacity of **11.2 kW**.
+
+### Data Collection Context
+- Location: Khalifa University, Abu Dhabi
+- Duration: two days
+- Time window: 8:30 a.m. to 7:30 p.m.
+- Resolution: minute-wise measurements
+- Raw data points: 1320
+- Stable data points retained after cleaning: **1080**
+
+The paper explicitly removes stabilization-period data, following HVAC testing recommendations.
+
+---
+
+## 3.2 Feature Design
+
+### Black-box Model Inputs
+The pure black-box model uses only four operational features:
+- room temperature (`Troom`)
+- mean set-point temperature (`Tmean`)
+- ambient temperature (`Tamb`)
+- relative humidity (`RH`)
+
+These are essentially **external/operational proxies** for system behaviour.
+
+### Hybrid Grey-box Model Inputs
+The hybrid model uses the above operational variables **plus** thermodynamic state and engineered features.
+
+#### Thermodynamic State Features
+- suction temperature (`Tsuc`)
+- discharge temperature (`Tdis`)
+
+#### Engineered Thermodynamic Features
+- pressure ratio (`PR`)
+- part-load ratio (`PLR`)
+- condenser subcooling (`DSC-cond`)
+- liquid-line subcooling 1 and 2 (`DSC-L1`, `DSC-L2`)
+- superheating in evaporator 1 and 2 (`DSH-E1`, `DSH-E2`)
+- suction-line superheating (`DSH-suc`)
+- refrigerant mass flow rates (`RF1`, `RF2`)
+
+These engineered variables are derived from measured pressures, temperatures, and refrigerant flow quantities through thermodynamic relations and energy balances.
+
+### Why This Matters
+This is where the paper becomes much more than a standard ML application. The authors are effectively arguing that:
+- operational variables tell you **what conditions the system sees**,
+- thermodynamic variables tell you **how the cycle is actually responding**.
+
+That distinction becomes very important later in the accuracy, uncertainty, and SHAP results.
+
+---
+
+## 3.3 Correlation Analysis
+The authors use **Spearman correlation** before model development.
+
+### Black-box Correlation Findings
+For the black-box dataset:
+- `Troom` is the strongest positive correlate with compressor input power,
+- `Tamb` is also positively related,
+- `Tmean` and `RH` are negatively related.
+
+The black-box model therefore relies heavily on indirect empirical trends.
+
+### Hybrid Correlation Findings
+For the hybrid dataset, the dominant variables shift away from raw operating conditions toward:
+- `PLR`
+- `PR`
+- `Tdis`
+- `RF1`
+- `RF2`
+- `DSC-cond`
+
+This is a major conceptual result. Once thermodynamic variables are introduced, the model no longer needs to rely mainly on environmental proxies. Instead, it can learn from variables that are much closer to the underlying physics of compressor workload.
+
+### Important Observation
+The paper notes some collinearity, especially:
+- `DSC-L1` vs `DSC-L2`
+- `RF1` vs `RF2`
+
+But the authors keep them because they encode distinct thermodynamic interactions.
+
+---
+
+## 3.4 Learning Algorithm & Training
+Both models use **XGBoost** with the same overall pipeline. The main difference is only the feature set.
+
+### Hyperparameter Tuning
+They tune hyperparameters using **GridSearchCV**.  
+Best values included:
+- learning rate = 0.1 for both
+- `max_depth = 3` for black-box, `6` for hybrid
+- `n_estimators = 75` for both
+- stronger regularization for the hybrid model (`reg_alpha = 0.5`, `reg_lambda = 2`)
+
+That stronger regularization in the hybrid model is interesting: even though the hybrid model has many more features, it still ends up performing substantially better, suggesting that the added variables are not just noise but genuinely informative structure.
+
+---
+
+## 4. Validation Strategy
+
+### Performance Metrics
+The paper evaluates models using:
+- `R²`
+- `RMSE`
+- `CV-RMSE`
+
+### Validation Procedure
+Because the dataset is small, the authors use **k-fold cross-validation** instead of a single fixed split, varying `k` from 2 to 10.
+
+### Additional Robustness Test
+They also perform an **out-of-distribution evaluation** using a 4-hour operational dataset with significant distributional shift, quantified using **Population Stability Index (PSI)**.
+
+This is a strong aspect of the paper. Many small-data ML studies stop at cross-validation, but here the authors go a step further and explicitly test how the models behave under shifted conditions.
+
+---
+
+## 5. Key Results
+
+## 5.1 Main Predictive Performance
+Across cross-validation folds, the hybrid grey-box model outperforms the black-box model consistently.
+
+### Average Gains of the Hybrid Model
+- **R² improvement:** **7.26%**
+- **RMSE reduction:** **71.86%**
+- **CV-RMSE reduction:** **71.87%**
+
+### Typical Metric Values
+Black-box model:
+- `R² ≈ 0.924–0.930`
+- `RMSE ≈ 0.082–0.086 kW`
+- `CV-RMSE ≈ 6.74–7.02%`
+
+Hybrid grey-box model:
+- `R² ≈ 0.993–0.995`
+- `RMSE ≈ 0.022–0.025 kW`
+- `CV-RMSE ≈ 1.82–2.05%`
+
+### Interpretation
+This is a large gain, not a marginal one. The hybrid model is not just “a little better”; it is in a materially different regime of accuracy.
+
+The paper also explains why the percentage gain in `R²` looks modest relative to the dramatic drop in RMSE:
+- `R²` is bounded and variance-based,
+- RMSE and CV-RMSE reflect absolute and relative error magnitude.
+
+That explanation is sensible and technically correct.
+
+---
+
+## 5.2 Actual-vs-Predicted Scatter
+The hybrid model has:
+- **98.33%** of predictions within the ±10% error bounds.
+
+The black-box model has:
+- **87.22%** within the ±10% error bounds.
+
+This is a visually intuitive way of showing that the grey-box model is much more tightly aligned with true compressor input power.
+
+---
+
+## 5.3 Residual Behaviour
+This is one of the strongest sections of the paper.
+
+### Black-box Residuals
+- residuals spread roughly from **-0.80 to 0.30 kW**
+- heteroscedastic pattern
+- larger errors at higher predicted power
+
+### Hybrid Residuals
+- residuals roughly confined to **-0.30 to 0.10 kW**
+- much tighter spread
+- more homoscedastic pattern
+
+### Why this matters
+This indicates the hybrid model is not just more accurate on average, but also more **stable across the operating range**. That is especially important for control-oriented energy models.
+
+---
+
+## 5.4 Robustness Under Distribution Shift
+This section significantly strengthens the paper.
+
+The authors freeze hyperparameters and evaluate both models on a new dataset with significant shift in many variables. PSI values indicate strong shift in features such as:
+- `Tdis`
+- `PR`
+- `PLR`
+- `DSC-cond`
+- `RF1`
+- `RF2`
+- `Troom`
+- `Tmean`
+- `Tamb`
+- `RH`
+
+### Shifted-Data Performance
+Black-box:
+- `RMSE = 0.1753 kW`
+- `CV-RMSE = 17.13%`
+- `R² = 0.8017`
+- **48.75%** within ±10% error
+
+Hybrid grey-box:
+- `RMSE = 0.1130 kW`
+- `CV-RMSE = 11.04%`
+- `R² = 0.9176`
+- **63.75%** within ±10% error
+
+### Interpretation
+Both models degrade under shift, which is expected. But the hybrid model degrades **more gracefully**. This is a strong result because it supports the core grey-box argument:
+**physically informed representations generalize better when the operating distribution changes.**
+
+---
+
+## 6. Uncertainty Quantification
+
+This is one of the paper’s most valuable contributions.
+
+## 6.1 Aleatoric Uncertainty
+The authors estimate aleatoric uncertainty in two stages:
+1. train a model to estimate the median compressor power,
+2. model the absolute residuals as a proxy for irreducible noise.
+
+### Results
+Black-box average aleatoric uncertainty:
+- **0.0315 kW**
+
+Hybrid grey-box average aleatoric uncertainty:
+- **0.0038 kW**
+
+### Reduction
+- **87.94% lower aleatoric uncertainty**
+
+### Interpretation
+This is a striking result. Strictly speaking, aleatoric uncertainty is supposed to reflect irreducible noise, but in practice its estimated value depends on how well the model isolates signal from noise. The hybrid model’s lower estimated aleatoric uncertainty suggests that the thermodynamic features help explain variance that would otherwise be dumped into the residual/noise term.
+
+That is one of the central messages of the paper:
+**better physics-aware features reduce what looks like “noise.”**
+
+---
+
+## 6.2 Epistemic Uncertainty
+Because XGBoost does not provide epistemic uncertainty directly, the authors use an ensemble-based perturbation approach:
+- inject Gaussian noise into input features,
+- retrain multiple perturbed models,
+- compute variance in predictions.
+
+### Results
+Black-box average epistemic uncertainty:
+- **0.0140 kW**
+
+Hybrid grey-box average epistemic uncertainty:
+- **0.0080 kW**
+
+### Reduction
+- **42.86% lower epistemic uncertainty**
+
+### Noise Sensitivity Test
+The hybrid model remains less sensitive to input perturbation across all tested noise levels. The authors report that the average percentage change in epistemic uncertainty across noise levels is **20.45% lower** for the hybrid model.
+
+### Interpretation
+This is a very nice result because the hybrid model actually has **more input features**, so one might initially expect more perturbation sensitivity. Instead, the opposite happens. The paper’s explanation is that the thermodynamic variables act as **structural constraints** that stabilize the learned function.
+
+That is a convincing interpretation.
+
+---
+
+## 7. Interpretability / SHAP Findings
+
+The paper uses:
+- SHAP summary plots,
+- global importance plots,
+- dependency plots,
+- SHAP interaction plots.
+
+## 7.1 What SHAP Shows at a High Level
+The hybrid model’s SHAP results are more physically meaningful than those of the pure black-box model. In the hybrid model:
+- operational features become secondary,
+- thermodynamic variables dominate,
+- feature effects align much more clearly with VRF thermodynamics.
+
+This is exactly what you would hope to see in a genuinely useful grey-box model.
+
+## 7.2 Key Physically Meaningful Findings
+The SHAP dependency analysis shows:
+- higher **PLR** strongly increases predicted compressor power,
+- higher **Tdis** is associated with greater compressor workload,
+- higher **PR** is positively related to compressor power,
+- higher **DSC-cond** also shows a meaningful positive role under load.
+
+These are not arbitrary ML patterns. They line up with expected compressor-cycle behaviour:
+- more load leads to higher refrigerant throughput,
+- higher pressure ratio means harder compression,
+- higher discharge temperature accompanies harder compressor operation.
+
+## 7.3 Interaction Effects
+The SHAP interaction plots are particularly useful.
+
+### `PR × PLR`
+- negative interaction at low PR and low PLR,
+- positive interaction in the mid-range,
+- near-zero interaction at very high values where individual effects dominate.
+
+### `DSC-cond × PLR`
+- slightly positive interaction at moderate load,
+- mildly negative at low PLR,
+- near-zero again at very high values.
+
+### Why this matters
+This adds nuance that a simple ranked feature-importance chart cannot give. The paper is showing not only **which** thermodynamic variables matter, but **how their joint influence changes across the operating envelope**.
+
+## 7.4 Practical Value of the SHAP Analysis
+The authors argue that the hybrid model can give useful insight into VRF control strategy, particularly under changing cooling loads. I think this is one of the strongest parts of the paper. The SHAP analysis is not just decorative; it supports the claim that the hybrid model is more than a predictor, it is a partially interpretable operational tool.
+
+---
+
+## 8. My Thoughts, Criticisms & Unstated Limitations
+
+## Criticism 1: The dataset is still very small
+The study uses only **1080 stable data points** collected over **two days** from a **single laboratory test bench**. That is not trivial data, but it is still a very constrained setting. The results are promising, but one should be careful about calling the approach “state-of-the-art” in a broad field sense without wider external validation.
+
+## Criticism 2: Cooling-only operation limits generality
+The test bench operates in **cooling mode only**. VRF systems in practice often operate across cooling, heating, transition, and defrost conditions. So the learned relationships may not transfer cleanly across all practical modes.
+
+## Criticism 3: External validity is asserted more than demonstrated
+The authors make a reasonable argument that the thermodynamic features are manufacturer-agnostic and could transfer with limited recalibration. That is plausible. But at this stage, it remains a **promising hypothesis**, not a demonstrated result.
+
+## Criticism 4: Uncertainty quantification is useful, but not fully Bayesian
+Their aleatoric and epistemic pipelines are thoughtful and practical, but they are still **approximation schemes**, not principled probabilistic posterior inference. That is not a flaw per se, but it is important to keep in mind. The paper should be read as providing **operational uncertainty indicators**, not exact uncertainty decomposition in a formal Bayesian sense.
+
+## Criticism 5: No comparison against stronger temporal models in equivalent conditions
+The authors cite LSTM literature, but they do not benchmark directly against a strong temporal deep learning model on the same dataset. Their justification is understandable because the dataset is short, but it still leaves open the question:
+- how much of the gain comes from physics-informed features,
+- and how much could also be captured by a carefully regularized temporal model if longer histories were available?
+
+## Criticism 6: SHAP is used persuasively, but not validated formally
+The SHAP results are highly interpretable and physically sensible. But the validation remains qualitative:
+- “does this look thermodynamically reasonable?”
+
+That is a good start, but there is no explicit testing of:
+- explanation stability,
+- faithfulness,
+- robustness under perturbations,
+- agreement with independent physical sensitivity analysis.
+
+## Criticism 7: The black-box baseline is intentionally weak in representation
+This is perhaps the biggest scientific caveat. The black-box model uses only four operational variables. That creates a very stark contrast with the hybrid model, which has sixteen features including cycle-informed quantities. So the study convincingly proves:
+**adding thermodynamic structure helps.**
+
+But it does **not** fully prove:
+**grey-box learning is superior to all strong black-box alternatives**,  
+because the “black-box” here is also deprived of potentially richer measured inputs.
+
+---
+
+## 9. What This Paper Really Tells Us
+
+The paper’s deepest contribution is not just a performance table. It shows that in small-data engineering settings:
+- feature design matters more than blindly increasing model complexity,
+- physics-informed variables can reduce both prediction error and estimated uncertainty,
+- interpretability improves when the feature space reflects the actual system physics,
+- robustness under shift improves when the model is grounded in physical state representation rather than only operational proxies.
+
+In other words:
+
+> The paper argues, quite convincingly, that the real strength of hybrid grey-box modelling is not merely “better accuracy,” but a better **representation of causally meaningful system behaviour**.
+
+That is why the approach works.
+
+---
+
+## 10. Action Items & Integration
+
+- [ ] Cite this paper in any literature review section discussing **physics-informed or grey-box energy prediction** for HVAC/VRF systems.
+- [ ] Use it as a key reference when arguing that **embedding thermodynamic state variables into ML models improves robustness and interpretability under limited data**.
+- [ ] Reuse its structure of comparing:
+  - prediction accuracy,
+  - residual behaviour,
+  - distribution-shift robustness,
+  - aleatoric uncertainty,
+  - epistemic uncertainty,
+  - SHAP interpretation.
+- [ ] In my own work, consider whether engineered physics features are reducing what is currently being interpreted as “noise.”
+- [ ] If I build a comparable model, include stronger external validation than this paper:
+  - multiple seasons,
+  - multiple modes,
+  - multiple systems/manufacturers,
+  - longer histories.
+- [ ] Consider adding formal interpretability checks beyond visual SHAP plausibility.
+- [ ] Position this paper as strong evidence that **small-data, domain-informed ML can outperform purely empirical ML in engineered systems**.
+
+---
+
+## 11. One-Paragraph Literature Review Summary
+Reshaeel and Hassan Ali (2026) present a strong case for hybrid grey-box machine learning in VRF compressor power prediction by comparing a pure black-box XGBoost model trained on operational variables with a grey-box XGBoost model augmented by thermodynamic state and engineered cycle features. Using limited experimental data from a laboratory VRF test bench, the hybrid model substantially outperformed the black-box model, achieving a 7.26% improvement in R² and roughly 72% reductions in RMSE and CV-RMSE, while also exhibiting more stable residuals and stronger robustness under distribution shift. A major contribution of the study is its explicit uncertainty analysis, where the grey-box model reduced estimated aleatoric and epistemic uncertainty by 87.94% and 42.86%, respectively. SHAP analysis further showed that the hybrid model learned physically meaningful relationships centered on part-load ratio, pressure ratio, discharge temperature, and condenser subcooling, providing interpretable insight into VRF control behaviour. Although the study is limited by small-scale, cooling-only, single-system data, it offers compelling evidence that thermodynamic feature engineering can improve accuracy, reliability, and interpretability in small-data HVAC modelling.
+
+---

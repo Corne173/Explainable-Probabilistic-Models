@@ -1,19 +1,376 @@
 ---
 title: "A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks"
-description: "Deep neural networks with interpretable confidence intervals for battery health. Review in progress."
-date: 2025-01-01
+description: "Review of an APSIPA ASC 2025 paper proposing a unified XAI and uncertainty quantification framework for battery SOH estimation using deep neural networks."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Aleatoric vs epistemic uncertainty
+  - Battery state of health
+  - Explainable AI
+  - Uncertainty quantification
+  - Deep learning
+  - Lithium-ion batteries
+  - MC dropout
+  - Deep ensembles
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Paper Title:** *A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks*
+- **Authors & Year:** Elias Isaac Huai-En Lim and Nicholas Heng Loong Wong (2025)
+- **Venue (Journal/Conference):** *2025 Asia Pacific Signal and Information Processing Association Annual Summit and Conference (APSIPA ASC)*
+- **DOI:** `10.1109/APSIPAASC65261.2025.11249263`
+- **Primary Topic/Concept:** Integrating explainable AI (XAI) and uncertainty quantification (UQ) into deep neural network based battery state of health (SOH) estimation
+- **Application Domain:** Lithium-ion battery diagnostics for electric vehicles and battery management systems
+- **Datasets Used:** McMaster Battery Aging Dataset and Oxford Battery Degradation Dataset
+- **Code/Data Available?:** Public datasets are referenced; no dedicated code repository is explicitly provided in the paper
+- **Proximity/Threat Level:** Medium to High / Relevant methodological reference for trustworthy regression in energy systems
+- **Date Reviewed:** 2026-03-13
 
-- **Authors & Year:** Lim, E.I.H.-E., & Wong, N.H.L. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=A+Unified+Framework+for+Interpretable+and+Uncertainty-Aware+Battery+State+of+Health+Estimation+Using+Deep+Neural+Networks)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why SOH Estimation Matters)
+- Accurate battery state of health estimation is critical for electric vehicles and renewable energy systems because it directly affects safety, reliability, performance, and battery longevity.
+- Poor SOH estimation can lead to premature battery replacement, degraded operation, poor maintenance decisions, and in extreme cases, battery safety hazards such as thermal runaway.
+- Deep neural networks are increasingly attractive for SOH estimation because they can model nonlinear degradation behavior from sensor data, but they are difficult to trust in deployment because they are black-box models.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why Explainability and Uncertainty?)
+- The authors argue that accurate predictions alone are not enough in safety-critical systems.
+- A practical battery diagnostic model should answer two questions:
+  1. **Why did the model predict this SOH value?**
+  2. **How certain is the model about that prediction?**
+- XAI is introduced to make model behavior interpretable, while UQ is introduced to provide confidence intervals around predictions so that operators can assess risk and act more cautiously when the model is uncertain.
+
+### Their Claim to Fame / Novelty
+- The paper proposes a **unified framework** that combines:
+  - **SHAP**
+  - **LIME**
+  - **Integrated Gradients (IG)**
+  - **Counterfactual explanations**
+  - **Adaptive Confidence Intervals (ACI)**
+  - **MC dropout**
+  - **Deep ensembles**
+- The novelty is not a brand-new backbone model, but rather the integration of interpretability and predictive uncertainty into a single SOH estimation pipeline.
+- They position the work as filling a gap in the literature, namely the lack of frameworks that jointly address **interpretability + uncertainty** for **regression-based, time-series, multivariate tabular battery data**.
+
+### The Value Derived from Explainability
+- The explainability toolkit is used to identify which features drive SOH predictions globally and locally.
+- It also allows layer-wise inspection of how feature importance changes through the depth of the network.
+- The paper claims explainability improves transparency, helps interpret edge cases, and enables actionable analysis via counterfactuals.
+
+### The Value Derived from Uncertainty Quantification
+- Their UQ framework tries to capture both:
+  - **Epistemic uncertainty**: uncertainty due to model limitations or lack of knowledge
+  - **Aleatoric uncertainty**: uncertainty due to measurement noise and inherent data variability
+- Confidence intervals are used to communicate prediction reliability, which is especially important for deployment in battery management systems.
+
+### Their Ultimate Result
+- The framework achieves:
+  - **RMSE = 0.01175** on McMaster
+  - **RMSE = 0.01432** on Oxford
+  - **PICP = 91.2%** on McMaster
+  - **PICP = 89.8%** on Oxford
+  - **MPIW = 0.2311** on McMaster
+  - **MPIW = 0.2457** on Oxford
+- The authors interpret these results as evidence that the framework provides both accurate and informative SOH predictions.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Datasets / Testbed
+The study uses two public lithium-ion battery datasets:
+
+- **McMaster Battery Aging Dataset**
+- **Oxford Battery Degradation Dataset**
+
+Both datasets contain time-series battery measurements over multiple charge-discharge cycles, including:
+- voltage
+- current
+- temperature
+- capacity
+
+### Preprocessing
+The paper applies fairly standard preprocessing:
+- moving average smoothing for noisy readings
+- cycle-based feature extraction such as:
+  - maximum voltage
+  - mean temperature
+- z-score normalization
+- stratified **80:20 train:test split** across cells and cycles
+
+### Model Architectures
+They replicate two previously published models:
+
+1. **CNN architecture**
+   - Uses stacked 1D convolutional layers and global pooling
+   - Applied primarily to the McMaster dataset
+   - This appears to be the main model of focus
+
+2. **Bi-LSTM with attention**
+   - Uses interpolated time-series features
+   - Includes dropout and batch normalization
+   - Applied to the Oxford dataset
+   - Used more as a validation model than the central focus
+
+### Training Setup
+- Implemented in **TensorFlow**
+- Optimizer: **Adam**
+- Learning rate: **0.001**
+- Batch size: **128**
+- Early stopping patience: **5**
+- Loss function: **Mean Squared Error (MSE)**
+
+### Explainability Framework
+The interpretability component includes four methods:
+
+#### 1. SHAP
+- Used to estimate feature contributions to predicted SOH
+- Applied globally and locally
+- Also used layer-wise
+
+#### 2. LIME
+- Used to fit local surrogate explanations around individual predictions
+- Particularly emphasized for understanding edge cases
+
+#### 3. Integrated Gradients (IG)
+- Used to attribute importance via gradients accumulated from a baseline input to the actual input
+- Intended to provide a more path-aware notion of feature influence
+
+#### 4. Counterfactual Explanations
+- Used to identify minimal input perturbations required to significantly change the predicted SOH
+- Intended to provide actionable what-if style explanations
+
+### Adaptive Confidence Interval (ACI)
+This is the main UQ contribution.
+
+The ACI combines:
+- **Epistemic uncertainty**
+  - estimated using **MC dropout**
+  - and **deep ensembles**
+- **Aleatoric uncertainty**
+  - estimated by injecting Gaussian noise into the input data
+  - and examining predictive variability
+
+The total uncertainty is then combined into a confidence interval using pooled estimates of means and variances:
+
+\[
+CI =
+\frac{n_{model}\bar{x}_{model} + n_{data}\bar{x}_{data}}
+{n_{model} + n_{data}}
+\pm z \cdot
+\sqrt{
+\frac{s^2_{model}}{n_{model}} +
+\frac{s^2_{data}}{n_{data}}
+}
+\]
+
+Where:
+- model terms represent epistemic uncertainty
+- data terms represent aleatoric uncertainty
+- \(z\) corresponds to the desired confidence level
+- they use:
+  - \(n_{model} = 50\)
+  - \(n_{data} = 50\)
+  - 95% confidence level
+
+### Evaluation Metrics
+They evaluate both predictive accuracy and interval quality.
+
+#### Predictive accuracy
+- **RMSE**
+
+#### Uncertainty quality
+- **PICP**: Prediction Interval Coverage Probability
+- **MPIW**: Mean Prediction Interval Width
+
+This is a sensible start, although still limited for a full UQ evaluation.
+
+---
+
+## 4. Validation Strategy (Predictions & Explanations)
+
+### Validating the Predictions
+The predictive side is evaluated using:
+- RMSE for point prediction error
+- PICP for coverage reliability
+- MPIW for interval compactness
+
+The framework is tested on both McMaster and Oxford datasets, and the paper claims consistent performance across both despite operating condition shifts.
+
+### Validating the Explanations
+The explanation validation is mostly **qualitative**.
+The authors argue that:
+- SHAP and IG consistently identify SOC and voltage as the most influential features
+- LIME helps explain atypical degradation cases
+- layer-wise analysis shows different features becoming more or less important across network depth
+- counterfactual changes are broadly consistent with the attribution results
+
+In other words, the paper treats agreement across multiple XAI methods as a kind of internal consistency check.
+
+### Layer-Wise Findings
+A particularly interesting point is that:
+- **SOC dominates deeper convolutional layers**
+- **Current and voltage are more important in earlier layers**
+
+This suggests a hierarchical representation:
+- early layers extract more direct electrical signatures
+- deeper layers may encode more abstract health-related structure centered around SOC
+
+This is one of the more interesting interpretability observations in the paper.
+
+---
+
+## 5. Main Results
+
+### Explainability Results
+- SHAP and IG consistently rank **SOC** and **voltage** as the dominant features
+- LIME is helpful for local edge-case interpretation
+- Counterfactuals identify minimal changes that alter SOH predictions in ways broadly aligned with SHAP and IG
+- Layer-wise SHAP shows the representation of importance shifts across the network depth
+
+### Uncertainty Results
+On the **McMaster dataset**:
+- **RMSE:** 0.01175
+- **PICP:** 91.2%
+- **MPIW:** 0.2311
+
+On the **Oxford dataset**:
+- **RMSE:** 0.01432
+- **PICP:** 89.8%
+- **MPIW:** 0.2457
+
+### Interpretation of the Results
+The paper argues that these results indicate:
+- low prediction error
+- reasonably high coverage
+- compact enough intervals to remain informative
+- some degree of generalizability across datasets
+
+---
+
+## 6. Strengths of the Study
+
+### Strength 1: Joint Treatment of Two Real Problems
+A major strength is that the paper does not treat explainability and uncertainty as separate optional add-ons. It directly addresses two deployment bottlenecks of black-box SOH models:
+- lack of interpretability
+- lack of calibrated confidence
+
+That is valuable because most papers address only one of the two.
+
+### Strength 2: Multi-Method Explainability
+Using SHAP, LIME, IG, and counterfactuals together gives the framework some triangulation value. Even if no formal faithfulness tests are used, comparing multiple explanation methods is still more convincing than relying on only one.
+
+### Strength 3: Distinction Between Epistemic and Aleatoric Uncertainty
+The paper explicitly acknowledges that not all uncertainty is the same. That conceptual distinction is important and often missing in applied engineering papers.
+
+### Strength 4: Cross-Dataset Evaluation
+Using both McMaster and Oxford datasets is a good design choice. It provides at least some evidence that the framework is not tied to a single dataset.
+
+### Strength 5: Practical Framing
+The paper keeps the discussion tied to battery management relevance:
+- safety
+- real-time deployment
+- confidence-aware diagnostics
+- actionable outputs
+
+That practical framing makes the paper useful even if some methodological pieces are still immature.
+
+---
+
+## 7. My Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: The Paper Overstates the Strength of Its Uncertainty Results
+There appears to be a serious inconsistency between the abstract and the main results table.
+
+- In the **abstract**, the paper reports:
+  - **PICP = 0.6288**, meaning only **62.88%** of ground truth values fell within the intervals
+- But in the **results section and Table I**, it reports:
+  - **PICP = 91.2%** on McMaster
+  - **PICP = 89.8%** on Oxford
+
+These are drastically different conclusions.
+A PICP of 62.88% would indicate poor interval calibration for nominal 95% intervals.
+A PICP near 90% is still imperfect, but far more acceptable.
+
+This inconsistency is not minor. It materially affects how trustworthy the uncertainty framework really is. At minimum, it suggests reporting or methodological confusion that should have been clarified.
+
+### Criticism 2: Interval Metrics Alone Are Not Enough for UQ Validation
+The framework only evaluates uncertainty using:
+- PICP
+- MPIW
+
+These are useful, but incomplete.
+They do **not** tell us whether uncertainty increases when the model is more likely to be wrong.
+A model can produce broad or narrow intervals with acceptable average coverage while still ranking risky predictions badly.
+
+The paper itself partially acknowledges this and suggests future inclusion of:
+- Spearman correlation between uncertainty and residuals
+- Negative log-likelihood (NLL)
+- Brier score
+
+This is a good admission, but it also means the current uncertainty evaluation is underdeveloped.
+
+### Criticism 3: The Proposed ACI Is More Engineering Heuristic Than Principled Probabilistic Modeling
+The adaptive confidence interval formulation pools estimates from model and data uncertainty in a fairly ad hoc way.
+It is practical, but it is not the same as learning a full predictive distribution.
+There is no rigorous derivation showing that this pooled CI is statistically calibrated under the nonlinear dependencies of the model.
+
+So while the framework is uncertainty-aware, it is not necessarily a fully principled uncertainty model.
+It is closer to an uncertainty engineering wrapper around point predictors.
+
+### Criticism 4: The Explainability Validation Is Almost Entirely Qualitative
+The explainability claims are based on:
+- intuitive agreement with domain expectations
+- agreement across methods
+- plausible feature rankings
+
+That is better than nothing, but it is still weak.
+The paper does not test:
+- explanation robustness
+- explanation stability under perturbation
+- explanation fidelity
+- sensitivity to correlated inputs
+- reproducibility of attributions across retraining runs
+
+This is especially important because battery features like voltage, current, temperature, and SOC are often strongly correlated.
+
+### Criticism 5: “Model-Agnostic” Is Used a Bit Too Generously
+The paper describes the framework as model-agnostic, but several components are not uniformly lightweight or architecture-independent in practice.
+For example:
+- layer-wise analysis depends on network internals
+- IG is gradient-based and tied to differentiable models
+- counterfactuals may depend heavily on optimization details and feature realism constraints
+
+So the system is not purely model-agnostic in the strictest sense.
+
+### Criticism 6: Counterfactuals Are Underdeveloped
+The paper includes counterfactual explanations, but only at the input level.
+That means they identify minimal feature changes, but they do not really explain internal reasoning pathways.
+The authors admit this and suggest future use of r-counterfactuals or internal-layer counterfactuals.
+
+This is important because input-level counterfactuals on sensor data can easily become unrealistic or physically implausible unless constrained properly.
+
+### Criticism 7: Computational Cost Is Acknowledged but Not Quantified
+The paper repeatedly mentions runtime overhead from:
+- MC dropout
+- layer-wise explainability
+- counterfactual generation
+
+But it does not actually benchmark:
+- latency
+- memory
+- deployment cost
+- scalability across hardware
+
+That weakens the claim of practical deployment readiness.
+
+### Criticism 8: Baseline Comparison Is Weak
+The paper mainly demonstrates that the framework works, but it does not perform a strong comparative study against:
+- simpler neural baselines without XAI/UQ
+- probabilistic neural baselines
+- Bayesian deep learning baselines
+- conformal prediction approaches
+- quantile regression methods
+- heteroscedastic regression models
+
+The authors state this will be future work, but without such comparisons it is difficult to isolate the val

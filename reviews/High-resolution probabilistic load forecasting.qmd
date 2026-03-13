@@ -1,19 +1,437 @@
 ---
 title: "High-resolution probabilistic load forecasting: A learning ensemble approach"
-description: "Probabilistic load forecasting with a learning ensemble and Shapley-based analysis. Review in progress."
-date: 2023-01-01
+description: "Review of a 2023 Journal of the Franklin Institute paper proposing a nonlinear learning ensemble for high-resolution probabilistic load forecasting, with theoretical guarantees and Shapley-based model contribution analysis."
+date: 2026-03-13
 categories:
-  - Review in progress
-  - Power systems baselines
+  - Probabilistic forecasting
+  - Load forecasting
+  - Ensemble learning
+  - Shapley value
+  - Deep learning
+  - Quantile forecasting
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Chenbei Lu, Jinhao Liang, Wenqian Jiang, Jiaye Teng, Chenye Wu (2023)
+- **Venue (Journal/Conference):** *Journal of the Franklin Institute*
+- **DOI:** 10.1016/j.jfranklin.2023.02.010
+- **Primary Topic:** High-resolution probabilistic load forecasting using a nonlinear ensemble learner
+- **Core Technical Theme:** Replacing conventional linear ensemble rules with a learned nonlinear combiner, then using Shapley values to quantify how much each base model contributes
+- **Date Reviewed:** 2026-03-13
+- **Proximity / Threat Level:** Moderate to high, especially if my work involves probabilistic forecasting, ensemble design, or SHAP/Shapley-based interpretation of model contributions
 
-- **Authors & Year:** Lu, C., et al. (2023)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=High-resolution+probabilistic+load+forecasting%3A+A+learning+ensemble+approach)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why probabilistic load forecasting?)
+The paper starts from the standard but important argument that deterministic forecasts are not enough for power-system operations. Operators need uncertainty-aware forecasts to support dispatch, planning, and investment, especially under increasing renewable penetration. The authors argue that **high-resolution probabilistic forecasting** is especially useful because it captures both short-term dynamics and uncertainty structure more comprehensively than coarser or point-only approaches.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why ensemble learning?)
+Their central motivation is that **no single forecasting model performs best on every dataset**, so model combination is attractive for improving robustness and generalization. However, they argue that most existing ensemble methods in load forecasting are still essentially **linear combinations** of base-model outputs, such as:
+- mean value ensemble,
+- median value ensemble,
+- weighted average ensemble, and
+- quantile regression combination.
+
+Their key complaint is that these linear rules are too restrictive and cannot fully exploit complementary strengths across heterogeneous base learners.
+
+### Their main novelty / claim to fame
+The paper makes three main claims:
+1. **A learning ensemble framework** for probabilistic load forecasting, where a machine learning model learns the nonlinear mapping from the predictions of several base models to the final probabilistic forecast.
+2. **A theoretical argument** that nonlinear learning-based ensemble methods can overcome a fundamental limitation of linear ensembles.
+3. **A Shapley value-based contribution analysis** to quantify the value of each base forecaster inside the ensemble.
+
+### What is actually novel here?
+The most important novelty is **not** simply “using an ensemble,” since ensembles are already common. The real novelty is the argument that:
+- prior probabilistic load-forecast ensembles are mostly linear,
+- nonlinear ensemble learning can do better,
+- and this is supported by both **theoretical results** and **empirical experiments**.
+
+This theoretical layer is important because many papers propose hybrid or stacked models purely as an engineering heuristic. Here, the authors try to give the nonlinear ensemble idea a formal foundation.
+
+### Their ultimate result
+The learning ensemble, especially the **DNN-based** and **LSTM-based** versions, outperformed conventional ensemble methods across multiple forecasting horizons. Compared with the average single model, improvements approached **50%** in some settings, and even compared with the **best single model**, the learning ensemble still achieved around **10% to 20%** improvement. The paper also found that **FCDNN and LSTM models contributed the most** to the ensemble according to Shapley-value analysis.
+
+---
+
+## 3. Problem Formulation & Methodology
+
+## 3.1 Forecasting formulation
+The paper frames the task as **quantile-based probabilistic forecasting** rather than directly predicting full parametric distributions. This is sensible because:
+- quantile forecasting is flexible,
+- it avoids assuming a specific output distribution family,
+- and it can be evaluated using **pinball loss**.
+
+The forecasting model receives:
+- historical load,
+- day-type information,
+- weather and temperature-related variables,
+
+and predicts future load quantiles over multiple time horizons.
+
+### Loss function
+The paper uses the **pinball loss** as the core optimization and evaluation objective for probabilistic forecasts. This is a standard and defensible choice for quantile prediction.
+
+---
+
+## 3.2 Data splitting strategy
+A slightly unusual but important part of the methodology is the dataset partitioning:
+- one half is used to train/validate the base models,
+- the other half is split into:
+  - an **ensemble training set** \(S\), and
+  - a **final evaluation set** \(E\).
+
+So the workflow is:
+
+1. Train multiple base forecasting models,
+2. collect their predictions on the ensemble-training subset,
+3. train the ensemble combiner on those predictions,
+4. evaluate the final ensemble on a held-out test subset.
+
+This is conceptually clean because it avoids training the meta-learner on the same data used to fit the base models.
+
+---
+
+## 3.3 Base forecasting models
+The ensemble is built from four model families:
+
+### 1. FCDNN
+A fully connected deep neural network trained with pinball loss plus regularization.
+
+### 2. LSTM
+A recurrent neural model intended to capture temporal dependencies in load time series.
+
+### 3. RFQR
+Random Forest Quantile Regression, which derives predictive quantiles from the distribution of tree outputs.
+
+### 4. LightGBM
+A gradient-boosted tree model adapted for the forecasting task.
+
+### Why this model set matters
+This is a reasonably diverse base-model library:
+- neural networks for flexible nonlinear function approximation,
+- LSTM for temporal dependence,
+- tree ensembles for structured nonlinearities and robustness.
+
+That diversity is exactly what makes ensemble learning potentially useful.
+
+---
+
+## 3.4 Conventional ensembles they compare against
+They benchmark the learning ensemble against four conventional combination rules:
+
+- **MVE**: Mean Value Ensemble
+- **MdVE**: Median Value Ensemble
+- **WAE**: Weighted Average Ensemble
+- **QR**: Quantile Regression ensemble
+
+This comparison is important because the paper is not asking whether ensembles help at all. It is asking whether **learned nonlinear combination** helps more than **standard linear aggregation**.
+
+---
+
+## 3.5 Their proposed learning ensemble
+The proposed learning ensemble takes the outputs of all trained base models as inputs and learns a nonlinear mapping:
+
+- base predictions go in,
+- final probabilistic forecast comes out,
+- training is performed by minimizing **pinball loss** on the ensemble-training set.
+
+They test three neural meta-learners for this role:
+- **DNN**
+- **LSTM**
+- **CNN**
+
+So the paper is really about **stacked nonlinear probabilistic forecasting**, with a neural combiner on top of heterogeneous base predictors.
+
+---
+
+## 4. Theoretical Contribution
+
+This is the most distinctive part of the paper.
+
+### 4.1 Critique of linear ensembles
+The authors derive expressions for the mean and variance of the error of a linear ensemble. They then show that the expected pinball loss of a linear ensemble remains **strictly larger than zero**, which they interpret as evidence of a systematic approximation gap between a linear ensemble and the true forecasting function.
+
+### 4.2 Approximation argument for nonlinear ensemble
+They then argue that a neural network can approximate the ideal nonlinear mapping from base predictions to the true target arbitrarily well under certain assumptions, including:
+- the existence of an injective Lipschitz-continuous mapping from base predictions to the true output,
+- and enough model capacity.
+
+They first show this for a simple two-layer network, then extend it to a deeper multi-model setting.
+
+### Why this matters
+Whether or not one accepts every assumption literally, the theoretical message is clear:
+
+> linear combination is fundamentally restrictive, while nonlinear learned combination is expressive enough to approximate a much richer class of mappings.
+
+That is the real conceptual backbone of the paper.
+
+---
+
+## 5. Shapley Value Component
+
+A second important contribution is the **Shapley value-based evaluation of base-model contributions**.
+
+### What they do
+For each subset of candidate forecasting models, they:
+1. train the corresponding ensemble,
+2. evaluate its pinball loss,
+3. compute marginal contributions across coalitions,
+4. aggregate those marginal contributions into Shapley values.
+
+### Why this is useful
+This is not feature attribution in the usual SHAP sense. Instead, it is **model-level contribution attribution**:
+- Which base forecasters are most useful to the ensemble?
+- Which ones actually reduce loss meaningfully?
+- Which ones are mostly redundant?
+
+This is a useful perspective because it helps interpret **the ensemble architecture itself**, not only the forecasted outputs.
+
+---
+
+## 6. Experimental Setup
+
+## 6.1 Dataset / testbed
+The study uses aggregated load data from a **coastal industrial city in Guangdong, China**, with **5-minute resolution** data from **January 2019 to June 2022**.
+
+### Inputs
+The input features include:
+- previous two days of 5-minute load history,
+- day type,
+- date information,
+- future temperature,
+- future apparent temperature.
+
+### Outputs
+The model predicts probabilistic forecasts at quantiles:
+- **20%**
+- **50%**
+- **80%**
+
+for horizons:
+- **1 hour**
+- **3 hours**
+- **6 hours**
+- **12 hours**
+- **24 hours**
+
+This is a genuinely high-resolution setting, and the multi-horizon design makes the evaluation more convincing.
+
+---
+
+## 6.2 Training details
+For the meta-learners, the paper uses:
+- random search for hyperparameters,
+- Adam optimizer,
+- early stopping,
+- ReLU as the general activation function.
+
+This is standard and reasonable, although not especially exhaustive.
+
+---
+
+## 7. Key Results
+
+## 7.1 Single-model performance
+Among the 40 single models tested, **FCDNN** and **LSTM** perform significantly better than **LightGBM** and **RFQR** overall. Performance worsens as the forecast horizon increases, which is exactly what one would expect.
+
+An interesting observation is that the deep learning models are more sensitive to hyperparameter choices than the more conventional tree-based models.
+
+---
+
+## 7.2 Ensemble performance
+This is where the paper’s main claim is supported.
+
+### Compared with the average single model
+Even simple mean ensembling improves over the average single model by more than **20%**.
+
+### Compared with conventional ensemble methods
+The learning ensemble methods outperform all four conventional linear ensemble approaches across all forecast windows.
+
+### Best-performing meta-ensembles
+The strongest performance comes from:
+- **LE (DNN)**
+- **LE (LSTM)**
+
+The DNN-based learning ensemble can achieve improvements approaching **50%** relative to the average single model.
+
+### Compared with the best single model
+This is the more meaningful comparison. Conventional ensemble methods sometimes fail to improve over the best single model. In contrast, the learning ensemble still shows **10%–20%** gains.
+
+This is probably the most practically relevant empirical result in the paper.
+
+---
+
+## 7.3 Robustness checks
+The authors shuffle the dataset five times to produce different training/validation/ensemble/evaluation splits. The learning ensemble maintains similar performance across these shuffled datasets.
+
+This is not a very deep robustness test, but it does at least suggest that the gains are not due to one lucky split.
+
+---
+
+## 7.4 Temporal behavior
+In their week-long visualization, the probabilistic forecasts track the real load closely. The paper notes that:
+- 1-hour forecasts have small average loss but larger fluctuation,
+- and larger forecast errors tend to occur from **13:00 to 20:00**.
+
+This kind of time-localized error analysis is useful because it hints at structural difficulty in certain daily operating periods.
+
+---
+
+## 7.5 Shapley results
+The Shapley-value analysis shows:
+- **FCDNN** and **LSTM** contribute much more than **LightGBM** and **RFQR**,
+- their contributions increase with forecasting difficulty,
+- and together they account for **more than 70%** of the total contribution share.
+
+This aligns with the single-model results and adds internal consistency to the study.
+
+---
+
+## 8. Strengths of the Paper
+
+### Strength 1: Clear problem framing
+The paper is very clear about the gap it wants to fill: existing probabilistic ensembles are mostly linear, and that may be too restrictive.
+
+### Strength 2: Theoretical + empirical integration
+Many forecasting papers are either theoretical or empirical. This one tries to do both:
+- formalize why linear ensembles are limited,
+- then validate the nonlinear alternative experimentally.
+
+### Strength 3: Strong experimental comparisons within the chosen framing
+The comparisons against MVE, MdVE, WAE, and QR are fair and directly tied to the paper’s stated research question.
+
+### Strength 4: Model-level interpretability
+The Shapley-value analysis is a nice addition because it helps explain **why** the ensemble works, not only **whether** it works.
+
+### Strength 5: Multi-horizon, high-resolution setting
+Testing at 1h, 3h, 6h, 12h, and 24h horizons with 5-minute load data gives the study practical depth.
+
+---
+
+## 9. My Thoughts, Criticisms & Unstated Limitations
+
+## Criticism 1: The theory depends on strong assumptions
+The theoretical superiority of the nonlinear ensemble depends on assumptions like the existence of an injective Lipschitz mapping from base-model predictions to the true target. That is mathematically useful, but in practice it is a strong assumption.
+
+This means the theory is best interpreted as an **expressivity argument**, not a guarantee that the proposed approach will always achieve near-zero pinball loss in real data.
+
+---
+
+## Criticism 2: “Can approach zero” is not the same as “will train well”
+The paper is careful in places, but the overall tone could make readers overestimate the practical implications of the approximation theorems. Real neural training is:
+- non-convex,
+- data-limited,
+- sensitive to hyperparameters,
+- and prone to optimization failure.
+
+So the theory supports the *possibility* of superior nonlinear combination, not necessarily its routine attainment.
+
+---
+
+## Criticism 3: The evaluation is narrow in terms of uncertainty quality
+The paper focuses almost entirely on **pinball loss**. That is appropriate for quantile forecasting, but still somewhat narrow.
+
+It does **not** deeply assess:
+- calibration quality across many quantile levels,
+- sharpness-vs-calibration tradeoff beyond pinball loss,
+- interval coverage diagnostics,
+- or full distributional consistency.
+
+Because they only forecast the 20%, 50%, and 80% quantiles, the uncertainty representation is also fairly sparse.
+
+---
+
+## Criticism 4: Limited comparison to more modern probabilistic deep baselines
+The base model set is useful, but the benchmark space is still limited. The paper does not compare against stronger end-to-end probabilistic deep learning baselines such as:
+- modern quantile sequence models,
+- conformal methods,
+- mixture density models,
+- deep state-space approaches,
+- or transformer-style probabilistic forecasters.
+
+So the claim is strongest **within the ensemble-combination setting they define**, not necessarily against the current full frontier of probabilistic forecasting.
+
+---
+
+## Criticism 5: Interpretation is at the model level, not the feature level
+The Shapley analysis explains which **base models** matter most, but not:
+- which **input variables** drive uncertainty,
+- which temporal patterns are most influential,
+- or how external weather variables affect different horizons.
+
+So this is useful interpretability, but it is not the same as the richer feature-level XAI used in SHAP-style forecasting papers.
+
+---
+
+## Criticism 6: Computational scalability of Shapley analysis may become painful
+For only four selected model types, enumerating all subsets is manageable. But exact Shapley computation scales poorly as the number of candidate models grows.
+
+So the method is elegant for a small library of base models, but may become cumbersome for larger ensemble pools unless approximation methods are used.
+
+---
+
+## Criticism 7: Generalization evidence is still geographically narrow
+The study uses one city-level dataset from Guangdong. It is a meaningful real-world dataset, but still only one operating environment.
+
+So the paper demonstrates that the method works **well here**, but not yet that it transfers robustly across:
+- different climates,
+- residential vs industrial systems,
+- national-scale demand,
+- markets with stronger weather volatility,
+- or different calendar/load behaviors.
+
+---
+
+## 10. What I Would Take Forward From This Paper
+
+### Research takeaway 1
+A nonlinear meta-learner on top of diverse probabilistic forecasters is a serious benchmark and should not be ignored.
+
+### Research takeaway 2
+If I am comparing forecasting pipelines, I should distinguish clearly between:
+- **single-model improvement**, and
+- **combination-rule improvement**.
+
+This paper is primarily about the second.
+
+### Research takeaway 3
+Model-level Shapley analysis is a useful way to justify which base learners are worth keeping in an ensemble.
+
+### Research takeaway 4
+There is room to extend this framework by adding stronger uncertainty diagnostics and richer probabilistic baselines.
+
+---
+
+## 11. Action Items & Integration
+
+- [ ] Consider using a nonlinear stacking ensemble as a benchmark in my own probabilistic forecasting work, especially when I already have heterogeneous base learners.
+- [ ] When reviewing this paper in a literature review, position it as a **nonlinear probabilistic ensemble** paper rather than a general “XAI forecasting” paper.
+- [ ] Note that its interpretability contribution is **model-contribution attribution**, not feature-level explanation.
+- [ ] If I build on this idea, add stronger uncertainty-quality diagnostics such as coverage, calibration curves, interval scores, CRPS, or conformal validity checks.
+- [ ] Treat the theoretical claims as **capacity and approximation arguments**, not as practical guarantees.
+- [ ] Use this paper to justify that linear ensemble rules may be too restrictive for probabilistic forecasting, especially in high-resolution settings.
+
+---
+
+## 12. Bottom-Line Summary
+This is a strong and well-structured paper whose main message is simple but important:
+
+> In probabilistic load forecasting, it is not enough to have many good base models.  
+> The rule used to combine them matters, and a learned nonlinear ensemble can outperform standard linear combination methods.
+
+Its best contribution is the combination of:
+- a clear ensemble-learning argument,
+- a formal theoretical justification,
+- and a Shapley-based analysis of model contribution.
+
+Its main weaknesses are:
+- strong theoretical assumptions,
+- limited uncertainty evaluation breadth,
+- and a benchmark space that does not fully cover newer probabilistic deep learning alternatives.
+
+Overall, this is a worthwhile paper and a solid citation if I need support for:
+- nonlinear ensemble learning,
+- probabilistic load forecasting,
+- or Shapley-based attribution of base-model contributions in ensemble systems.

@@ -1,19 +1,591 @@
 ---
-title: "An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction"
-description: "TCN-Informer forecasting with interval prediction and SHAP interpretation. Review in progress."
-date: 2025-01-01
+title: "An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction"
+description: "Review of a 2025 Systems paper proposing a Boruta-BiTCN-Informer framework with SHAP interpretability and Monte Carlo dropout for interval carbon price forecasting."
+date: 2025-11-12
 categories:
-  - Review in progress
-  - Power systems baselines
+  - Carbon price forecasting
+  - Time series forecasting
+  - Explainable AI
+  - Hybrid deep learning
+  - Uncertainty quantification
+  - SHAP
+  - Informer
+  - TCN
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Pei Du, Xuankai Zhang, Tingting Chen, and Wendong Yang (2025)
+- **Venue (Journal/Conference):** *Systems* (MDPI)
+- **DOI:** [10.3390/systems13111011](https://doi.org/10.3390/systems13111011)
+- **Paper Title:** *An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction*
+- **Primary Topic/Concept:** Hybrid deep learning for carbon price forecasting with feature selection, interpretability, and interval prediction
+- **Core Methods:** Boruta, BiTCN, Informer, SHAP, Monte Carlo Dropout
+- **Markets Studied:** Guangdong and Shanghai carbon markets, with additional robustness tests on EU carbon prices and U.S. Henry Hub natural gas
+- **Date Reviewed:** 2026-03-13
+- **Proximity/Threat Level:** Moderate to High, especially if your work also combines multivariate hybrid forecasting with explainability and uncertainty quantification
 
-- **Authors & Year:** Du, P., et al. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=An+Interpretable+Hybrid+System+Using+Temporal+Convolutional+Network+and+Informer+Model+for+Carbon+Price+Prediction)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty & Motivation
 
-> Review in progress.
+### The Motivation (Why this problem matters)
+Carbon price forecasting matters because carbon prices sit at the center of emissions trading systems and affect both policy design and enterprise compliance decisions. The authors argue that the carbon market is nonlinear, complex, and influenced by many external drivers, so simple historical or deterministic forecasting approaches are inadequate.
 
-This page is a placeholder for a future full review using the site template.
+### The Motivation (Why a hybrid model?)
+The paper argues that a single model is often not flexible enough to capture all the components of carbon price dynamics. Carbon prices are influenced by multiple heterogeneous drivers, and different architectures may be better at extracting different structures in the data. Their proposed solution is therefore a staged hybrid architecture:
+- **BiTCN** for local spatio-temporal dependence and bidirectional feature extraction
+- **Informer** for long-sequence global dependency modeling using sparse attention
+
+### The Motivation (Why explainability?)
+The paper is explicitly positioned against the black-box nature of many deep forecasting systems. The authors want not only better prediction accuracy, but also:
+- insight into **which drivers matter most**,
+- understanding of **regional heterogeneity** across markets,
+- and a more decision-useful model for governments and firms.
+
+### The Motivation (Why interval prediction?)
+The authors make the very sensible point that point predictions alone are often insufficient in real decision settings. Decision-makers need uncertainty bounds, not just a single predicted value. They therefore add **Monte Carlo dropout** to obtain prediction intervals.
+
+### Their claim to fame / novelty
+The paper’s novelty is not a single new algorithm, but rather the integration of several components into one interpretable system:
+1. **Multi-source feature integration**, including structured and unstructured variables,
+2. **Boruta-based feature selection** over 21 candidate factors,
+3. **BiTCN-Informer hybridization** for staged feature extraction,
+4. **SHAP-based interpretability** for both global and local driver analysis,
+5. **Monte Carlo dropout** for interval prediction,
+6. **Cross-market validation** beyond the two core Chinese datasets.
+
+### What the XAI actually did
+SHAP was used not just decoratively, but to produce market-specific driver rankings and regional comparisons:
+- In **Guangdong**, the **EU-ETS carbon price** was the most influential driver.
+- In **Shanghai**, **energy and financial variables** such as crude oil, natural gas, and USD/CNY were more dominant.
+
+This is important because the explainability output is tied directly to an economic interpretation rather than presented as generic feature-importance plots.
+
+---
+
+## 3. Methodology & Technical Details
+
+### Overall pipeline
+The framework has four major stages:
+1. **Data collection**
+2. **Feature selection with Boruta**
+3. **Hybrid model construction**
+4. **Further validation and application**, including DM tests, extra datasets, SHAP, and interval prediction
+
+### Data
+The main empirical datasets are:
+- **Guangdong carbon market (GD)**
+- **Shanghai carbon market (SH)**
+
+Both span:
+- **1 August 2017 to 31 March 2024**
+- first **80%** used for training,
+- remaining **20%** used for testing.
+
+### Candidate features
+The study begins with **21 candidate variables** across five dimensions:
+
+#### Environmental indicators
+- Temperature
+- AQI
+- PM2.5
+- PM10
+
+#### Energy markets
+- EU-ETS carbon price
+- International natural gas price
+- International crude oil price
+- International gasoline price
+
+#### Financial market indicators
+- China Treasury Bond 1-year
+- China Treasury Bond 5-year
+- China Treasury Bond 10-year
+- USD/CNY
+- EUR/CNY
+- Shanghai Stock Exchange Index
+- Shanghai Stock Exchange Energy Sector Index
+- CSI1000
+- S&P500
+- HS300
+- DJI
+
+#### Geopolitical risk
+- Geopolitical Risk Index
+
+#### Unstructured data
+- **Baidu Index**, obtained from 30 carbon-related keywords and reduced via PCA into a daily time series
+
+### Feature selection
+Boruta is used as a wrapper feature-selection method around random forests. The key logic is:
+- create **shadow features** by shuffling originals,
+- compare real feature importance against shadow features,
+- iteratively classify features as important or unimportant.
+
+After Boruta:
+- **16 important features** are retained for each dataset-plus-price-series input setup.
+- Some features are rejected in both markets, especially AQI, PM2.5, and PM10.
+- There is **market heterogeneity** in selected variables:
+  - **TEM** is confirmed in GD but rejected in SH,
+  - **CTB1** is confirmed in GD but rejected in SH,
+  - **GPRI** and **BDI** are rejected in GD but confirmed in SH.
+
+This is already an interesting substantive finding, because it suggests the relevance of exogenous factors depends strongly on market structure.
+
+### Model architecture
+The proposed model is **Boruta-BiTCN-Informer**.
+
+#### BiTCN component
+BiTCN introduces:
+- forward and backward dilated convolutions,
+- a feature fusion layer,
+- residual connections.
+
+Its purpose is to capture **local bidirectional temporal dependencies** and reduce feature loss.
+
+#### Informer component
+Informer is used because standard Transformer attention has quadratic complexity. Informer improves this with:
+- **ProbSparse self-attention**
+- **self-attention distilling**
+- **non-autoregressive generative decoder**
+
+Its purpose is to capture **global long-range dependencies** efficiently.
+
+#### Hybrid connection mechanism
+The output of BiTCN is linearly projected to Informer’s input dimension and then fused with Informer features. Conceptually, this is a staged extraction pipeline:
+- BiTCN does local/bidirectional feature mining first,
+- Informer then performs long-range global modeling on these enriched features.
+
+### Interpretability
+The model is interpreted with **SHAP**, using Shapley values to estimate the average marginal contribution of each feature.
+
+### Uncertainty quantification
+For interval prediction, the paper uses **Monte Carlo dropout**:
+- dropout remains active at inference,
+- multiple stochastic forward passes approximate a predictive distribution,
+- mean and variance across samples define the interval.
+
+The interval is then given by:
+
+\[
+\text{Interval} = \mu \pm z \sigma
+\]
+
+with \( z = 1.96 \) for a 95% confidence level.
+
+### Hyperparameters
+The paper reports:
+- kernel size = 3
+- channels = [64, 64]
+- dropout = 0.1
+- encoder layers = 2
+- decoder layers = 1
+- dmodel = 4
+- feedforward = 64
+- multi-heads = 4
+- activation = GELU
+- optimizer = Adam
+- learning rate = 0.0005
+- epochs = 100
+- batch size = 64
+
+---
+
+## 4. Validation Strategy (Predictions, Uncertainty, and Statistical Testing)
+
+### Point prediction metrics
+The point forecasts are evaluated using:
+- **MAE**
+- **MAPE**
+- **RMSE**
+- **TIC** (Theil inequality coefficient)
+
+### Interval prediction metrics
+The interval forecasts are evaluated using:
+- **PICP**: Prediction Interval Coverage Probability
+- **PINAW**: Prediction Interval Normalized Average Width
+- **CWC**: Coverage Width-Based Criterion
+
+This is a decent set of interval metrics because it captures both:
+- whether intervals contain the truth enough times,
+- and whether those intervals are too wide.
+
+### Experimental design
+The study runs **three major point-prediction experiments**:
+
+#### Experiment I
+Compares standard models with:
+- all variables,
+- versus Boruta-selected variables.
+
+This tests whether feature selection actually helps.
+
+#### Experiment II
+Compares Boruta-based single models:
+- LSTM
+- GRU
+- TCN
+- BiLSTM
+- BiGRU
+- BiTCN
+- Transformer
+- Informer
+
+This identifies the strongest single model.
+
+#### Experiment III
+Builds hybrid models by combining bidirectional architectures with Informer or Transformer:
+- BiLSTM-Informer
+- BiGRU-Informer
+- BiTCN-Informer
+- BiLSTM-Transformer
+- BiGRU-Transformer
+- BiTCN-Transformer
+
+This tests whether staged hybridization improves performance further.
+
+### Statistical validation
+The paper uses the **Diebold-Mariano (DM) test** to check whether the forecast improvements are statistically significant.
+
+### Robustness validation
+The proposed model is also tested on:
+- **EU carbon trading price**
+- **Henry Hub natural gas price**
+
+This is meant to show broader applicability beyond the two main Chinese carbon markets.
+
+### XAI validation
+The paper does **not** use formal explanation evaluation metrics such as:
+- fidelity,
+- stability,
+- robustness,
+- infidelity,
+- or sensitivity.
+
+Instead, SHAP is validated through **economic plausibility and interpretive usefulness**.
+
+---
+
+## 5. Results Summary
+
+## 5.1 Experiment I: Does Boruta help?
+Yes, mostly.
+
+For the **GD dataset**, Boruta improves nearly every benchmark model relative to using all variables.  
+For example:
+- **ALL-LSTM**: MAE = 2.4261
+- **Boruta-LSTM**: MAE = 1.9362
+
+The improvement is especially strong for:
+- **Transformer**
+  - ALL-Transformer: MAE = 1.8817
+  - Boruta-Transformer: MAE = 1.3523
+
+For the **SH dataset**, Boruta again improves most models:
+- **ALL-LSTM**: MAE = 2.3988
+- **Boruta-LSTM**: MAE = 2.0081
+
+This supports the authors’ claim that redundant features interfere with learning and that Boruta improves accuracy by removing weakly informative variables.
+
+### Main takeaway
+Feature selection is not just preprocessing here; it materially improves performance and likely reduces noise in a high-dimensional multivariate forecasting setup.
+
+---
+
+## 5.2 Experiment II: Which single model works best?
+Among the Boruta-based single models, **Informer** performs best overall.
+
+### Guangdong
+- **Boruta-Informer**
+  - MAE = 1.3171
+  - RMSE = 1.7904
+  - MAPE = 0.0352
+  - TIC = 0.0181
+
+It outperforms:
+- Boruta-LSTM
+- Boruta-GRU
+- Boruta-TCN
+- Boruta-BiLSTM
+- Boruta-BiGRU
+- Boruta-BiTCN
+- Boruta-Transformer
+
+### Shanghai
+- **Boruta-Informer**
+  - MAE = 1.7424
+  - RMSE = 2.5141
+  - MAPE = 0.0365
+  - TIC = 0.0256
+
+The runner-up is generally **Boruta-BiTCN**.
+
+### Bidirectional effect
+The paper also shows that bidirectional variants often outperform their unidirectional counterparts. That is plausible because carbon price sequences likely benefit from richer contextual extraction.
+
+### Main takeaway
+Before hybridization, **Informer is the strongest single architecture**, and **BiTCN is the strongest local/bidirectional complement**. This sets up the logic for combining them.
+
+---
+
+## 5.3 Experiment III: Do hybrid models improve performance?
+Yes, clearly.
+
+The proposed **Boruta-BiTCN-Informer** is the best overall model.
+
+### Guangdong
+- **Boruta-BiTCN-Informer**
+  - MAE = 0.9642
+  - RMSE = 1.3788
+  - MAPE = 0.0284
+  - TIC = 0.0142
+
+Compare this to:
+- **Boruta-Informer**
+  - MAE = 1.3171
+  - RMSE = 1.7904
+  - MAPE = 0.0352
+  - TIC = 0.0182
+- **Boruta-BiTCN**
+  - MAE = 1.5041
+  - RMSE = 1.9718
+  - MAPE = 0.0431
+  - TIC = 0.0201
+
+### Shanghai
+- **Boruta-BiTCN-Informer**
+  - MAE = 1.4213
+  - RMSE = 2.0154
+  - MAPE = 0.0320
+  - TIC = 0.0204
+
+Again, this beats both:
+- Boruta-Informer
+- Boruta-BiTCN
+
+### Informer hybrids vs Transformer hybrids
+Across matched hybrid pairings, the **Informer-based hybrids** generally outperform **Transformer-based hybrids**.
+
+### Main takeaway
+The results support the intended architectural story:
+- BiTCN adds useful local bidirectional structure extraction,
+- Informer handles long-range dependencies better than Transformer in this setup,
+- their combination is stronger than either alone.
+
+---
+
+## 5.4 Interval prediction results
+The interval prediction results are actually quite strong on paper.
+
+### Guangdong
+- **95% level:** PICP = 0.9693, PINAW = 0.0918
+- **90% level:** PICP = 0.9201, PINAW = 0.0922
+- **85% level:** PICP = 0.8775, PINAW = 0.0830
+
+### Shanghai
+- **95% level:** PICP = 0.9553, PINAW = 0.1252
+- **90% level:** PICP = 0.9137, PINAW = 0.0905
+- **85% level:** PICP = 0.8690, PINAW = 0.0856
+
+The reported PICPs exceed the nominal confidence levels while keeping PINAW relatively low, which the authors interpret as evidence of effective interval prediction.
+
+### Main takeaway
+The uncertainty module appears practically useful, at least under the paper’s own evaluation framework.
+
+---
+
+## 5.5 DM test results
+The DM test mostly supports the superiority of the proposed model.
+
+According to the paper:
+- almost all DM values exceed the 0.05 critical threshold,
+- most also exceed the 0.01 threshold,
+- the main exception is **Boruta-BiLSTM-Informer** on GD, where significance is not established.
+
+### Main takeaway
+This is a strength of the paper. Many forecasting papers stop at raw metric comparisons. Here, the authors at least attempt statistical confirmation that the gains are not just incidental.
+
+---
+
+## 5.6 Robustness on other datasets
+The model is additionally tested on:
+- **EU carbon price**
+- **Henry Hub natural gas**
+
+The paper concludes that the proposed model remains strong in both settings:
+- in the **EU market**, it reports an MAE of **1.6336**, which is an **11.0240% reduction** relative to Boruta-Informer,
+- in the **natural gas market**, the MAE improvement over Boruta-Informer is reported as **30.7937%**.
+
+### Main takeaway
+This broadens the paper from being just a two-market case study to a more general multivariate commodity forecasting architecture.
+
+---
+
+## 6. Interpretability Findings
+
+### Global driver rankings
+The SHAP analysis reveals distinct market-specific drivers.
+
+#### Guangdong
+Top drivers include:
+1. **EU-ETS carbon price**
+2. China Treasury Bond 10-year
+3. International crude oil price
+4. China Treasury Bond 5-year
+5. Dow Jones Index
+
+The paper argues that Guangdong’s export-oriented industrial base makes it more exposed to **EU policy spillovers**, especially through mechanisms like the Carbon Border Adjustment Mechanism.
+
+#### Shanghai
+Top drivers include:
+1. **International crude oil price**
+2. International natural gas price
+3. **USD/CNY**
+4. S&P 500
+5. China Treasury Bond 5-year
+
+The paper interprets this as consistent with Shanghai’s stronger exposure to **global financial and energy market dynamics**.
+
+### Regional heterogeneity
+One of the more interesting SHAP findings is that the effect of **EUR/CNY** differs across markets:
+- in **Shanghai**, higher EUR/CNY corresponds to positive SHAP values,
+- in **Guangdong**, higher EUR/CNY corresponds to negative SHAP values.
+
+This is one of the better parts of the paper because it shows SHAP being used to uncover heterogeneity, not just to produce a single universal ranking.
+
+### Practical recommendations from SHAP
+The authors go beyond explanation and suggest decision rules, for example:
+- Guangdong firms monitoring **EUCP SHAP contributions** for advance quota procurement,
+- Shanghai firms monitoring **INGP** and **USD/CNY** to inform production and allowance holdings,
+- regulators assigning different regional weights instead of using uniform national rules.
+
+### Main takeaway
+SHAP is used in a fairly applied, decision-oriented way. Whether one agrees with all the policy extrapolations, the interpretability section is more substantive than the usual “here is a summary plot” treatment.
+
+---
+
+## 7. Strengths
+
+### Strength 1: Clear systems-level integration
+The study combines:
+- feature selection,
+- hybrid deep learning,
+- interpretability,
+- and interval prediction
+
+into one coherent pipeline.
+
+### Strength 2: Multisource feature design
+Using structured and unstructured features is a real strength. The inclusion of the **Baidu Index** acknowledges that market attention and public sentiment may matter.
+
+### Strength 3: Sensible architectural pairing
+BiTCN + Informer is not a random mashup. The pairing has a clear rationale:
+- local bidirectional temporal extraction first,
+- long-range sparse-attention modeling second.
+
+### Strength 4: Strong empirical benchmarking
+The study runs multiple experiments, across two main markets and two auxiliary datasets, and includes both metric comparisons and DM tests.
+
+### Strength 5: SHAP used for heterogeneity analysis
+The interpretability section gives market-specific insights rather than generic feature rankings.
+
+### Strength 6: Interval prediction included
+This is an important practical addition and makes the study more useful than point-only forecasting papers.
+
+---
+
+## 8. Criticisms, Limitations & Unstated Weaknesses
+
+### Criticism 1: The paper is still mostly an accuracy paper wearing an interpretability layer
+Even though SHAP is used, the core scientific validation remains forecasting accuracy. The interpretability part is meaningful, but it is not rigorously evaluated.
+
+### Criticism 2: No formal XAI validation
+The paper does not evaluate:
+- fidelity,
+- robustness,
+- sensitivity,
+- stability,
+- or consistency of SHAP explanations.
+
+So while the SHAP outputs are plausible, they are not formally validated.
+
+### Criticism 3: Monte Carlo dropout is a convenient uncertainty proxy, not deep uncertainty rigor
+MC dropout is practical, but it is still an approximation. The paper does not compare it against:
+- deep ensembles,
+- conformal prediction,
+- Bayesian RNN/Transformer variants,
+- or quantile-based interval methods.
+
+So the uncertainty section is useful, but not especially state-of-the-art.
+
+### Criticism 4: No comparison to stronger modern probabilistic baselines
+The interval prediction is assessed internally, but there is no head-to-head comparison with:
+- quantile regression networks,
+- conformal forecasting,
+- NGBoost-type probabilistic methods,
+- distributional deep forecasting models.
+
+That weakens the paper’s claims about uncertainty quantification.
+
+### Criticism 5: The hybrid model may be overengineered relative to the evidence
+The architecture is more complex than any single baseline, but the paper does not really analyze:
+- computational cost,
+- training time,
+- memory demand,
+- or deployment practicality.
+
+A production-oriented user would want this.
+
+### Criticism 6: No ablation study on SHAP and MC dropout interaction
+The paper treats explainability and uncertainty as add-ons after forecasting, but it does not ask whether the uncertainty mechanism affects explanation quality, or whether explanations differ across stochastic forward passes.
+
+### Criticism 7: Limited temporal validation design
+The data split is an 80/20 train-test split. For financial and market forecasting, a more rigorous rolling-origin or walk-forward evaluation would usually be more convincing.
+
+### Criticism 8: Some interpretive claims may be stronger than the evidence supports
+SHAP identifies associations in model behavior, not causal effects in the underlying market. Some of the paper’s policy and enterprise recommendations lean a little too close to causal language.
+
+---
+
+## 9. My Overall Interpretation
+
+This is a strong **engineering-style hybrid forecasting paper** with three real contributions:
+1. it shows that **Boruta helps** in a multisource carbon-price setting,
+2. it shows that **BiTCN + Informer** is an effective architectural pairing,
+3. it turns the resulting black box into something more usable through **SHAP** and interval forecasts.
+
+Its biggest weakness is that it presents interpretability and uncertainty quantification as if they are fully validated, when in reality they are only partially demonstrated:
+- SHAP is economically plausible, but not rigorously tested,
+- MC dropout intervals look good, but are not benchmarked against stronger UQ alternatives.
+
+So I would describe the paper as:
+- **methodologically solid for applied forecasting,**
+- **strong on hybrid modeling and empirical results,**
+- **good but not definitive on explainability,**
+- **useful but not exhaustive on uncertainty quantification.**
+
+---
+
+## 10. Action Items & Integration into My Own Work
+- [ ] Cite this paper as a recent example of a **hybrid deep learning + SHAP + interval prediction** framework in carbon/energy-related forecasting.
+- [ ] Use it to support the argument that **single models are often insufficient** for complex market forecasting tasks.
+- [ ] Note Boruta as a useful **wrapper-based feature selection baseline** for multivariate forecasting with heterogeneous drivers.
+- [ ] Compare its **MC dropout interval strategy** against stronger alternatives such as conformal prediction, deep ensembles, or probabilistic boosting methods.
+- [ ] In my literature review, explicitly mention that the paper provides **regional heterogeneity insights** rather than only aggregate feature importance.
+- [ ] Use this paper as an example of why **formal XAI validation** is still needed even when SHAP plots look persuasive.
+- [ ] If I build a similar pipeline, include an **ablation study** showing the incremental contribution of:
+  - Boruta,
+  - BiTCN,
+  - Informer,
+  - SHAP,
+  - and the uncertainty layer.
+- [ ] Position my work as stronger if I can provide:
+  - rolling-origin validation,
+  - more rigorous probabilistic baselines,
+  - formal explanation-quality metrics,
+  - and computational complexity comparisons.
+
+---
+
+## 11. One-Paragraph Literature Positioning Summary
+This paper presents a modern, applied hybrid forecasting framework for carbon price prediction that integrates Boruta-based feature selection, BiTCN local bidirectional feature extraction, Informer long-range sequence modeling, SHAP interpretability, and Monte Carlo dropout interval prediction. Its strongest contribution lies in showing that staged hybrid modeling with carefully filtered multisource features can materially improve carbon price forecasting performance across multiple markets. The SHAP analysis adds real value by revealing region-specific driver heterogeneity, especially the stronger influence of EU-ETS prices in Guangdong and energy-financial variables in Shanghai. However, the paper remains more convincing as an applied forecasting study than as a definitive contribution to explainability or uncertainty quantification, because it does not formally validate explanation quality or compare its uncertainty estimates against stronger contemporary probabilistic baselines.
