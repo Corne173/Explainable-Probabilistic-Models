@@ -1,21 +1,119 @@
 ---
 title: "Review Articles"
-listing:
-  contents: reviews
-  sort: "date desc"
-  type: default
-  fields: [title, description, date, categories]
 ---
 
 # Welcome
 
-This website collects my review articles on probabilistic models and related topics.
+This website collects my review articles on probabilistic models, uncertainty quantification, and explainability.
 
-The main page gives a summary of all the papers I have reviewed, while each paper has its own dedicated review page.
+Each paper has its own dedicated review page, and this index groups the papers by the main ideas shaping the review.
 
 Some entries are already fully reviewed, while others are placeholder pages marked **Review in progress** so I can keep track of papers I still want to summarize.
 
-## All Reviews
+> **Note**
+>
+> The citation counts below are manual placeholders so I can update them over time.
+> The **Published** column is also manual for now. Where I have not yet verified the exact publication month, I use a month-year placeholder format such as `Jan 2025`.
 
-The entries below are generated automatically from the metadata in each review page.
+## Browse by idea
+
+- [Explaining prediction intervals and quantiles with SHAP](#explaining-prediction-intervals-and-quantiles-with-shap)
+- [Decomposing aleatoric vs. epistemic uncertainty with XAI](#decomposing-aleatoric-vs-epistemic-uncertainty-with-xai)
+- [Status quo baseline: deep learning + intervals/quantiles + SHAP in power systems](#status-quo-baseline-deep-learning--intervalsquantiles--shap-in-power-systems)
+- [Related load / demand forecasting with prediction intervals and XAI](#related-load--demand-forecasting-with-prediction-intervals-and-xai)
+- [Critical papers on uncertainty quantification in deep learning](#critical-papers-on-uncertainty-quantification-in-deep-learning)
+- [Explaining uncertainty and explainability of UQ](#explaining-uncertainty-and-explainability-of-uq)
+
+## Explaining prediction intervals and quantiles with SHAP
+
+These papers support the move from explaining only the point forecast to explaining the **distribution, interval width, and risk profile** itself.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jan 2025 | 7 | [Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis](<reviews/Uncertainty-aware optimization of zeolite particle size.qmd>) | Direct precedent for comparing SHAP contributions across upper and lower bounds to study interval fluctuations. |
+| Jan 2025 | 54 | [Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective](<reviews/Quantifying and explaining machine learning uncertainty in predictive process monitoring.qmd>) | Uses quantile methods and SHAP specifically to identify the drivers of predictive uncertainty. |
+| Jan 2025 | 30 | [Interpretable building energy performance prediction using XGBoost Quantile Regression](<reviews/Interpretable building energy performance prediction using XGBoost Quantile Regression.qmd>) | Shows that feature importance changes across different quantiles, supporting distribution-aware interpretation. |
+| Jan 2022 | 181 | [An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting](<reviews/An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting.qmd>) | Important domain example explaining both point forecasts and prediction intervals, with a useful contrast to non-parametric approaches. |
+| Jan 2025 | 0 | [Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification](<reviews/Explaining Set-Valued Predictions.qmd>) | Extends SHAP toward explaining set-valued predictions rather than only single-label outputs. |
+| Dec 2023 | 76 | [Explaining Predictive Uncertainty with Information Theoretic Shapley Values](<reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.qmd>) | Foundational theoretical basis for adapting Shapley values to predictive uncertainty. |
+| Jan 2024 | 53 | [Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression](<reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.qmd>) | Supports the combination of deep neural networks, quantile regression, and SHAP. |
+
+## Decomposing aleatoric vs. epistemic uncertainty with XAI
+
+These papers motivate the stronger claim that uncertainty should not only be estimated, but also **split into model ignorance vs. irreducible system variability**.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jan 2026 | 2 | [UbiQTree: Uncertainty quantification in XAI with tree ensembles](<reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.qmd>) | Most direct methodological support for separating SHAP uncertainty into aleatoric and epistemic components. |
+| Jan 2026 | 0 | [Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction](<reviews/Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction.qmd>) | Uses Bayesian deep learning and uncertainty decomposition to distinguish environmental variability from model limitations. |
+| Jan 2026 | 1 | [Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning](<reviews/Enhancing energy prediction in variable refrigerant flow cooling systems.qmd>) | Energy-systems example explicitly reducing and interpreting both aleatoric and epistemic uncertainty. |
+| Jan 2025 | 6 | [Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems](<reviews/Uncertainty-aware Bayesian neural network with SHAP interpretability.qmd>) | Connects uncertainty bounds directly to feature contributions using a Bayesian neural model with SHAP. |
+| Jan 2024 | 4 | [Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants](<reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.qmd>) | Strong support for trust, operator interaction, and explaining both prediction accuracy and uncertainty in safety-critical settings. |
+| Jan 2025 | 0 | [A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks](<reviews/A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation.qmd>) | Combines SHAP with intervals that explicitly capture both epistemic and aleatoric uncertainty in an energy application. |
+
+## Status quo baseline: deep learning + intervals/quantiles + SHAP in power systems
+
+These papers define the immediate baseline: strong probabilistic forecasting systems that still often explain the **forecast** more clearly than the **uncertainty width itself**.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jan 2025 | 23 | [Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts](<reviews/Explainable deeply-fused nets electricity demand prediction model.qmd>) | A close baseline: combines deep learning, intervals, and SHAP, but focuses interpretability more on the point forecast than on interval width. |
+| Jan 2023 | 19 | [Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression](<reviews/Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression.qmd>) | Uses SHAP mainly for feature selection before forecasting rather than for explaining uncertainty dynamically after prediction. |
+| Jan 2026 | 0 | [Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning](<reviews/Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning.qmd>) | Relevant example of deep learning with adaptive prediction bands and SHAP-based meteorological interpretation. |
+| Jan 2024 | 26 | [Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features](<reviews/Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting.qmd>) | Interval prediction in electricity markets with interpretability for exogenous drivers. |
+| Jan 2025 | 0 | [An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction](<reviews/An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction.qmd>) | Uses deep forecasting, interval estimation, and SHAP in a market-oriented energy setting. |
+| Jan 2023 | 15 | [High-resolution probabilistic load forecasting: A learning ensemble approach](<reviews/High-resolution probabilistic load forecasting.qmd>) | Probabilistic load forecasting using a learning ensemble and Shapley-style contribution analysis. |
+| Jan 2023 | 27 | [Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties](<reviews/Data-driven cooperative trading framework for a risk-constrained wind integrated power system.qmd>) | Applies quantile-style uncertainty modeling and Shapley analysis in wind-integrated power system decision-making. |
+
+## Related load / demand forecasting with prediction intervals and XAI
+
+These papers round out the broader energy and building-load literature around probabilistic prediction and interpretability.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jan 2024 | 18 | [Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods](<reviews/Hybrid model for robust and accurate forecasting building electricity demand.qmd>) | Hybrid building-demand forecasting with Monte Carlo intervals and SHAP interpretability. |
+| Jan 2025 | 10 | [High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques](<reviews/High-resolution energy consumption forecasting of a university campus power plant.qmd>) | Campus energy forecasting with probabilistic outputs and SHAP-based interpretation. |
+| Jan 2022 | 3 | [Weighted residual clustering-based building load prediction interval estimation](<reviews/Weighted residual clustering-based building load prediction interval estimation.qmd>) | Uses SHAP contributions as part of the pipeline for prediction interval estimation. |
+| Jan 2024 | 29 | [Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression](<reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.qmd>) | Useful for probabilistic postprocessing and contribution analysis in electricity-price forecasting. |
+
+## Critical papers on uncertainty quantification in deep learning
+
+These papers help frame the broader methodological caution: uncertainty estimates can look convincing while still being poorly calibrated, brittle under shift, or conceptually ambiguous.
+
+### Evaluation, robustness, and dataset shift
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jun 2019 | 2607 | [Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift](<reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.qmd>) | Foundational evidence that many uncertainty methods degrade badly under dataset shift. |
+| Jan 2019 | 554 | [Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift](<reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.qmd>) | Relevant when connecting predictive uncertainty to reliability monitoring. |
+| Jan 2019 | 57 | [How to Evaluate Uncertainty Estimates in Machine Learning for Regression](<reviews/How to Evaluate Uncertainty Estimates in Machine Learning for Regression.qmd>) | Important for judging whether interval estimates are genuinely informative rather than superficially calibrated. |
+| Jan 2022 | 4 | [Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts](<reviews/Validation of uncertainty quantification metrics a primer based on the consistency and adaptivity concepts.qmd>) | Helps anchor discussions of metric validity and uncertainty-quality assessment. |
+| Jan 2025 | 102 | [Preventing dataset shift from breaking machine-learning biomarkers](<reviews/Preventing dataset shift from breaking machine-learning biomarkers.qmd>) | Useful supporting reference on robustness and the practical consequences of shift. |
+
+### Surveys and broader framing
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jan 2023 | 153 | [A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective](<reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.qmd>) | Broad survey for positioning the deep-learning UQ landscape, strengths, and open problems. |
+
+## Explaining uncertainty and explainability of UQ
+
+These papers sit closest to the conceptual bridge between **uncertainty quantification** and **explainability**.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Dec 2023 | 76 | [Explaining Predictive Uncertainty with Information Theoretic Shapley Values](<reviews/Explaining Predictive Uncertainty with Information Theoretic Shapley Values.qmd>) | Core theoretical paper for uncertainty-focused Shapley explanations. |
+| Jan 2025 | 0 | [Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification](<reviews/Explaining Set-Valued Predictions.qmd>) | Useful extension from scalar uncertainty to set-valued predictions. |
+
+## Notes for future additions
+
+- Add more critique papers on evidential deep learning, deterministic epistemic uncertainty, calibration, and Bayesian alternatives.
+- Add more papers on explainability–uncertainty links as those review pages are created.
+- Update citation counts periodically as placeholders are refined.
+
+This page is now organized manually so the literature review can follow the argument structure more closely than a simple chronological list.
+
+
+
+
 
