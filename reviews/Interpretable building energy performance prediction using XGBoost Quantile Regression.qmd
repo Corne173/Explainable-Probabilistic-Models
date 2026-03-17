@@ -474,21 +474,6 @@ If I were positioning my own work relative to this paper, I would say this study
 
 ---
 
-## 12. Action Items & Integration for My Own Research
 
-- [ ] Cite this paper as a strong example of combining **high-performing tabular ML** with **post-hoc explainability** and **distribution-aware analysis**.
-- [ ] Use it to justify why **mean-only models can miss heterogeneous effects** across the response distribution.
-- [ ] Reference its SHAP findings when discussing the importance of **envelope thermal properties** and **building age** in building-energy studies.
-- [ ] Use it as a methodological precedent for integrating **quantile regression** into an otherwise deterministic ML workflow.
-- [ ] In my own work, improve on this study by adding:
-  - temporal data,
-  - operational / occupant variables,
-  - stronger explanation-validation procedures,
-  - cross-domain generalization tests,
-  - calibration or uncertainty analysis where relevant.
-- [ ] Position my contribution carefully: this paper already covers interpretability + quantile heterogeneity well, so novelty would need to come from stronger data, stronger validation, or stronger methodological innovation.
-
----
-
-## 13. One-Paragraph Summary
+## 12. One-Paragraph Summary
 This paper presents a strong applied machine-learning framework for predicting and interpreting the Building Energy Performance Ratio of residential buildings in Istanbul. Among several algorithms, XGBoost performed best, and SHAP showed that wall U-value, roof U-value, window U-value, and building age were the dominant drivers of BEPR. The most valuable contribution is the use of XGBoost Quantile Regression, which reveals that the relative importance of these factors changes across low-, medium-, and high-performance buildings. This makes the study more useful than a standard mean-regression paper because it captures heterogeneous effects that are directly relevant for targeted retrofit policy. Its main limitations are the lack of behavioral variables, lack of temporal dynamics, and limited geographic generalizability, but overall it is a very solid benchmark in interpretable building-energy modeling.
