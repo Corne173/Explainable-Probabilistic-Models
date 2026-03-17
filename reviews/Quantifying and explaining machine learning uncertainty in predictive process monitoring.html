@@ -499,42 +499,52 @@ window.Quarto = {
 </ul>
 <hr>
 </section>
-<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">5. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+<section id="thoughts-criticisms-author-acknowledged-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="thoughts-criticisms-author-acknowledged-limitations">5. Thoughts, Criticisms &amp; Author-Acknowledged Limitations</h2>
 <ul>
-<li><strong>Criticism 1: The Conflation of Aleatoric and Epistemic Uncertainty (Major Flaw):</strong>
+<li><strong>Criticism 1: The paper explicitly acknowledges uncertainty from both model limitations and data noise, but still leaves epistemic and aleatoric uncertainty fundamentally conflated (Most serious issue).</strong>
 <ul>
-<li>The authors fundamentally fail to distinguish between <em>aleatoric</em> uncertainty (inherent data noise/randomness) and <em>epistemic</em> uncertainty (model ignorance/lack of data). In Section 3.3, they explicitly lump these together, stating that uncertainty arises from both “the model’s inherent limitations” and “noise in the data.”</li>
-<li>By applying SHAP to the quantile interval width <span class="math inline">\(W(x)\)</span>, they are primarily explaining the <em>aleatoric</em> uncertainty (the learned conditional variance in the data). However, they treat the resulting explanations as if they represent general “model uncertainty” that could be mitigated by adding more data, which is technically inaccurate. A wider quantile interval usually means the underlying process is inherently noisy at those feature values, not necessarily that the model lacks knowledge.</li>
+<li>In Section 3.3, the authors themselves state that uncertainty arises from the model’s limitations, data noise, feature interactions, and unobserved variables. That admission is important, but it also exposes the central weakness of the paper: the framework never separates <em>epistemic</em> uncertainty (what the model does not know) from <em>aleatoric</em> uncertainty (irreducible variability in the process).</li>
+<li>This matters because SHAP on interval width <span class="math inline">\(W(x)=Q_{1-\alpha}(x)-Q_{\alpha}(x)\)</span> cannot tell whether a feature widens the interval because the process is genuinely noisy, because the training data are sparse in that region, or because the model is poorly specified there. As a result, the explanations are only explanations of <strong>model-estimated interval width</strong>, not clean explanations of distinct uncertainty sources.</li>
+<li>That is a major conceptual limitation, because the paper frames the outputs as actionable uncertainty explanations for practitioners, while the method cannot distinguish whether the right response is “collect more data,” “trust the interval as inherent variability,” or “improve the model.”</li>
 </ul></li>
-<li><strong>Criticism 2: Extremely Weak XAI Validation:</strong>
+<li><strong>Criticism 2: Explaining interval width is not the same as explaining the predictive distribution or quantile behaviour.</strong>
 <ul>
-<li>Relying on an <span class="math inline">\(n=1\)</span> sample size for expert validation via a dashboard is anecdotal, not scientifically rigorous validation of an XAI framework. Furthermore, walking through a single local instance does not prove the SHAP explanations are robust across the dataset. The lack of quantitative XAI evaluation metrics is a glaring limitation.</li>
+<li>The paper’s key idea is to explain a derived scalar quantity, the prediction interval width, rather than the lower and upper quantiles separately. This is elegant, but it collapses a richer probabilistic object into a single number.</li>
+<li>A feature could shift both quantiles upward with almost no change in width, or affect only the upper tail, or induce asymmetric risk, and those are meaningfully different behaviours. By focusing only on <span class="math inline">\(W(x)\)</span>, the paper explains spread, but not how features shape the <strong>location, asymmetry, or tail behaviour</strong> of the predictive distribution.</li>
+<li>This makes the explanation layer less informative than it first appears. It is useful for saying <em>which features widen intervals</em>, but weaker for saying <em>how those features alter risk structure</em>.</li>
 </ul></li>
-<li><strong>Criticism 3: Independent Quantile Estimation vs.&nbsp;Interval Optimization:</strong>
+<li><strong>Criticism 3: The explanation validation is extremely weak relative to the strength of the claims.</strong>
 <ul>
-<li>QRF estimates the upper and lower quantiles <em>independently</em>. Estimating quantiles independently does not explicitly optimize the calibration or sharpness of the <em>interval itself</em> during training. The model is completely unaware of interval width during the learning phase; it is only measured post-hoc.</li>
+<li>The paper does not evaluate explanation quality using fidelity, stability, sensitivity, perturbation, or feature-removal tests. Instead, the XAI validation is limited to a prototype dashboard discussion with a single expert and one highlighted local example.</li>
+<li>For a paper claiming to provide actionable explanations of predictive uncertainty, this is not enough. At best, it shows that the explanations are plausible and readable; it does <strong>not</strong> show that they are reliable, faithful, or robust.</li>
+<li>This is one of the biggest practical weaknesses in the paper, because the predictive side is evaluated carefully, while the explanation side is largely accepted on face validity.</li>
 </ul></li>
-<li><strong>Criticism 4: The Computational Cost of KernelSHAP:</strong>
+<li><strong>Criticism 4: The paper’s decision-support narrative is stronger than the evidence actually provided.</strong>
 <ul>
-<li>The authors used <em>KernelSHAP</em> to explain the prediction interval width. Since QRF is a tree-based model, using KernelSHAP (which is model-agnostic and computationally explosive) instead of a specialized TreeSHAP algorithm suggests an inefficient pipeline that would struggle to scale in real-time high-dimensional process monitoring.</li>
+<li>The authors motivate the work through a predict-then-optimize lens and argue that uncertainty explanations can support production planning. However, they also effectively acknowledge that the work remains at the <em>prediction</em> stage: the forecasts may serve as inputs to later optimization models, but that integration is not actually carried out in the paper.</li>
+<li>In other words, the study shows that one can predict intervals and visualize feature attributions, but it does not demonstrate that these explanations improve scheduling decisions, reduce cost, or change operational behaviour in a measurable way.</li>
+<li>That makes the practitioner value proposition promising, but still only partially substantiated.</li>
+</ul></li>
+<li><strong>Criticism 5: The framework is heavily dependent on one proprietary dataset, which limits generalizability and reproducibility.</strong>
+<ul>
+<li>The authors implicitly acknowledge dataset dependence when they note that uncertainty can reveal sparse or anomalous regions of the training data. But this also means the explanations are highly tied to one event log, one firm, and one process environment.</li>
+<li>Because the study uses a single proprietary manufacturing dataset and provides neither code nor data, it is difficult to assess whether the same method would behave similarly on other predictive process monitoring tasks, other industries, or more complex forecasting settings.</li>
+<li>This does not invalidate the case study, but it does weaken any broad claim that the framework is generally established rather than demonstrated in one narrow context.</li>
+</ul></li>
+<li><strong>Criticism 6: The SHAP implementation adds approximation and scalability concerns that the paper does not fully resolve.</strong>
+<ul>
+<li>The authors note that exact Shapley values are computationally expensive, so they rely on <em>KernelSHAP</em> approximations. That is understandable, but it introduces another layer of approximation on top of an already derived target <span class="math inline">\(W(x)\)</span>.</li>
+<li>Since the paper is working with a tree-based model, this choice also raises questions about efficiency and robustness, especially if the framework were to be scaled to larger feature spaces or real-time monitoring settings.</li>
+<li>This is a secondary limitation compared with the conceptual issues above, but it still weakens the case for the method as a scalable operational tool.</li>
 </ul></li>
 <li><strong>Observation on “Uncertainty Profiles” (MRPIW):</strong>
 <ul>
-<li>Their use of MRPIW (Mean Relative Prediction Interval Width) to create low/medium/high profiles is highly practical. Absolute width (MPIW) naturally scales with the target size (longer tasks have wider intervals). Normalizing the width by the point prediction to create profiles makes the uncertainty actionable for domain experts.</li>
+<li>Their use of MRPIW (Mean Relative Prediction Interval Width) to create low/medium/high profiles is still one of the most practically useful ideas in the paper. Absolute width (MPIW) naturally scales with the target size, so normalizing by the point prediction gives practitioners a more interpretable notion of whether a case is “uncertain relative to what is expected.”</li>
+<li>So even though the uncertainty explanation story is conceptually weaker than claimed, the profiling device itself is a genuinely useful contribution for operational communication.</li>
 </ul></li>
 </ul>
 <hr>
-</section>
-<section id="action-items-integration" class="level2">
-<h2 class="anchored" data-anchor-id="action-items-integration">6. Action Items &amp; Integration</h2>
-<ul class="task-list">
-<li><label><input type="checkbox"><strong>Adopt MRPIW:</strong> Add Mean Relative Prediction Interval Width (MRPIW) to my suite of validation metrics. It is a highly practical metric for proving interval sharpness across different scales of data.</label></li>
-<li><label><input type="checkbox"><strong>Highlight the Aleatoric vs.&nbsp;Epistemic Gap:</strong> Use this paper in my literature review to point out that current UQ+XAI applications often fail to distinguish between aleatoric and epistemic uncertainty. Clearly define which type of uncertainty <em>my</em> model is predicting and explaining.</label></li>
-<li><label><input type="checkbox"><strong>Address the XAI Target:</strong> Note their technique of setting the SHAP target directly to the interval width (<span class="math inline">\(W(x) = U(x) - L(x)\)</span>). I must ensure my XAI framework explicitly formulates the mathematical “game” it is trying to explain (e.g., explaining the variance output or the interval bounds directly).</label></li>
-<li><label><input type="checkbox"><strong>Position against Qualitative Validation:</strong> Explicitly state that recent applied papers rely entirely on anecdotal, <span class="math inline">\(n=1\)</span> qualitative “sanity checks” for XAI. Position my quantitative XAI metrics (fidelity, stability, etc.) as a necessary and rigorous evolution for trust in probabilistic forecasting.</label></li>
-<li><label><input type="checkbox"><strong>Highlight the Training Gap:</strong> Point out that their model (QRF) estimates quantiles independently, leaving an opening for my approach which directly optimizes the interval quality (via differentiable CWC or similar interval-based losses) during training.</label></li>
-</ul>
 
 
 </section>
