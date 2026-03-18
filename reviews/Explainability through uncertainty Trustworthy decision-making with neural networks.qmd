@@ -1,0 +1,222 @@
+---
+title: "Explainability through uncertainty: Trustworthy decision-making with neural networks"
+description: "Review of a European Journal of Operational Research paper positioning uncertainty estimation as an XAI technique that enhances trust, robustness, and actionable decision-making."
+date: 2026-03-17
+categories:
+  - Explainable AI
+  - Uncertainty Quantification
+  - Decision Support Systems
+  - Neural Networks
+---
+
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Arthur Thuy, Dries F. Benoit (2024)
+- **Venue:** European Journal of Operational Research *(Tier 1, OR + decision systems focus)*
+- **Core Idea:** Uncertainty estimation is reframed as an **explainable AI (XAI) mechanism** rather than just a statistical add-on.
+- **Key Contribution:** Links **uncertainty → explainability → trust → actionability → improved decision-making**
+- **Primary Topic:** Trustworthy decision-making with neural networks through uncertainty-aware explainability
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+### 2.1 The Key Idea: Uncertainty *is* Explainability
+- The paper’s central claim is that **uncertainty estimation itself is a form of XAI**.
+- Unlike SHAP or feature attribution, uncertainty:
+  - Explains **confidence in predictions**
+  - Provides **local, per-sample interpretability**
+  - Is **model-specific and inherently probabilistic**
+
+➡️ This reframes explainability from *“why this prediction?”* to  
+**“should I trust this prediction?”**
+
+---
+
+### 2.2 Uncertainty → Trust
+- Neural networks are **overconfident**, especially under **distribution shift**.
+- This creates dangerous failure modes:
+  - Confidently wrong predictions
+  - Silent performance degradation
+
+- Uncertainty solves this by:
+  - Signaling when the model **does not know**
+  - Allowing the system to **communicate risk**
+
+📌 Key insight:
+> Trust is not built by explaining predictions, but by **knowing when not to trust them** 
+
+---
+
+### 2.3 Uncertainty → Actionability (Critical for Your Paper)
+
+This is the most important part for your argument.
+
+The paper explicitly states that previous work:
+- **Measures uncertainty**
+- But does **nothing with it**
+
+👉 Their contribution:
+They **operationalise uncertainty into decisions**
+
+---
+
+## 3. How Uncertainty Becomes Actionable
+
+### 3.1 Classification with Rejection (Core Mechanism)
+
+The paper introduces a **decision framework**:
+
+1. Compute uncertainty (data + model)
+2. Use it to **decide whether to trust a prediction**
+3. If uncertain → **reject prediction → send to human**
+
+This creates a **human-in-the-loop system**.
+
+📌 This is the key transition:
+> Uncertainty → Decision rule → Action
+
+---
+
+### 3.2 What Actions Are Enabled?
+
+Uncertainty directly drives:
+
+- **Reject predictions** (avoid costly mistakes)
+- **Escalate to experts**
+- **Allocate resources efficiently**
+- **Control risk dynamically**
+
+Example from paper:
+- In high-uncertainty cases → human intervention
+- In low-uncertainty cases → automated decisions
+
+---
+
+### 3.3 Formal Decision Metrics
+
+They quantify actionability using:
+
+- **Non-Rejected Accuracy (NRA):**
+  - Accuracy after removing uncertain predictions
+- **Classification Quality (CQ):**
+  - Correct decisions (keep correct, reject incorrect)
+- **Rejection Quality (RQ):**
+  - How well uncertainty isolates errors
+
+➡️ These convert uncertainty into **measurable decision performance**
+
+---
+
+## 4. Outcomes: What Does Uncertainty Actually Improve?
+
+### 4.1 Robustness Under Distribution Shift
+- Standard NN:
+  - Becomes **more confident but more wrong**
+- Uncertainty-aware models:
+  - Become **more uncertain when they should**
+
+📌 Critical result:
+> Good models “know what they don’t know” 
+
+---
+
+### 4.2 Improved Decision Accuracy (Not Just Prediction Accuracy)
+
+- By rejecting uncertain samples:
+  - Accuracy increases dramatically
+
+Example:
+- Under large shift:
+  - Standard NN → stagnates
+  - Uncertainty models → accuracy improves to ~95% after rejection
+
+➡️ This is huge:
+**Uncertainty doesn’t just explain — it improves system performance**
+
+---
+
+### 4.3 Better Resource Allocation
+
+- Labeling budget (human effort) is used **strategically**
+- Only uncertain cases are reviewed
+
+➡️ This creates:
+- Efficient decision pipelines
+- Scalable human-AI collaboration
+
+---
+
+### 4.4 Trustworthy Decision-Making Systems
+
+The paper shows that uncertainty improves:
+
+- **Trust** → model signals confidence properly  
+- **Robustness** → adapts to distribution shifts  
+- **Actionability** → enables decision rules  
+
+📌 Final claim:
+> Uncertainty as XAI leads to more **trustworthy and actionable ML systems** 
+
+---
+
+## 5. Key Insight for Your Paper (How to Use This)
+
+You can position this paper as:
+
+### 🔹 Supporting Argument
+Uncertainty is not just:
+- A statistical output  
+- Or a calibration measure  
+
+👉 It is:
+> A **decision-making interface** between AI and humans
+
+---
+
+### 🔹 Your Framing (Strong Positioning)
+
+You can extend their idea:
+
+> “Uncertainty provides a form of explainability that is inherently actionable, as it directly informs operational decisions such as whether to trust, reject, or escalate predictions.”
+
+---
+
+### 🔹 Link to Your Work (Energy Forecasting Context)
+
+Translate their idea into your domain:
+
+- In power systems:
+  - High uncertainty → increase reserves / reduce risk exposure
+  - Low uncertainty → aggressive bidding / optimization
+
+➡️ This directly mirrors:
+- Their classification-with-rejection framework
+- Your **decision-aware forecasting framework**
+
+---
+
+## 6. Criticism & Limitations (For Balance)
+
+- Focuses on **classification**, not regression/quantiles
+- Actionability limited to **rejection paradigm**
+- Does not explore:
+  - Economic cost functions
+  - Continuous decision strategies (e.g., trading, dispatch)
+
+---
+
+## 7. Final Takeaway
+
+This paper establishes a **critical conceptual bridge**:
+
+> **Uncertainty → Explainability → Trust → Action → Improved Decisions**
+
+And most importantly:
+
+> Explainability is not useful unless it **changes decisions**
+
+---
+
+## 8. How You Can Cite It (One-Line Summary)
+
+> Thuy and Benoit (2024) demonstrate that uncertainty estimation functions as an explainable AI mechanism by quantifying prediction reliability, enabling actionable decision-making through rejection strategies, and improving trust and robustness under distribution shifts.

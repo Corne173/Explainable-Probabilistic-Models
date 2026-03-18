@@ -61,24 +61,35 @@ categories:
 
 ---
 
-## 5. My Thoughts, Criticisms & Unstated Limitations
-- **Criticism 1: The Conflation of Aleatoric and Epistemic Uncertainty (Major Flaw):** 
-  - The authors fundamentally fail to distinguish between *aleatoric* uncertainty (inherent data noise/randomness) and *epistemic* uncertainty (model ignorance/lack of data). In Section 3.3, they explicitly lump these together, stating that uncertainty arises from both "the model's inherent limitations" and "noise in the data." 
-  - By applying SHAP to the quantile interval width $W(x)$, they are primarily explaining the *aleatoric* uncertainty (the learned conditional variance in the data). However, they treat the resulting explanations as if they represent general "model uncertainty" that could be mitigated by adding more data, which is technically inaccurate. A wider quantile interval usually means the underlying process is inherently noisy at those feature values, not necessarily that the model lacks knowledge.
-- **Criticism 2: Extremely Weak XAI Validation:** 
-  - Relying on an $n=1$ sample size for expert validation via a dashboard is anecdotal, not scientifically rigorous validation of an XAI framework. Furthermore, walking through a single local instance does not prove the SHAP explanations are robust across the dataset. The lack of quantitative XAI evaluation metrics is a glaring limitation.
-- **Criticism 3: Independent Quantile Estimation vs. Interval Optimization:** 
-  - QRF estimates the upper and lower quantiles *independently*. Estimating quantiles independently does not explicitly optimize the calibration or sharpness of the *interval itself* during training. The model is completely unaware of interval width during the learning phase; it is only measured post-hoc.
-- **Criticism 4: The Computational Cost of KernelSHAP:** 
-  - The authors used *KernelSHAP* to explain the prediction interval width. Since QRF is a tree-based model, using KernelSHAP (which is model-agnostic and computationally explosive) instead of a specialized TreeSHAP algorithm suggests an inefficient pipeline that would struggle to scale in real-time high-dimensional process monitoring.
+## 5. Thoughts, Criticisms & Author-Acknowledged Limitations
+- **Criticism 1: The paper explicitly acknowledges uncertainty from both model limitations and data noise, but still leaves epistemic and aleatoric uncertainty fundamentally conflated (Most serious issue).**
+  - In Section 3.3, the authors themselves state that uncertainty arises from the model's limitations, data noise, feature interactions, and unobserved variables. That admission is important, but it also exposes the central weakness of the paper: the framework never separates *epistemic* uncertainty (what the model does not know) from *aleatoric* uncertainty (irreducible variability in the process).
+  - This matters because SHAP on interval width $W(x)=Q_{1-\alpha}(x)-Q_{\alpha}(x)$ cannot tell whether a feature widens the interval because the process is genuinely noisy, because the training data are sparse in that region, or because the model is poorly specified there. As a result, the explanations are only explanations of **model-estimated interval width**, not clean explanations of distinct uncertainty sources.
+  - That is a major conceptual limitation, because the paper frames the outputs as actionable uncertainty explanations for practitioners, while the method cannot distinguish whether the right response is "collect more data," "trust the interval as inherent variability," or "improve the model."
+- **Criticism 2: Explaining interval width is not the same as explaining the predictive distribution or quantile behaviour.**
+  - The paper's key idea is to explain a derived scalar quantity, the prediction interval width, rather than the lower and upper quantiles separately. This is elegant, but it collapses a richer probabilistic object into a single number.
+  - A feature could shift both quantiles upward with almost no change in width, or affect only the upper tail, or induce asymmetric risk, and those are meaningfully different behaviours. By focusing only on $W(x)$, the paper explains spread, but not how features shape the **location, asymmetry, or tail behaviour** of the predictive distribution.
+  - This makes the explanation layer less informative than it first appears. It is useful for saying *which features widen intervals*, but weaker for saying *how those features alter risk structure*.
+- **Criticism 3: The explanation validation is extremely weak relative to the strength of the claims.**
+  - The paper does not evaluate explanation quality using fidelity, stability, sensitivity, perturbation, or feature-removal tests. Instead, the XAI validation is limited to a prototype dashboard discussion with a single expert and one highlighted local example.
+  - For a paper claiming to provide actionable explanations of predictive uncertainty, this is not enough. At best, it shows that the explanations are plausible and readable; it does **not** show that they are reliable, faithful, or robust.
+  - This is one of the biggest practical weaknesses in the paper, because the predictive side is evaluated carefully, while the explanation side is largely accepted on face validity.
+- **Criticism 4: The paper's decision-support narrative is stronger than the evidence actually provided.**
+  - The authors motivate the work through a predict-then-optimize lens and argue that uncertainty explanations can support production planning. However, they also effectively acknowledge that the work remains at the *prediction* stage: the forecasts may serve as inputs to later optimization models, but that integration is not actually carried out in the paper.
+  - In other words, the study shows that one can predict intervals and visualize feature attributions, but it does not demonstrate that these explanations improve scheduling decisions, reduce cost, or change operational behaviour in a measurable way.
+  - That makes the practitioner value proposition promising, but still only partially substantiated.
+- **Criticism 5: The framework is heavily dependent on one proprietary dataset, which limits generalizability and reproducibility.**
+  - The authors implicitly acknowledge dataset dependence when they note that uncertainty can reveal sparse or anomalous regions of the training data. But this also means the explanations are highly tied to one event log, one firm, and one process environment.
+  - Because the study uses a single proprietary manufacturing dataset and provides neither code nor data, it is difficult to assess whether the same method would behave similarly on other predictive process monitoring tasks, other industries, or more complex forecasting settings.
+  - This does not invalidate the case study, but it does weaken any broad claim that the framework is generally established rather than demonstrated in one narrow context.
+- **Criticism 6: The SHAP implementation adds approximation and scalability concerns that the paper does not fully resolve.**
+  - The authors note that exact Shapley values are computationally expensive, so they rely on *KernelSHAP* approximations. That is understandable, but it introduces another layer of approximation on top of an already derived target $W(x)$.
+  - Since the paper is working with a tree-based model, this choice also raises questions about efficiency and robustness, especially if the framework were to be scaled to larger feature spaces or real-time monitoring settings.
+  - This is a secondary limitation compared with the conceptual issues above, but it still weakens the case for the method as a scalable operational tool.
 - **Observation on "Uncertainty Profiles" (MRPIW):**
-  - Their use of MRPIW (Mean Relative Prediction Interval Width) to create low/medium/high profiles is highly practical. Absolute width (MPIW) naturally scales with the target size (longer tasks have wider intervals). Normalizing the width by the point prediction to create profiles makes the uncertainty actionable for domain experts.
+  - Their use of MRPIW (Mean Relative Prediction Interval Width) to create low/medium/high profiles is still one of the most practically useful ideas in the paper. Absolute width (MPIW) naturally scales with the target size, so normalizing by the point prediction gives practitioners a more interpretable notion of whether a case is "uncertain relative to what is expected."
+  - So even though the uncertainty explanation story is conceptually weaker than claimed, the profiling device itself is a genuinely useful contribution for operational communication.
 
 ---
 
-## 6. Action Items & Integration
-- [ ] **Adopt MRPIW:** Add Mean Relative Prediction Interval Width (MRPIW) to my suite of validation metrics. It is a highly practical metric for proving interval sharpness across different scales of data.
-- [ ] **Highlight the Aleatoric vs. Epistemic Gap:** Use this paper in my literature review to point out that current UQ+XAI applications often fail to distinguish between aleatoric and epistemic uncertainty. Clearly define which type of uncertainty *my* model is predicting and explaining.
-- [ ] **Address the XAI Target:** Note their technique of setting the SHAP target directly to the interval width ($W(x) = U(x) - L(x)$). I must ensure my XAI framework explicitly formulates the mathematical "game" it is trying to explain (e.g., explaining the variance output or the interval bounds directly).
-- [ ] **Position against Qualitative Validation:** Explicitly state that recent applied papers rely entirely on anecdotal, $n=1$ qualitative "sanity checks" for XAI. Position my quantitative XAI metrics (fidelity, stability, etc.) as a necessary and rigorous evolution for trust in probabilistic forecasting.
-- [ ] **Highlight the Training Gap:** Point out that their model (QRF) estimates quantiles independently, leaving an opening for my approach which directly optimizes the interval quality (via differentiable CWC or similar interval-based losses) during training.
+
