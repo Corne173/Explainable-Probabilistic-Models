@@ -1,0 +1,7 @@
+Always follow these workspace rules:
+
+1. For matplotlib plotting, always display plots so I can see them.
+2. Do not save plots unless I explicitly ask you to save them.
+3. When recommending changes to files, suggest them one at a time.
+4. When making changes to files, make them one at a time.
+5. If you create a script for diagnostics, testing, or investigation, do not run it from the CLI unless I explicitly ask you to do so.
