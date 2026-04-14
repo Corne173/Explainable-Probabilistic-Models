@@ -1,19 +1,242 @@
 ---
-title: "Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis"
-description: "Quantile regression and SHAP analysis for confidence interval fluctuations. Review in progress."
-date: 2025-01-01
+title: "Uncertainty-Aware Optimization of Zeolite Synthesis via SHAP-Based Analysis"
+description: "Critical review of a study using SHAP and comparative SHAP analyses to guide smaller-particle zeolite synthesis under an uncertainty-aware optimization framework."
+date: 2026-04-14
 categories:
-  - Review in progress
-  - Explaining uncertainty with SHAP
+  - Explainable AI
+  - Materials informatics
+  - Zeolite synthesis
+  - SHAP
+  - Uncertainty-aware optimization
 ---
 
-## Citation
+## 1. Quick Reference & Meta-Data
+- **Topic:** SHAP-based interpretation and optimization guidance for zeolite synthesis, with emphasis on particle-size control
+- **Primary Aim of the Study:** Use machine learning explanations to identify synthesis conditions associated with smaller particle sizes, and then translate those insights into optimization guidance
+- **Core XAI Tool:** SHAP
+- **Claimed Added Value:** The study attempts to move beyond passive model interpretation and use SHAP-derived insights to guide synthesis toward desirable outcomes
+- **My Overall Assessment:** Interesting and ambitious idea, but the methodology and interpretation are weaker than they first appear. The paper uses SHAP in an exploratory and suggestive way, but it does not fully validate whether the extracted explanations actually support reliable optimization.
 
-- **Authors & Year:** He, S., et al. (2025)
-- **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-aware+optimization+of+zeolite+particle+size%3A+Utilizing+quantile+regression+and+SHAP+analysis)
+---
 
-## Review Status
+## 2. Core Contributions, Novelty, & Motivation
+- **The Motivation:**
+  - Particle size is an important synthesis outcome, and the authors want to understand which synthesis parameters are associated with smaller particles.
+  - Rather than using the ML model only for prediction, they want to extract interpretable guidance for experimental design.
+- **What They Are Trying to Do:**
+  - Train a predictive model for particle size.
+  - Use SHAP to identify influential synthesis variables.
+  - Compare SHAP behavior across different subsets of samples.
+  - Infer which synthesis parameters should be adjusted to obtain smaller particles.
+- **Their Practical Ambition:**
+  - Turn explanation into design guidance.
+  - In effect, use SHAP not only as an interpretability tool, but as a heuristic optimization aid.
+- **What Seems Novel:**
+  - The paper’s main novelty is not a fundamentally new SHAP theory, but the way it uses SHAP comparatively across selected sample groups to derive optimization guidance.
+  - The work appears to combine prediction, explanation, and intervention-oriented interpretation in one pipeline.
 
-> Review in progress.
+---
 
-This page is a placeholder for a future full review using the site template.
+## 3. Methodology, Restated in Standard SHAP Language
+The methodology becomes much clearer when translated into standard SHAP terminology.
+
+The study starts with an ordinary supervised learning setup. The model takes synthesis parameters as inputs and predicts particle size as the output. Standard SHAP is then applied to this trained model. At this stage, there is nothing unusual: for each sample, SHAP assigns feature contributions that explain how the model’s prediction differs from the baseline expected prediction.
+
+In common SHAP language, this is the usual additive decomposition:
+\[
+f(x) = \mathbb{E}[f(X)] + \sum_j \phi_j
+\]
+where \(f(x)\) is the predicted particle size, \(\mathbb{E}[f(X)]\) is the baseline model output over the background data, and \(\phi_j\) is the contribution of feature \(j\) for the specific sample.
+
+Up to this point, the method is just standard SHAP for explaining particle-size predictions.
+
+The paper then introduces the idea of comparing explanations across two groups of samples:
+- an **anchor set**, intended to represent desirable outcomes, such as smaller-particle samples,
+- a **reference set**, intended to represent baseline, typical, or less desirable outcomes.
+
+For each feature, the authors appear to compute the mean SHAP value over the anchor set and the mean SHAP value over the reference set, then subtract the two:
+\[
+\Delta \phi_j = \overline{\phi}_{j,\mathrm{ANC}} - \overline{\phi}_{j,\mathrm{REF}}
+\]
+
+This is what they refer to as a **SHAP value difference**.
+
+This term is important to clarify. In standard SHAP literature, every SHAP value is already a difference-based quantity because it measures deviation from the baseline expectation. However, the paper uses the phrase **SHAP value difference** in a second, non-standard sense: not the built-in SHAP difference from the baseline, but rather a **post-processing subtraction between average SHAP values over two sample groups**.
+
+So, in plain terms, they are not introducing a new SHAP formulation. They are:
+1. computing ordinary SHAP values,
+2. averaging them over two subsets of the data,
+3. subtracting those averages,
+4. interpreting the result as optimization guidance.
+
+That means the quantity they call a SHAP difference is really best understood as a **difference between two explanation summaries**, not a native SHAP object.
+
+---
+
+## 4. What the “SHAP Value Difference” Actually Means
+This was one of the biggest sources of confusion in the methodology.
+
+The phrase does **not** mean:
+- a classical SHAP value,
+- or some uncertainty-specific SHAP object by default,
+- or necessarily a subtraction between upper and lower quantile SHAP values.
+
+Instead, in the optimization section, it appears to mean:
+> the difference between the average feature contribution in the anchor samples and the average feature contribution in the reference samples.
+
+So the interpretation is relative:
+- if a feature has a large positive SHAP difference, its average contribution is larger in the anchor group than in the reference group,
+- if a feature has a negative SHAP difference, its average contribution is smaller in the anchor group than in the reference group.
+
+This is a meaningful comparative analysis, but it does **not automatically imply a causal intervention direction**.
+
+A feature having a negative SHAP difference does not, by itself, prove that increasing the feature will cause smaller particles. It only shows that the feature’s modeled contribution differs between the two selected groups.
+
+That distinction is crucial.
+
+---
+
+## 5. Revisiting the Optimization Interpretation
+The paper uses these SHAP differences to construct what it calls an optimization guide for synthesizing smaller particles. This is where the strongest interpretive leap happens.
+
+The authors seem to argue that if a feature contributes less in the anchor set than in the reference set, then changing that feature in a particular direction may help achieve the desired smaller-particle regime. For example, if silicon content shows the largest SHAP difference, they interpret this as evidence that increasing silicon content might help facilitate smaller particle sizes.
+
+The problem is that SHAP, by itself, does not justify that jump.
+
+SHAP explains:
+- how features contributed to the prediction for observed samples under the trained model.
+
+SHAP does **not inherently prove**:
+- which intervention direction should be taken,
+- whether the relationship is monotonic,
+- whether the effect is causal,
+- or whether changing the feature will move a new sample toward the target regime.
+
+So the paper is using SHAP explanations as a kind of heuristic sensitivity signal. That may be useful, but it is weaker than a true optimization or causal analysis.
+
+A more cautious interpretation would be:
+> these features are associated with different contribution patterns in desirable versus baseline samples, and therefore may be promising candidates for further experimental testing.
+
+That is much safer than claiming:
+> increase this feature to obtain smaller particles.
+
+---
+
+## 6. Methodological Ambiguities and Pain Points
+### 6.1 Ambiguous Use of Terminology
+One of the clearest weaknesses is the paper’s terminology. Calling this quantity a **SHAP value difference** risks confusion because SHAP values are already defined relative to a baseline expectation. The paper is layering a second subtraction operation on top of standard SHAP, but it does not seem to clearly distinguish that from ordinary SHAP terminology. This makes the method sound more formal or canonical than it really is.
+
+### 6.2 Unclear Selection of Anchor and Reference Samples
+The optimization guidance depends heavily on how the anchor and reference sets are chosen. Yet the paper does not appear to provide a fully rigorous, reproducible rule for how these sets are selected.
+
+This matters because the resulting SHAP differences are conditional on that grouping. Different definitions of “anchor” and “reference” could lead to different average SHAP patterns, and therefore different optimization guidance. Without a transparent selection protocol, the method is partly subjective and data-dependent.
+
+### 6.3 Association Is Being Used Like Intervention
+The paper moves from comparative explanation to actionable recommendation without fully justifying the step in between. It treats differences in feature contributions across groups as if they provide reliable intervention directions. But this is not guaranteed by SHAP theory.
+
+The paper is therefore best understood as generating **design hypotheses**, not verified optimization rules.
+
+### 6.4 Explanation Is Being Treated as Optimization
+The overall narrative makes the method sound like an optimization framework, but in reality it is closer to:
+- explanation,
+- grouped comparison,
+- heuristic inference,
+- and recommendation.
+
+That is not necessarily a flaw by itself, but it should be framed more cautiously than it is.
+
+---
+
+## 7. Methodological Question for My Own Exploration
+One point worth exploring further is whether different operations on SHAP are equivalent.
+
+Suppose there are two possible methodological routes:
+
+- **Method A:** define a new target quantity first, such as a difference in model outputs, and then compute SHAP on that derived quantity.
+- **Method B:** compute SHAP values for two outputs separately, then subtract the resulting SHAP values afterward.
+
+These are generally **not equivalent in nonlinear settings**, especially when the model outputs are nonlinear functionals such as quantiles, uncertainty bounds, or other distributional summaries. SHAP is linear in the cooperative game under strict assumptions, but once the target quantity itself is nonlinear, or once different output objects are being compared, subtraction before SHAP and subtraction after SHAP need not produce the same result.
+
+This matters conceptually because the paper’s methodology invites exactly this kind of question: are they directly explaining the target quantity of interest, or are they comparing explanations of related quantities afterward? The distinction affects how rigorous the resulting interpretation is.
+
+I would like to revisit this point more formally later, because it has broader implications for any work that compares SHAP values across outputs, quantiles, or conditions.
+
+---
+
+## 8. Validation Strategy: Did They Actually Validate the SHAP Explanations?
+This is one of the strongest criticisms of the paper.
+
+The paper does not appear to rigorously validate whether the explanations produced by SHAP are genuinely useful for achieving the desired synthesis outcomes. In particular, it does not convincingly show a closed-loop verification process in which:
+- SHAP-derived insights are translated into feature adjustments,
+- those adjustments are fed back into the model or into experiments,
+- and the resulting particle sizes are shown to improve in the intended direction.
+
+That kind of validation would have been very powerful. It would have allowed the authors to demonstrate that the SHAP explanations were not merely plausible narratives, but actually operationally useful.
+
+Instead, the validation appears to be mostly interpretive. The authors identify features with large SHAP differences, infer directions of change, and then argue that these findings are meaningful or chemically plausible. That is useful as exploratory analysis, but it is not a strong validation of the explanations.
+
+So the paper does not really establish:
+- that the extracted explanation patterns are stable,
+- that they are causally meaningful,
+- or that following them reliably improves the target synthesis outcome.
+
+In that sense, the SHAP-based guidance is **suggestive, not verified**.
+
+---
+
+## 9. My Thoughts, Criticisms, and Unstated Limitations
+- **Criticism 1: The paper’s central explanatory quantity is not standard SHAP**
+  - The so-called SHAP value difference is a post-processing comparison between average SHAP values across two groups, not a native SHAP quantity.
+  - This should have been made much more explicit.
+- **Criticism 2: Terminology overstates methodological rigor**
+  - The wording makes the approach sound like a formally grounded SHAP-based optimization method, whereas it is more accurately a comparative analysis of grouped explanations.
+- **Criticism 3: Anchor/reference group selection is under-specified**
+  - Since the final conclusions depend on these group definitions, unclear sample selection weakens reproducibility and interpretability.
+- **Criticism 4: The jump from explanation to optimization is not formally justified**
+  - SHAP explains model behavior, not intervention effects.
+  - The paper treats contribution differences as if they directly yield control directions, which is a stronger claim than the method supports.
+- **Criticism 5: Explanation quality is not properly validated**
+  - The paper does not show that SHAP-derived recommendations actually produce better synthesis outcomes when applied.
+  - This is a major weakness.
+- **Criticism 6: Lack of causal or counterfactual verification**
+  - A much stronger study would have tested whether the recommended parameter changes lead to smaller particles through model-based counterfactuals or follow-up experiments.
+- **Criticism 7: The method is better viewed as hypothesis generation**
+  - Its real strength is exploratory insight generation, not rigorous optimization.
+
+---
+
+## 10. What I Would Have Liked to See
+To make the paper much stronger, I would have wanted:
+- a precise and reproducible definition of the anchor and reference sets,
+- a clearer explanation of what exactly is meant by SHAP value differences,
+- an explicit distinction between descriptive explanation and prescriptive intervention,
+- counterfactual or optimization-loop testing using the model,
+- and ideally experimental confirmation that the SHAP-guided parameter changes do indeed produce smaller particle sizes.
+
+Without these steps, the method remains interesting, but only partially validated.
+
+---
+
+## 11. Why the Paper Is Still Useful
+Despite these criticisms, the paper is still useful because it shows a creative attempt to use explainability in a materials design context rather than only as a post hoc reporting tool. It highlights a genuine and important research direction: using model interpretation to guide experimental decisions.
+
+Even if the present implementation is not fully rigorous, it surfaces a valuable idea:
+> explanations may help identify promising directions for materials optimization, provided that those directions are later validated properly.
+
+So the paper is still worth citing, but mainly as an **exploratory SHAP-guided design study**, not as a definitive demonstration of validated explanation-driven optimization.
+
+---
+
+## 12. Action Items and Integration for My Own Research
+- [ ] Be very explicit in my own writing about whether I am using standard SHAP, grouped SHAP summaries, or differences between SHAP summaries.
+- [ ] Avoid implying that SHAP explanations automatically provide valid intervention directions.
+- [ ] Clearly separate descriptive explanation from optimization or control claims.
+- [ ] If I use explanation-derived guidance, validate it by feeding it back into the model or experiments.
+- [ ] When reviewing similar papers, check whether they define their reference/anchor sets rigorously.
+- [ ] Revisit the theoretical issue of whether “difference then SHAP” and “SHAP then difference” are equivalent in my own context.
+- [ ] Use this paper as an example of both the promise and the pitfalls of explanation-guided optimization.
+
+---
+
+## 13. Bottom-Line Takeaway
+This paper is interesting because it tries to use SHAP not only to explain particle-size predictions, but also to guide synthesis toward smaller particles. However, the core optimization logic is weaker than it first appears. The method does not introduce a fundamentally new SHAP formulation; instead, it compares average SHAP values across selected groups of samples and interprets those differences as design guidance. That makes the framework exploratory and potentially useful for hypothesis generation, but it also introduces several weaknesses: ambiguous terminology, unclear anchor/reference sample selection, an unproven jump from association to intervention, and limited validation of whether the SHAP-derived explanations actually lead to better outcomes. The paper is therefore best read as a suggestive and creative application of SHAP in materials design, rather than a rigorously verified SHAP-based optimization methodology.
