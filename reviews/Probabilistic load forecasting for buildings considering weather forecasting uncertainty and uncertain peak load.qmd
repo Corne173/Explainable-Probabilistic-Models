@@ -1,0 +1,514 @@
+---
+title: "Probabilistic load forecasting for buildings considering weather forecasting uncertainty and uncertain peak load"
+description: "Review of an Applied Energy paper proposing a probabilistic building load forecasting framework that explicitly models weather forecast uncertainty and abnormal peak load behaviour."
+date: 2026-03-19
+categories:
+  - Probabilistic load forecasting
+  - Building energy systems
+  - Weather uncertainty
+  - Peak load forecasting
+  - ANN
+  - Statistical modelling
+---
+
+## 1. Quick Reference & Meta-Data
+- **Authors & Year:** Lei Xu, Shengwei Wang, Rui Tang (2019)
+- **Venue (Journal/Conference):** *Applied Energy* *(high-impact energy journal)*
+- **DOI:** `10.1016/j.apenergy.2019.01.022`
+- **Application Domain:** Individual commercial / educational building load forecasting
+- **Study Context:** Hong Kong Polytechnic University, Phase 7 educational building
+- **Forecasting Focus:** Probabilistic building load forecasting with explicit treatment of weather forecast uncertainty and abnormal peak load
+- **Core Modelling Ingredients:** ANN for normal load, statistical occurrence model for abnormal peaks, statistical distribution fitting for abnormal peak magnitude
+- **Data Horizon:** 8 years of hourly data (2009–2016) for training/validation, plus 2017 real-time case studies
+- **Proximity/Threat Level:** Medium to High / Strong methodological relevance for probabilistic load forecasting under uncertainty
+- **Date Reviewed:** 2026-03-19
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+- **The Motivation (Why probabilistic load forecasting?):**
+  - The paper argues that deterministic building load forecasting is inadequate when both supply-side and demand-side uncertainties are growing.
+  - In modern grids, uncertainty comes not only from variable generation but also from building-side behaviour, operating schedules, and sudden abnormal peak loads.
+  - For practical decision-making, especially demand-side management and peak demand limiting, operators need distributions, intervals, or quantiles rather than a single point estimate.
+
+- **The Motivation (Why buildings specifically?):**
+  - Much of the earlier probabilistic load forecasting literature focused on aggregate or system-level load.
+  - Individual buildings are much more volatile and are therefore harder to forecast.
+  - For non-residential buildings, especially those with HVAC-driven demand, load uncertainty depends strongly on both weather forecasting uncertainty and abnormal peak events.
+
+- **The Motivation (Why model peak load separately?):**
+  - The authors identify a gap: previous work either ignored building-level abnormal peak load or relied on deterministic peak forecasting approaches that are poorly suited to large fluctuations and weak weather correlation.
+  - They argue that abnormal peaks are fundamentally different from normal weather-driven demand and should not simply be absorbed into a single forecasting model.
+
+- **Their claim to fame / Novelty:**
+  - They propose a two-component probabilistic forecasting architecture:
+    1. a **probabilistic normal load forecasting model**, and
+    2. a **probabilistic peak abnormal differential (PAD) load forecasting model**.
+  - They explicitly integrate **real probabilistic weather forecasts**, rather than synthetic temperature scenarios based only on historical climate data.
+  - They introduce a **hybrid decomposition method** combining linear regression (LR) and local outlier factor (LOF) to separate normal load from abnormal load.
+  - They separately model the **occurrence** and **magnitude** of abnormal peaks.
+
+- **What is actually new here conceptually?**
+  - The paper’s real contribution is not merely “ANN + probability.”
+  - It is the decomposition of total building load uncertainty into:
+    - uncertainty in the **normal operational load**, mainly weather-driven, and
+    - uncertainty in the **abnormal peak component**, which is rarer, less weather-dependent, and statistically irregular.
+  - That decomposition is the key modelling idea.
+
+---
+
+## 3. Problem Formulation & Modelling Philosophy
+
+- **Main forecasting view:**
+  - The total building load is treated as the combination of:
+    - a normal load process, and
+    - a positive abnormal differential component representing peak abnormalities.
+
+- **Key definitions:**
+  - **Normal load:** load with no significant deviation from neighbouring load values.
+  - **Abnormal load:** load with significant deviation from neighbouring values.
+  - **Abnormal peak load:** abnormal load with significant positive deviation.
+  - **Peak abnormal differential (PAD) load:** the difference between abnormal peak load and the corresponding normal load at that same time step.
+
+- **Overall forecasting logic:**
+  - At any time, the probabilistic forecast can be thought of as:
+    - either the normal load forecast alone, or
+    - the normal load forecast plus the PAD forecast if an abnormal peak occurs.
+
+- **Why this matters:**
+  - This is a more physically and statistically structured way to represent building load uncertainty than forcing one monolithic model to explain both everyday consumption and rare spikes.
+
+---
+
+## 4. Methodology & Technical Details
+
+### 4.1 Overall Model Architecture
+The proposed framework has two basis-function-style components:
+
+1. **Probabilistic normal load forecasting model**
+   - Built using an ANN
+   - Inputs: weather variables + calendar information
+   - Weather uncertainty enters through probabilistic temperature forecasts
+
+2. **Probabilistic PAD load forecasting model**
+   - Built using statistical methods
+   - Models:
+     - probability of PAD occurrence
+     - probability distribution of PAD magnitude
+   - Inputs mainly depend on calendar information rather than weather
+
+This separation is sensible because the authors assume normal load is weather-sensitive, while PAD events are less weather-dependent and more schedule/event related.
+
+---
+
+### 4.2 Probabilistic Normal Load Forecasting
+
+- **Model type:** Three-layer backpropagation ANN
+- **Learning algorithm:** Levenberg-Marquardt (LM)
+- **Why ANN?:**
+  - The authors argue ANN is suitable because the relationship between building load, weather, and occupancy-related calendar effects is nonlinear and difficult to formulate analytically.
+  - Calendar variables are used as proxies for occupancy and operational schedules.
+
+- **Inputs to the ANN:**
+  - Outdoor dry-bulb temperature
+  - Relative humidity
+  - Hour of day
+  - Day of week
+  - Month of year
+
+- **Output:**
+  - Hourly deterministic normal load
+
+- **Training setup:**
+  - Historical data split into training and testing samples in a 7/8 : 1/8 ratio
+  - Implemented in MATLAB using the Neural Network Toolbox
+  - Hidden neurons set to 12 using empirical guidance plus trial and error
+  - Mean square error target: 0.001
+  - Learning rate: 0.5
+  - Iterations: 1000
+
+- **How probabilistic forecasts are generated from this ANN:**
+  - The ANN itself is first trained as a deterministic normal-load model.
+  - Then deterministic temperature input is replaced with **hourly probabilistic temperature quantiles**.
+  - Running the ANN over these temperature quantiles yields corresponding quantiles of the normal load forecast.
+
+- **Important modelling choice:**
+  - They treat temperature as the dominant uncertain weather input and use its probabilistic forecast to induce the load forecast distribution.
+  - Relative humidity remains deterministic in the case studies.
+
+---
+
+### 4.3 Construction of Probabilistic Temperature Forecasts
+
+- **Weather source:** Hong Kong Observatory (HKO)
+- **Available weather information:**
+  - probabilistic daily minimum temperature forecasts
+  - probabilistic daily maximum temperature forecasts
+  - deterministic hourly temperature forecasts
+  - deterministic hourly relative humidity forecasts
+
+- **Their method:**
+  - Convert the HKO minimum/maximum temperature probability plots into usable time series data
+  - Transform these into cumulative distribution functions
+  - Interpolate 1%–99% quantiles of daily minimum and maximum temperature
+  - Use those quantiles together with deterministic hourly forecasts to derive **hourly probabilistic temperature forecasts**
+
+- **Why this is noteworthy:**
+  - Many earlier studies used historical temperature scenarios rather than actual forecast distributions.
+  - This paper explicitly uses updated forecast uncertainty from an operational weather service, which makes the method more realistic for real-time deployment.
+
+---
+
+### 4.4 Probabilistic PAD Load Forecasting
+
+The PAD model has two submodels:
+
+#### A. Probabilistic Occurrence Model
+- PAD occurrence is assumed to depend mainly on:
+  - **hour of day**
+  - **month of year**
+- The model forecasts the probability that PAD occurs at hour `h` in month `m`
+- It is based on empirical occurrence probabilities from historical data
+
+- **Underlying assumption:**
+  - PAD load occurs with the same probability at a given office hour across work days within a month
+
+- **What this means practically:**
+  - This is a calendar-conditioned empirical probability model, not a highly flexible machine learning classifier
+
+#### B. Probabilistic Magnitude Model
+- The magnitude of PAD load is modelled by fitting candidate probability density functions
+- The four candidates are:
+  - Normal
+  - Gamma
+  - Weibull
+  - Lognormal
+
+- **Parameter estimation:** maximum likelihood
+- **Selection criterion:** Kolmogorov-Smirnov (K-S) error
+
+- **Best fit found:**
+  - Lognormal distribution
+  - Training K-S error: **0.0398**
+
+- **Interpretation:**
+  - The abnormal peak magnitudes are positively skewed and better captured by a lognormal-type distribution than by a symmetric normal distribution
+
+---
+
+## 5. Data Processing & Decomposition Strategy
+
+One of the most interesting parts of the paper is the preprocessing framework used to separate normal and abnormal load.
+
+### 5.1 Why decomposition is necessary
+- A single training dataset containing both ordinary demand behaviour and irregular spikes may distort the ANN’s learning process
+- The authors therefore try to remove abnormal loads before training the normal-load ANN
+
+### 5.2 Hybrid decomposition method
+They combine two methods:
+
+#### A. Linear Regression (LR) method
+- Used to identify abnormal loads that deviate from the weather-sensitive trend
+- Steps:
+  - Perform sensitivity analysis between load and weather variables
+  - Cluster by hour of day
+  - Build LR between load and weather variable within each cluster
+  - Analyse residuals with kernel density estimation (KDE)
+  - Mark loads outside the 95% KDE confidence region as abnormal
+
+- **Interesting result:**
+  - Enthalpy in second order had the strongest Pearson correlation with load (**0.914**), stronger than temperature or humidity alone
+  - This supports the idea that combined thermal effects matter more than any single weather variable
+
+#### B. Local Outlier Factor (LOF) method
+- Used to detect local anomalies in the time series
+- Useful where local discontinuities exist
+- Weakness: may fail when abnormal loads persist continuously over multiple time points
+
+#### C. Why hybridise LR and LOF?
+- LR catches globally weather-inconsistent points
+- LOF catches locally unusual points
+- Their union gives a more robust abnormal-load detector
+
+### 5.3 Hybrid method performance
+- Ratio of abnormal loads detected:
+  - **LR:** 0.036
+  - **LOF:** 0.035
+  - **Hybrid:** 0.068
+
+- **Interpretation:**
+  - The hybrid method is much more sensitive than either individual method
+  - This is presented as evidence that it better captures abnormal behaviour
+
+### 5.4 After decomposition
+- Abnormal loads are removed
+- Gaps are filled by linear interpolation to recover a “normal load” dataset
+- PAD load is then defined as the positive deviation between abnormal load and recovered normal load
+
+---
+
+## 6. Experimental Setup & Testbed
+
+- **Building:** Phase 7, The Hong Kong Polytechnic University
+- **Building type:** educational / commercial-style building
+- **Facilities:** laboratories, classrooms, lecture theatres, conference rooms, staff offices
+- **Climate:** subtropical Hong Kong climate
+- **Sampling interval:** hourly
+- **Historical window:** Jan 2009 to Dec 2016
+- **Operating hours considered:** 09:00–20:00 on workdays
+- **Excluded periods:**
+  - Sundays
+  - public holidays
+  - morning chiller-start spikes before 08:00
+
+- **Why exclude these?**
+  - The authors argue the focus is on on-peak operating periods that matter most for demand limiting and monthly electricity costs
+  - They also note that chiller start spikes are not the practical cause of actual monthly peak demand in their building
+
+---
+
+## 7. Validation Strategy
+
+### 7.1 Deterministic normal-load model evaluation
+- **Metrics:**
+  - MAPE
+  - MAE
+  - RMSE
+
+### 7.2 PAD magnitude model evaluation
+- **Metric:**
+  - Kolmogorov-Smirnov error between predicted and observed magnitude distribution
+
+### 7.3 Probabilistic normal-load case-study evaluation
+- **Metrics:**
+  - MAE
+  - MAPE
+  - RMSE
+  - Pinball score
+  - Quantile bandwidth / interval width
+  - Visual inspection of whether actual loads lie within prediction intervals
+
+### 7.4 What is missing
+- They discuss sharpness, resolution, and reliability conceptually
+- But they do not use a broader probabilistic metrics suite such as:
+  - CRPS
+  - Winkler score
+  - calibration curves
+  - PIT histograms for final building-load distributions
+- So the probabilistic evaluation is useful but not especially deep by today’s standards
+
+---
+
+## 8. Main Results
+
+### 8.1 Deterministic normal-load forecasting
+- Average **MAPE = 5.0%**
+- Average **MAE = 77.8 kVA**
+- Average **RMSE = 108 kVA**
+- Best month:
+  - minimum MAPE = **2.9%** in July
+- Worst months tend to occur during more volatile transition-season conditions such as December
+
+- **Interpretation:**
+  - The ANN captures normal building behaviour reasonably well once abnormal peaks have been removed
+
+---
+
+### 8.2 PAD occurrence forecasting
+- The PAD occurrence model matched observed hourly relative frequencies fairly well
+- Larger deviations occurred around:
+  - 09:00
+  - 19:00
+  - 20:00
+
+- **Interpretation:**
+  - The simple calendar-based occurrence model is workable, but performance is limited by the rarity of PAD events and the amount of historical PAD data available
+
+---
+
+### 8.3 PAD magnitude forecasting
+- Best-fitting distribution: **Lognormal**
+- Training fit:
+  - K-S error = **0.0398**
+- Validation on 2016:
+  - K-S error = **0.09**
+
+- **Interpretation:**
+  - The model gives a reasonably good statistical description of abnormal peak magnitudes
+  - This is a solid result, though not a perfect one
+
+---
+
+### 8.4 Real-time probabilistic normal-load case studies
+
+The authors compare three ways of using weather forecasts:
+
+#### Case 1: October, weather reported on four days
+- MAPE = **8.4%**
+- MAE = **147 kVA**
+- RMSE = **170 kVA**
+- Pinball score = **58.9**
+
+#### Case 2: December, one-day-ahead weather forecasts updated daily
+- MAPE = **4.7%**
+- MAE = **64 kVA**
+- RMSE = **80 kVA**
+- Pinball score = **27.6**
+- Best-performing case
+
+#### Case 3: December, nine-day-ahead weather forecasts
+- MAPE = **6.7%**
+- MAE = **65 kVA**
+- RMSE = **82 kVA**
+- Pinball score = **27.8**
+
+### 8.5 Key empirical takeaway
+- **One-day-ahead probabilistic weather forecasts produced the best probabilistic load forecasts**
+- The paper therefore shows that forecast quality is strongly affected by the quality and recency of the weather forecast input
+
+---
+
+## 9. What the Paper Proves
+
+- It proves that **building-level probabilistic forecasting improves when weather forecast uncertainty is represented explicitly**
+- It proves that **abnormal peak load should be modelled separately rather than treated as ordinary noise**
+- It shows that **updated weather forecast information matters materially**
+- It demonstrates that **a decomposed modelling strategy can work well in practice for real building data**
+
+This is a practically grounded paper rather than a purely methodological one. Its value is in operational realism.
+
+---
+
+## 10. Strengths of the Study
+
+- **Strong practical framing**
+  - The paper is very application-oriented and addresses a real problem in building energy management
+
+- **Explicit treatment of two uncertainty sources**
+  - Weather forecast uncertainty
+  - Abnormal peak load uncertainty
+
+- **Clear decomposition philosophy**
+  - Separating normal and abnormal demand is an intuitively strong modelling move
+
+- **Uses real probabilistic weather forecasts**
+  - This is more realistic than historical scenario generation
+
+- **Hybrid anomaly-detection preprocessing**
+  - Combining LR and LOF is a clever and sensible engineering solution
+
+- **Real long-term dataset**
+  - Eight years of building data is a strong practical asset
+
+- **Reasonable validation story**
+  - They do not just train a model; they also validate the abnormal peak components and run real-time case studies
+
+---
+
+## 11. Thoughts, Criticisms & Unstated Limitations
+
+### Criticism 1: The “probabilistic” framework is partly induced rather than fully learned
+- The normal-load probabilistic forecast is not produced by a truly probabilistic ANN.
+- Instead, a deterministic ANN is driven by probabilistic temperature inputs.
+- That means the uncertainty is propagated primarily from one input source rather than learned jointly as an output distribution conditioned on all inputs.
+
+**Why this matters:**  
+This may underestimate uncertainty arising from occupancy, equipment usage, operational changes, or model error.
+
+---
+
+### Criticism 2: Relative humidity is treated deterministically while temperature gets the probabilistic treatment
+- The method assumes temperature is the dominant uncertain weather variable.
+- That is probably reasonable, but it is still a simplification.
+- For buildings with humidity-sensitive HVAC behaviour, this could underrepresent uncertainty.
+
+---
+
+### Criticism 3: The occurrence model for abnormal peaks is fairly simple
+- PAD occurrence is modelled using empirical probabilities based mainly on month and hour.
+- This is interpretable and data-efficient, but also restrictive.
+- It ignores richer explanatory factors such as:
+  - event schedules
+  - examinations
+  - operational anomalies
+  - special building-use patterns
+  - maintenance events
+
+**Why this matters:**  
+The model may work well on average while still missing the real causal drivers of abnormal peaks.
+
+---
+
+### Criticism 4: The magnitude model is statistically neat but not dynamically rich
+- Fitting a single lognormal distribution to PAD magnitude is elegant, but it may hide heterogeneity.
+- Different kinds of abnormal peaks may arise from different mechanisms and therefore different distributions.
+- A mixture model or context-conditioned model might capture this better.
+
+---
+
+### Criticism 5: Probabilistic evaluation is not especially modern
+- The paper uses pinball score and interval-width style reasoning, which is useful.
+- But the evaluation could be much stronger with:
+  - CRPS
+  - calibration diagnostics
+  - coverage deviation analysis
+  - reliability diagrams
+  - formal decomposition of sharpness vs calibration
+
+---
+
+### Criticism 6: Single-site validation limits generalisability
+- The whole study is based on one educational building in Hong Kong.
+- The method may transfer, but the evidence for transferability is limited.
+- Buildings with different schedules, climates, or end-use structures may behave quite differently.
+
+---
+
+### Criticism 7: Excluding certain spikes and off-peak periods simplifies the problem
+- The authors deliberately narrow the forecasting domain to office-hour on-peak periods.
+- This makes sense operationally, but it also means the framework is not validated for full 24-hour building demand forecasting.
+- The most difficult transient phenomena may therefore be partly avoided.
+
+---
+
+### Criticism 8: Comparison baseline scope is narrow
+- The paper demonstrates internal effectiveness, but it does not compare against stronger modern probabilistic baselines such as:
+  - quantile regression forests
+  - gradient boosting for quantiles
+  - probabilistic LSTMs
+  - deep ensembles
+  - NGBoost-style distributional learning
+  - conformal forecasting approaches
+
+**Why this matters:**  
+The study shows the proposed framework works, but not necessarily whether it is the best available approach.
+
+---
+
+## 12. Deeper Interpretation for My Research Context
+
+- **What I can take from this paper:**
+  - Separate structurally distinct uncertainty sources instead of forcing one model to explain everything
+  - Treat forecast-input uncertainty explicitly
+  - Use domain-informed decomposition before forecasting
+  - Benchmark not just point error but also probabilistic sharpness and quality
+
+- **What this paper does not yet solve:**
+  - End-to-end probabilistic forecasting of full load distributions from all uncertain drivers
+  - dynamic modelling of rare-event occurrence using richer covariates
+  - rigorous probabilistic calibration analysis
+  - multi-building or multi-climate generalisation
+
+- **How I would position it in a literature review:**
+  - As an important applied study showing that probabilistic building load forecasting benefits from explicit weather uncertainty modelling and abnormal peak decomposition
+  - But also as a transitional paper: stronger than purely deterministic building forecasting, yet not as advanced as modern end-to-end probabilistic learning frameworks
+
+---
+
+## 13. Suggested Literature Review Positioning Paragraph
+
+This study is important because it moves beyond conventional deterministic building load forecasting by explicitly separating ordinary weather-driven demand from rare abnormal peak behaviour. Its main contribution is a hybrid probabilistic architecture in which an ANN forecasts normal load under probabilistic temperature inputs, while abnormal peak differential load is modelled through separate occurrence and magnitude components. The framework is practically valuable because it uses real probabilistic weather forecasts rather than synthetic historical scenarios, and because it acknowledges that abnormal peak load is statistically different from normal operational demand. However, the resulting probabilistic system remains partly modular and heuristic: uncertainty is propagated mainly through temperature quantiles, abnormal peak occurrence is driven by simple empirical calendar probabilities, and the evaluation of predictive uncertainty is not as comprehensive as in more recent probabilistic forecasting literature. Thus, the paper stands as a strong applied contribution in building-level probabilistic forecasting, while still leaving room for more integrated, better-calibrated, and more generalisable probabilistic learning methods.
+
+---
+

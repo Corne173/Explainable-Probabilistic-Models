@@ -1,16 +1,31 @@
 ---
-title: "Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis"
-description: "Quantile regression and SHAP analysis for confidence interval fluctuations. Review in progress."
-date: 2025-01-01
+title: "Uncertainty-Aware Optimization of Zeolite Synthesis via SHAP-Based Analysis"
+description: "Critical review of a study using SHAP and comparative SHAP analyses to guide smaller-particle zeolite synthesis under an uncertainty-aware optimization framework."
+date: 2026-04-14
 categories:
-  - Review in progress
-  - Explaining uncertainty with SHAP
+  - Explainable AI
+  - Materials informatics
+  - Zeolite synthesis
+  - SHAP
+  - Uncertainty-aware optimization
 ---
 
-::: {.paper-meta}
+## 1. Quick Reference & Meta-Data
+- **Topic:** SHAP-based interpretation and optimization guidance for zeolite synthesis, with emphasis on particle-size control
+- **Primary Aim of the Study:** Use machine learning explanations to identify synthesis conditions associated with smaller particle sizes, and then translate those insights into optimization guidance
+- **Core XAI Tool:** SHAP
+- **Claimed Added Value:** The study attempts to move beyond passive model interpretation and use SHAP-derived insights to guide synthesis toward desirable outcomes
+- **My Overall Assessment:** Interesting and ambitious idea, but the methodology and interpretation are weaker than they first appear. The paper uses SHAP in an exploratory and suggestive way, but it does not fully validate whether the extracted explanations actually support reliable optimization.
+
+---
+
+## Citation
+
 - **Authors & Year:** He, S., et al. (2025)
 - **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Uncertainty-aware+optimization+of+zeolite+particle+size%3A+Utilizing+quantile+regression+and+SHAP+analysis)
-- **Review Status:** Review in progress.
-:::
+
+## Review Status
+
+> Review in progress.
 
 This page is a placeholder for a future full review using the site template.
