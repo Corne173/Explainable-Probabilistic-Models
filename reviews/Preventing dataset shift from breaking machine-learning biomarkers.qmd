@@ -1,5 +1,5 @@
 ---
-title: "Tier 2 Research Review: Theory & Justification"
+title: "Preventing dataset shift from breaking machine-learning biomarkers"
 date: 2024-05-18
 categories:
   - Theory
@@ -8,14 +8,12 @@ categories:
   - Covariate Shift
 ---
 
-# 📝 TIER 2 RESEARCH REVIEW: Theory & Justification
-
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** Preventing dataset shift from breaking machine-learning biomarkers
+::: {.paper-meta}
 - **Authors & Year:** Jérôme Dockès, Gaël Varoquaux, Jean-Baptiste Poline (2021)
 - **Venue (Journal/Conference):** GigaScience (Oxford University Press) *(Highly reputable, peer-reviewed open-access journal).*
-- **Link/DOI:** [https://doi.org/10.1093/gigascience/giab055](https://doi.org/10.1093/gigascience/giab055)
+- **Link/DOI:** [10.1093/gigascience/giab055](https://doi.org/10.1093/gigascience/giab055)
 - **Primary Topic/Concept:** The mathematical breakdown of Empirical Risk Minimization (ERM) under dataset shift, and why standard statistical "fixes" (like deconfounding) actually destroy predictive models.
+:::
 
 ---
 

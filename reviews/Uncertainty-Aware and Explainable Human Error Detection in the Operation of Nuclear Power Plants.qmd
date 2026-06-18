@@ -10,16 +10,17 @@ categories:
   - Bayesian neural networks
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Bhavya Reddy, Ezgi Gursel, Katy Daniels, Anahita Khojandi, Jamie Baalis Coble, Vivek Agarwal, Ronald Boring, Vaibhav Yadav, and Mahboubeh Madadi (2024)
 - **Venue (Journal/Conference):** *Nuclear Technology*
-- **DOI:** https://doi.org/10.1080/00295450.2024.2372217
+- **DOI:** [10.1080/00295450.2024.2372217](https://doi.org/10.1080/00295450.2024.2372217)
 - **Published Online:** 23 July 2024
 - **Core Domain:** Human error detection in nuclear power plant operations
 - **Main Technical Themes:** Multiclass classification, uncertainty quantification (UQ), explainable AI (XAI), Bayesian neural networks (BNNs), SHAP
 - **Code/Data Available?:** Not explicitly provided in the paper extract I reviewed
 - **Proximity/Threat Level:** Moderate to High for anyone working on trustworthy AI in safety-critical monitoring
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

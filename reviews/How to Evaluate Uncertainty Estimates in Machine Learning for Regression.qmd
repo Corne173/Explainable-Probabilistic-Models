@@ -1,296 +1,334 @@
 ---
-title: "How to Evaluate Uncertainty Estimates in Machine Learning for Regression"
-description: "Review of a methodological paper critiquing standard uncertainty evaluation practices in regression and proposing simulation-based testing for pointwise coverage."
-date: 2026-03-13
+title: "How to evaluate uncertainty estimates in machine learning for regression?"
+description: "Review of Sluijterman, Cator, and Heskes' critique of log-likelihood, PICP, and single-split uncertainty evaluation in regression."
+date: 2026-06-07
 categories:
+  - Reviewed
   - Uncertainty Quantification
   - Probabilistic Regression
   - Calibration
   - Prediction Intervals
-  - Explainable Evaluation
+  - Pointwise Coverage
+  - Evaluation Methodology
 ---
 
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** *How to Evaluate Uncertainty Estimates in Machine Learning for Regression?*
-- **Authors & Year:** Laurens Sluijterman, Eric Cator, Tom Heskes (2023)
-- **Venue (Journal/Conference):** arXiv methodological paper
-- **Primary Topic/Concept:** Evaluation of uncertainty estimates for regression models
-- **Link/Identifier:** arXiv:2106.03395
-- **Code/Data Available?:** Not emphasized
-- **Proximity/Threat Level:** High relevance / methodological foundation
-- **Date Reviewed:** 2026-03-13
+::: {.paper-meta}
+- **Authors & Year:** Laurens Sluijterman, Eric Cator, Tom Heskes (2024 journal article; arXiv v2 in 2023)
+- **Venue:** *Neural Networks*, volume 173, article 106203
+- **DOI:** [10.1016/j.neunet.2024.106203](https://doi.org/10.1016/j.neunet.2024.106203)
+- **arXiv:** 2106.03395
+- **Primary Topic:** How uncertainty estimates for regression should be evaluated
+- **Contribution Type:** Methodological critique and simulation-based evaluation framework
+- **Methods Used in Demonstrations:** Naive bootstrap and concrete dropout
+- **Core Metrics Discussed:** Log-likelihood, RMSE, PICP, CICP, PICF, CICF, Brier score, interval width
+- **Proximity / Threat Level:** High relevance / methodological foundation for evaluating probabilistic forecasting and interval reliability
+- **Date Reviewed:** 2026-06-07
+:::
 
 ---
 
 ## 2. Core Contributions, Novelty & Motivation
 
-### The Motivation (Why this paper matters)
-As machine learning models increasingly produce probabilistic predictions rather than single point forecasts, it becomes essential to evaluate the quality of their uncertainty estimates. In regression problems, uncertainty is typically expressed through predictive distributions, prediction intervals, or confidence intervals. However, the authors argue that current evaluation practice is fundamentally flawed and may incorrectly rank uncertainty estimation methods.
+### What problem are they solving?
 
-Two dominant evaluation strategies are widely used:
+The paper argues that common ways of evaluating uncertainty estimates in regression can make an uncertainty method look reliable even when its intervals behave poorly in important regions of the input space.
 
-1. **Predictive density evaluation** using test log-likelihood.
-2. **Interval evaluation** using metrics such as Prediction Interval Coverage Probability (PICP).
+The authors focus on two dominant evaluation habits:
 
-The paper demonstrates that both approaches are insufficient for assessing the correctness of uncertainty estimates.
+1. **Log-likelihood testing**, where models that output predictive densities are compared using test-set log-likelihood.
+2. **Prediction interval coverage probability (PICP)**, where interval methods are judged by the fraction of test observations falling inside their intervals.
 
----
+Both seem reasonable at first glance. If a predictive distribution assigns high likelihood to held-out observations, it sounds like the uncertainty is good. If a 90% interval contains about 90% of held-out observations, it sounds calibrated. The paper's main point is that this reasoning is incomplete.
 
-### Central Problem Identified
-The authors argue that commonly used metrics evaluate **aggregate predictive performance**, not whether the estimated uncertainty is actually correct. As a result, a model may appear well-calibrated even if its uncertainty estimates behave incorrectly across different regions of the input space.
+### Main argument
 
-For example:
+The central claim is that aggregate predictive metrics do not prove that uncertainty estimates are locally reliable.
 
-- A model may produce intervals that are **too narrow in some regions** and **too wide in others**, yet still achieve correct average coverage.
-- Log-likelihood improvements may arise from better mean predictions rather than improved uncertainty estimation.
+A method can:
 
-Thus, existing evaluation metrics fail to isolate the true quality of uncertainty estimates.
+- achieve good PICP while being overconfident in one region and underconfident in another;
+- achieve better log-likelihood because its mean prediction is better, not because its uncertainty estimate is better;
+- produce acceptable predictive uncertainty while estimating model uncertainty and data noise variance incorrectly;
+- fail to widen confidence intervals in sparse or poorly sampled regions even though such widening is exactly what epistemic uncertainty should do.
 
----
+### What is novel?
 
-### Key Novelty
-The main contribution of the paper is not a new predictive model, but a **new evaluation framework** for uncertainty estimates in regression.
+The novelty is not a new forecasting model. The contribution is an evaluation framework.
 
-The authors propose a **simulation-based evaluation strategy** that measures **pointwise coverage** instead of relying solely on average test-set metrics.
+The authors propose testing uncertainty estimates through controlled simulations where:
 
-Their approach highlights that:
+- the data-generating function is known;
+- training data can be resampled repeatedly;
+- prediction and confidence intervals can be evaluated across repeated experiments;
+- coverage can be checked point by point rather than only on average.
 
-- Proper evaluation requires **repeated training experiments**
-- Coverage should be analyzed **for each input location**, not only on average.
+This lets them evaluate **pointwise coverage**, not merely marginal or average coverage.
 
----
+### Why this matters
 
-### Deeper Conceptual Contribution
-A key insight of the paper is the separation between two types of uncertainty:
+For probabilistic forecasting, it is tempting to report one coverage number and one sharpness number. This paper is useful because it explains why that is not enough. A model can have the right global PICP and still be unreliable in the operating regimes where uncertainty matters most.
 
-**Model uncertainty (epistemic)**  
-Uncertainty arising from limited training data and imperfect model estimation.
-
-**Data noise variance (aleatoric)**  
-Intrinsic randomness in the data generation process.
-
-Standard evaluation metrics combine these components into a single predictive uncertainty measure, making it impossible to determine whether either component is estimated correctly.
+For energy, load, solar, wind, or other operational forecasting problems, this is especially important because data are not uniformly informative across the system. Some regions may be well sampled, while others may be sparse, seasonal, shifted, or operationally rare. Those are precisely the regions where uncertainty estimates must behave cautiously.
 
 ---
 
-### Ultimate Result
-The authors show that models can achieve strong performance according to traditional metrics such as PICP or log-likelihood while still producing **poorly calibrated uncertainty estimates locally**.
+## 3. Uncertainty Framework & Key Definitions
 
-Their proposed evaluation framework reveals these hidden weaknesses.
+### Regression setup
 
----
-
-## 3. Theoretical Framework & Technical Setup
-
-### Regression Formulation
-
-The paper considers the standard regression setting:
+The paper works in a regression setting where observations are represented as:
 
 \[
-Y \mid X = x \sim \mathcal{N}(f(x), \sigma^2(x))
+Y \mid X = x \sim N(f(x), \sigma^2(x))
 \]
 
-Where:
-
-- \(f(x)\) is the true regression function
-- \(\sigma^2(x)\) is the noise variance
-
-The goal of probabilistic regression models is therefore to estimate both:
-
-- the mean prediction \(\hat{f}(x)\)
-- the predictive uncertainty around it.
-
----
-
-### Two Explicit Sources of Uncertainty
-
-The paper distinguishes between two components:
-
-**Model uncertainty**
-
-Uncertainty due to imperfect estimation of the regression function. This uncertainty decreases with more training data.
-
-**Noise variance**
-
-Irreducible variability inherent in the data.
-
-Many probabilistic models estimate both simultaneously, but existing evaluation metrics do not verify whether either estimate is correct.
-
----
-
-### Pointwise vs Marginal Coverage
-
-This distinction is central to the paper.
-
-**Marginal coverage**
-
-Coverage averaged over the entire input distribution.
-
-Example:  
-A 95% prediction interval should contain approximately 95% of the observations in the dataset.
-
-**Pointwise coverage**
-
-Coverage evaluated **for each input location**.
-
-Example:  
-For a specific input \(x\), the interval should contain the true value 95% of the time across repeated training experiments.
-
-The authors argue that **pointwise coverage is the correct target**, because marginal coverage can hide large local errors.
-
----
-
-## 4. Existing Evaluation Strategies Reviewed
-
-### PICP-Based Testing
-
-For interval-based methods, the most common metric is:
-
-**Prediction Interval Coverage Probability (PICP)**
+or equivalently:
 
 \[
-PICP = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}(y_i \in PI_i)
+y_i = f(x_i) + \epsilon_i
 \]
 
-Where \(PI_i\) is the prediction interval for observation \(i\).
+Here:
 
-Coverage is usually reported alongside **interval width metrics**, because narrower intervals are preferred if coverage remains correct.
+- \(f(x)\) is the true regression function;
+- \(\sigma^2(x)\) is the data noise variance;
+- \(\hat{f}(x)\) is the learned model estimate.
+
+The authors distinguish two uncertainty components:
+
+- **Model uncertainty:** uncertainty about the learned estimate \(\hat{f}(x)\). This corresponds closely to epistemic uncertainty and should be high where the model has limited knowledge.
+- **Data noise variance:** irreducible noise in the observation process. This corresponds closely to aleatoric uncertainty.
+
+The predictive uncertainty combines both components. That is part of the problem: a good total predictive uncertainty estimate can hide a bad decomposition into model uncertainty and data noise variance.
+
+### Prediction intervals vs confidence intervals
+
+The paper is careful about the difference between prediction intervals and confidence intervals.
+
+**Prediction interval (PI):**
+
+- aims to contain a future observation \(Y\);
+- includes both model uncertainty and data noise;
+- can be checked in real data by asking whether held-out observations fall inside the interval.
+
+**Confidence interval (CI):**
+
+- aims to contain the true function value \(f(x)\);
+- is about the uncertainty in the estimated function, not the noise in individual future observations;
+- cannot normally be checked directly in real-world data because \(f(x)\) is unknown.
+
+This distinction is important. In ordinary applied modelling, if we check whether observed test values fall inside intervals, we are evaluating prediction interval coverage, not confidence interval coverage. Confidence interval coverage can only be evaluated directly when the true function is known, such as in simulation.
+
+### Pointwise vs marginal coverage
+
+The most important distinction in the paper is between pointwise and marginal coverage.
+
+**Marginal coverage** means the interval has the correct coverage on average over the input distribution.
+
+Example: a 90% prediction interval covers 90% of test observations overall.
+
+**Pointwise coverage** means the interval has the correct coverage at each input location \(x\).
+
+Example: for each specific operating condition \(x\), the 90% interval covers the target 90% of the time across repeated experiments.
+
+Pointwise coverage is stronger and more useful. Marginal coverage can hide local failures. A model can be too narrow in some regions and too wide in others, while still averaging to the right global PICP.
+
+### Important wording clarification
+
+The paper often talks about testing coverage on a "single data set." That wording can be confusing in applied system modelling.
+
+The more useful interpretation is:
+
+> A single collected sample or single train/test split gives only one realization of the system's data-generating process. It may not reveal whether intervals behave correctly across repeated samples or across all operating regimes of the system.
+
+For a real physical or operational system, the concern is not just "one dataset" in the abstract. The concern is uneven **system coverage**. If some part of the operating space has little data, a model should express higher epistemic uncertainty there. A global PICP score can miss exactly that failure.
 
 ---
 
-### Log-Likelihood Evaluation
+## 4. Existing Evaluation Strategies Critiqued
 
-Methods that produce full predictive distributions are usually evaluated using **test log-likelihood**.
+### PICP-based interval testing
 
-This benchmark methodology became popular following probabilistic backpropagation experiments on common regression datasets.
+PICP is defined as the fraction of test observations that fall inside their prediction intervals:
 
-Typical benchmark datasets include:
+\[
+PICP = \frac{1}{N_{test}} \sum_i 1\{y_i \in PI(x_i)\}
+\]
+
+This is widely used because it is simple and intuitive. If we construct 90% intervals, we hope PICP is close to 0.9.
+
+The paper's criticism is that PICP estimates coverage averaged over the test distribution. It does not guarantee that intervals are reliable at each individual value of \(x\).
+
+### CICP-based confidence interval testing
+
+The analogous confidence interval measure is CICP:
+
+\[
+CICP = \frac{1}{N_{test}} \sum_i 1\{f(x_i) \in CI(x_i)\}
+\]
+
+But this requires knowing the true function \(f(x)\). In normal real-world applications, we do not know this. That is why CICP is mainly available in simulation studies.
+
+This is one of the key practical frustrations with the paper: the strongest evaluation target is not directly observable in ordinary applied modelling.
+
+### Log-likelihood testing
+
+The log-likelihood procedure applies when a model outputs a full predictive density \(p(y \mid x)\), often a normal distribution with estimated mean and variance. The method is then evaluated using average test-set log-likelihood.
+
+This paper is not about a formal likelihood ratio test. It is about using log-likelihood as a predictive scoring metric to compare probabilistic models.
+
+The authors acknowledge that log-likelihood is sensible if the goal is to estimate the full predictive density. However, they argue that if the practical goal is to construct good prediction intervals, a better log-likelihood does not necessarily imply better intervals.
+
+### Standard benchmark habit
+
+The paper traces much of the benchmark culture to the probabilistic backpropagation evaluation setup, where methods are tested on regression datasets such as:
 
 - Boston Housing
+- Concrete Compression Strength
 - Energy Efficiency
+- Kin8nm
+- Naval Propulsion
 - Combined Cycle Power Plant
 - Protein Structure
-- Wine Quality
+- Wine Quality Red
+- Yacht Hydrodynamics
 - Year Prediction MSD
 
-Performance is measured using:
-
-- average log-likelihood
-- RMSE
+The authors argue that these benchmarks are useful for comparison, but the usual metrics do not isolate uncertainty quality well enough.
 
 ---
 
 ## 5. Major Criticisms of Existing Evaluation
 
-### Criticism 1: Predictive Performance ≠ Correct Uncertainty
+### Criticism 1: Predictive performance does not prove correct uncertainty decomposition
 
-Even if a method produces good predictive distributions, it does not mean its uncertainty estimates are correct.
+Predictive uncertainty combines model uncertainty and data noise variance.
 
-Errors in estimating model uncertainty may be compensated by incorrect estimates of noise variance.
+A method might get a good overall predictive uncertainty score because:
 
-Thus improved predictive metrics do not necessarily reflect improved uncertainty estimation.
+- its model uncertainty estimate is good;
+- its data noise estimate is good;
+- one bad estimate compensates for another bad estimate;
+- the mean prediction is better, even though uncertainty is not.
 
----
+Therefore, PICP and log-likelihood do not tell us whether epistemic and aleatoric uncertainty have been estimated correctly.
 
-### Criticism 2: Single Test Sets Cannot Evaluate Coverage
+This matters for out-of-distribution detection. If model uncertainty is supposed to rise in unfamiliar regions, we need to know whether the model uncertainty component itself is behaving correctly. A good predictive score may not answer that.
 
-Prediction intervals depend on:
+### Criticism 2: Coverage cannot be properly tested from one realization
 
-- the sampled training data
-- stochastic training procedures
+Intervals are random because they depend on:
 
-Therefore interval evaluation must consider **repeated experiments**.
+- which training data were sampled;
+- which targets were observed;
+- random effects in model training, such as initialization and stochastic optimization.
 
-The authors show that even perfectly calibrated intervals may appear badly calibrated when evaluated on a single test split.
+To test whether an interval procedure has the desired coverage, the whole experiment should be repeated: sample data, train model, construct intervals, evaluate coverage.
 
----
+The authors demonstrate this with a simple linear example. Even when the interval procedure is correctly calibrated, a single evaluation can look misleading. In one simulation, CICP may be 0; in another, it may be 1. This does not mean the interval procedure is useless. It means one realization cannot establish coverage.
 
-### Criticism 3: PICP Only Measures Marginal Coverage
+Practical translation: cross-validation, bootstrapping, blocked resampling, repeated train/test splits, or simulation-based stress tests are attempts to approximate this repeated-experiment logic. They still do not give true CICP unless \(f(x)\) is known, but they are better than relying on one split.
 
-PICP measures average coverage across the dataset.
+### Criticism 3: Good PICP does not guarantee pointwise coverage
 
-This means a model may have:
+PICP measures average coverage across the test set. It does not show where coverage succeeds or fails.
 
-- overly wide intervals in some regions
-- overly narrow intervals in others
+A model can achieve near-perfect PICP by:
 
-yet still achieve the desired average coverage.
+- over-covering easy or well-sampled regions;
+- under-covering difficult, sparse, shifted, or high-risk regions;
+- averaging those failures into a respectable global number.
 
-Such behavior is undesirable in practice.
+This is one of the most important ideas to carry into forecasting work. The right question is not only:
 
----
+> Do the 90% intervals cover 90% of observations overall?
 
-### Criticism 4: Log-Likelihood Conflates Mean Accuracy and Uncertainty
+It is also:
 
-Log-likelihood evaluates the full predictive distribution.
+> Do the 90% intervals cover approximately 90% of observations in the operating regimes where decisions will be made?
 
-However, improvements in log-likelihood may arise from:
+### Criticism 4: Better log-likelihood does not imply better prediction intervals
 
-- better mean predictions
-- not necessarily better uncertainty estimates.
+Log-likelihood rewards the whole predictive density. A model can improve log-likelihood because its mean predictions are better, even if its uncertainty estimate is worse.
 
-Therefore it is not a reliable metric for evaluating uncertainty quality.
+The paper gives a small example where one method has slightly better log-likelihood, about -3.109 versus -3.110, but much worse 68% interval coverage, about 0.57 versus 0.67.
+
+The takeaway is simple: if the final use of the model is interval construction, interval behaviour must be evaluated directly. Log-likelihood alone is not enough.
 
 ---
 
 ## 6. Proposed Solution: Simulation-Based Testing
 
-### Main Idea
+### Main idea
 
-The authors propose evaluating uncertainty estimation methods through **controlled simulation experiments**.
+The authors propose controlled simulation-based evaluation.
 
-Instead of relying on a single dataset split, the procedure repeatedly generates training data from a known data-generating process.
+Instead of relying on one real train/test split, the evaluator defines a data-generating process where the true function and noise process are known. Then the full modelling procedure is repeated many times.
 
-This allows the true regression function and variance to be known.
+This allows the evaluator to ask:
+
+- Do prediction intervals cover future observations at each \(x\)?
+- Do confidence intervals cover the true function \(f(x)\) at each \(x\)?
+- Do intervals widen where data are sparse?
+- Do methods trade off width and coverage sensibly?
+- Are local failures hidden by global averages?
+
+### Procedure
+
+The proposed testing process is:
+
+1. Choose a distribution \(P_{X,Y}\) for simulating datasets.
+2. Simulate a fixed test set so methods can be compared on the same inputs.
+3. Simulate a training set.
+4. Train the uncertainty estimation method.
+5. Construct prediction intervals and confidence intervals at chosen levels.
+6. Repeat the training-set simulation and model-fitting process many times.
+7. Compute coverage for each test input across simulations.
+8. Compare methods using Brier score and average interval width.
+
+### New metrics
+
+The paper introduces pointwise coverage fractions:
+
+- **PICF:** Prediction Interval Coverage Fraction, the pointwise coverage of prediction intervals across repeated simulations.
+- **CICF:** Confidence Interval Coverage Fraction, the pointwise coverage of confidence intervals across repeated simulations.
+
+The authors then use a Brier-style score to penalize deviations from the desired coverage level:
+
+\[
+BS = \frac{1}{N_{test}} \sum_i (PICF(x_i) - (1-\alpha))^2
+\]
+
+A low Brier score means the intervals are close to the intended coverage level across the input space, not just on average.
+
+### Simulation options proposed
+
+The authors suggest three broad ways to build simulations:
+
+1. Use known toy functions with controlled noise.
+2. Build simulations from real datasets, such as the standard regression benchmark datasets.
+3. Use a very large dataset split into one test set and many distinct training sets.
+
+The third option is practically useful but limited: it can test prediction intervals, but not confidence intervals, because the true function is still unknown.
 
 ---
 
-### Evaluation Procedure
+## 7. Experiments & Figure-Level Interpretation
 
-1. Define a data-generating distribution.
-2. Generate a fixed test dataset.
-3. Repeatedly sample training datasets.
-4. Fit the uncertainty estimation method each time.
-5. Compute coverage statistics across repetitions.
+### Methods compared
 
----
+The paper uses two methods mainly for demonstration:
 
-### New Metrics Introduced
+- **Naive bootstrap:** repeatedly resample the training data, train multiple neural networks, and use variation across the resulting models to construct confidence intervals.
+- **Concrete dropout:** train a neural network with dropout and keep dropout active during prediction, using repeated stochastic forward passes to estimate uncertainty.
 
-**Prediction Interval Coverage Fraction (PICF)**  
-Measures coverage probability for each input point across repeated experiments.
+The bootstrap method here is essentially an ensemble method with bootstrap resampling. Its uncertainty estimate comes from the spread across multiple fitted models.
 
-**Confidence Interval Coverage Fraction (CICF)**  
-Evaluates the correctness of confidence intervals for the estimated regression function.
+Concrete dropout behaves like a stochastic ensemble at prediction time, but its interval behaviour is not guaranteed to match the intuitive epistemic uncertainty story.
 
-**Average Interval Width**
+### Homoscedastic toy example: Figures 4, 5, and 6
 
-Measures sharpness of intervals.
-
-**Brier Score**
-
-Used to quantify deviations between empirical coverage and the desired coverage level.
-
-The Brier score also penalizes large variations in coverage across different inputs.
-
----
-
-## 7. Experimental Demonstrations
-
-### Methods Compared
-
-The paper uses two uncertainty estimation approaches:
-
-- **Naïve bootstrap**
-- **Concrete dropout**
-
-These methods were chosen because they are simple to implement and illustrate weaknesses of standard evaluation.
-
----
-
-### Homoscedastic Noise Simulation
-
-The authors simulate the function:
+The first toy simulation uses:
 
 \[
 f(x) = (2x - 1)^3
@@ -298,102 +336,310 @@ f(x) = (2x - 1)^3
 
 with constant Gaussian noise.
 
-Both bootstrap and dropout achieve correct PICP values.
+**Figure 4:** Both bootstrap and dropout achieve PICP values close to the desired 90% and 80% levels. If the evaluation stopped here, both methods would look acceptable.
 
-However, analysis of pointwise coverage reveals large variations in interval quality across different input locations.
+**Figure 5:** When the authors evaluate confidence interval coverage using the true function, the CICP values are much less reassuring. Good PICP does not translate into good confidence interval behaviour.
 
----
+**Figure 6:** The authors switch from averaging over test points to averaging over simulations at each \(x\). This reveals that some input regions are covered too often and others too rarely. This is the key pointwise coverage argument.
 
-### Heteroscedastic Noise Simulation
+### Heteroscedastic toy example: Figure 7
 
-The noise variance is defined as:
+The second toy example uses non-constant noise:
 
 \[
 \sigma(x) = 0.1 + x^2
 \]
 
-Bootstrap assumes constant noise while dropout can estimate heteroscedastic variance.
+This matters because bootstrap assumes homoscedastic noise in their setup, while concrete dropout can estimate heteroscedastic noise.
 
-Although bootstrap achieves similar PICP values, pointwise evaluation shows significantly worse performance.
+**Figure 7:** PICP can point in the wrong direction. Bootstrap can look comparable or slightly better under global PICP, even though the pointwise evaluation shows worse local interval behaviour. The paper reports a PICF Brier score of 0.011 for bootstrap and 0.0011 for dropout, strongly favouring dropout in this case.
 
-The Brier score correctly identifies dropout as the superior method.
+This is one of the clearest demonstrations that average PICP can reward the wrong method.
 
----
+### Sparse-data / out-of-distribution example: Figures 8 and 9
 
-### Sparse Data Regions
+The authors then create a bimodal input distribution so that some regions have limited data.
 
-The authors simulate bimodal input distributions to create regions with limited training data.
+This is the most relevant part for epistemic uncertainty.
 
-In these regions, uncertainty estimation becomes particularly important.
+The desired behaviour is:
 
-Conventional metrics such as PICP and log-likelihood incorrectly rank models, whereas pointwise coverage metrics reveal the true behavior.
+- intervals should be narrower where data are dense;
+- intervals should widen where data are sparse;
+- model uncertainty should reflect lack of knowledge about poorly sampled regions.
 
----
+**Figure 8:** Bootstrap behaves more sensibly by widening confidence intervals in the sparse region. Dropout does the opposite in the example: its intervals shrink where there is less data.
 
-### Boston Housing Simulation
+This is especially important because dropout has better aggregate scores in the example:
 
-To demonstrate realism, the authors design simulations based on the Boston Housing dataset.
+- PICP: dropout 0.83 versus bootstrap 0.75 for 80% intervals;
+- log-likelihood: dropout 0.14 versus bootstrap 0.12.
 
-They:
+If the evaluator looked only at PICP or log-likelihood, dropout would appear better. But visually and conceptually, the bootstrap intervals better reflect epistemic uncertainty in the low-data region.
 
-1. Train a random forest to approximate the true regression function.
-2. Train another model to estimate noise variance.
-3. Simulate new response variables.
+**Figure 9:** Repeating the experiment 100 times confirms the same concern. Both methods can have reasonable PICP, while their confidence interval behaviour differs substantially in the sparse region.
 
-Both bootstrap and dropout appear acceptable under traditional metrics, yet detailed analysis reveals significant interval miscalibration.
+This figure is useful for the phrasing "a good overall uncertainty score does not guarantee sensible uncertainty behaviour in under-sampled operating regions."
 
----
+### Boston Housing simulation: Figure 10
 
-## 8. Criticisms and Limitations
+To move beyond one-dimensional toy functions, the authors build a simulation from the Boston Housing dataset.
 
-### Limitation 1: Simulation Design Becomes Critical
+Their procedure:
 
-The proposed evaluation framework depends on the quality of simulated data-generating processes.
+1. Train a random forest on the original data and treat it as the true function \(f(x)\).
+2. Model squared residuals with a second random forest and treat that as \(\sigma^2(x)\).
+3. Simulate new targets using the original covariates and the learned function/noise model.
+4. Evaluate bootstrap and dropout using repeated simulated datasets.
 
-If simulations do not reflect realistic conditions, evaluation results may not generalize.
+They split the generated data into:
 
----
+- 366 training samples;
+- 100 test samples;
+- 40 validation samples.
 
-### Limitation 2: Dependence on Gaussian Noise Assumptions
+**Figure 10:** PICP again looks fairly close to the desired 80% level, but PICF and CICF reveal that individual points are often over-covered or under-covered. The authors report that for PICF, bootstrap has a Brier score of 0.027 and dropout has 0.032. For CICF, bootstrap has 0.147 and dropout has 0.15. Both methods show important local weaknesses.
 
-Most experiments assume Gaussian noise distributions.
-
-Real-world uncertainty distributions may be skewed or multi-modal.
-
----
-
-### Limitation 3: Limited Direct Applicability to Real Deployments
-
-Simulation-based evaluation is ideal for research benchmarking.
-
-However, it cannot be directly applied in real-world deployments where the true function is unknown.
+This section supports the claim that the proposed approach can be made more realistic by using simulations based on real datasets, although it still depends heavily on how the simulator is constructed.
 
 ---
 
-## 9. Relevance for Probabilistic Forecasting Research
+## 8. My Thoughts, Criticisms & Limitations
 
-This paper is highly relevant for research involving probabilistic forecasting models.
+### Criticism 1: The paper is strongest as a benchmark critique, not a direct deployment recipe
 
-It provides strong methodological justification for several important arguments:
+The simulation-based framework is very persuasive for research benchmarking. It lets us test questions that are impossible to answer from ordinary real-world data.
 
-- Aggregate calibration metrics may hide local failures.
-- Predictive likelihood improvements do not necessarily imply better uncertainty estimation.
-- Coverage evaluation should consider **local behavior across the input space**.
+However, in deployed systems we usually do not know \(f(x)\). This limits direct use of CICP and true pointwise confidence interval coverage.
 
-These insights are particularly important for forecasting models used in critical infrastructure such as power systems.
+The practical value is therefore indirect:
+
+- use simulations to compare methods before deployment;
+- use domain-informed stress tests;
+- use repeated resampling where possible;
+- use local coverage diagnostics on held-out observations;
+- avoid claiming that global PICP proves local reliability.
+
+### Criticism 2: Simulation realism becomes the main vulnerability
+
+The paper's proposed solution depends on the quality of the simulated data-generating process.
+
+If the simulation is too clean, too Gaussian, too low-dimensional, or too unlike the real system, then the evaluation may not generalize. A method can perform well in the benchmark simulator and still fail under real operational conditions.
+
+For energy forecasting, this means the simulation should include meaningful operating regimes such as:
+
+- seasonal effects;
+- weather regimes;
+- demand levels;
+- forecast horizon;
+- sensor drift;
+- rare high-risk operating states.
+
+### Criticism 3: The Gaussian assumption is narrow
+
+Much of the paper assumes normally distributed noise. This is convenient for defining intervals and calculating expectations, but real forecasting errors can be skewed, heavy-tailed, bounded, zero-inflated, multimodal, or regime-dependent.
+
+The authors acknowledge this in the future work section. This matters because quantile regression and conformal methods do not need the same Gaussian assumptions.
+
+### Criticism 4: The method comparison is illustrative rather than exhaustive
+
+The paper compares naive bootstrap and concrete dropout mainly because they are easy to implement and useful for exposing metric failures.
+
+It does not provide a broad modern benchmark across:
+
+- deep ensembles;
+- Bayesian neural networks;
+- Gaussian processes;
+- quantile regression;
+- conformal prediction;
+- evidential methods;
+- natural gradient boosting;
+- distributional tree ensembles.
+
+So the paper should be cited for its evaluation argument, not as final evidence that one uncertainty method dominates another.
+
+### Criticism 5: Pointwise coverage is conceptually clean but hard in high dimensions
+
+Pointwise coverage for every exact \(x\) is attractive theoretically. In high-dimensional real systems, exact repeated observations at the same \(x\) are rare or impossible.
+
+In practice, the idea may need to become **conditional or local coverage by regime**, for example:
+
+- coverage by forecast horizon;
+- coverage by irradiance band;
+- coverage by load level;
+- coverage by season;
+- coverage by temperature range;
+- coverage by confidence/interval-width bins;
+- coverage by learned clusters of operating conditions.
+
+This links the paper closely to Pernot's adaptivity idea: uncertainty should be reliable across the input space, not only on average.
+
+### Criticism 6: Terminology can obscure the applied point
+
+The phrase "single data set" is technically correct but can be misleading for applied readers. The issue is not that a real system is unimportant because it is only one dataset. The issue is that one collected sample from that system may not reveal all uncertainty failures.
+
+A clearer applied phrasing is:
+
+> Do not trust global interval coverage unless you have checked whether the intervals behave sensibly across the system's operating regimes, especially where training data are sparse.
 
 ---
 
-## 10. Action Items for Research Integration
+## 9. Relevance to My Research Context
 
-- Cite this paper when discussing limitations of PICP-based interval evaluation.
-- Emphasize the distinction between **marginal and pointwise coverage**.
-- Avoid relying solely on log-likelihood or coverage metrics when evaluating probabilistic forecasts.
-- Consider simulation-based stress testing for uncertainty estimation methods.
-- Use this paper to justify more rigorous evaluation protocols in probabilistic forecasting research.
+### Why I would cite this paper
+
+I would cite this paper to justify a stricter evaluation standard for probabilistic forecasting models.
+
+It supports the claim that:
+
+- PICP alone is not enough;
+- log-likelihood alone is not enough;
+- interval width alone is not enough;
+- uncertainty quality must be checked locally or conditionally;
+- sparse regions of the input space require special attention.
+
+### How it supports uncertainty-aware forecasting
+
+For load, solar, wind, or electricity-price forecasting, a model can have acceptable average coverage while failing under specific conditions.
+
+Examples:
+
+- intervals may be too narrow during high ramp events;
+- intervals may be too wide during stable conditions;
+- intervals may fail in rare weather regimes;
+- intervals may be poorly calibrated at longer forecast horizons;
+- intervals may look globally correct because errors cancel across seasons.
+
+This paper gives methodological support for analysing coverage by regime rather than only reporting one global PICP value.
+
+### How it connects to explainability
+
+The paper is not an XAI paper, but it is highly relevant to explainable uncertainty.
+
+If I use SHAP or another XAI method to explain interval width, uncertainty, or prediction risk, I should first ask whether those intervals are actually reliable. Explaining a bad uncertainty estimate can produce a very polished but misleading explanation.
+
+The evaluation logic should therefore come before or alongside the explanation logic:
+
+1. Validate whether the uncertainty estimate behaves sensibly.
+2. Then explain why uncertainty is high or low in particular regions.
+
+### Most useful insight for my work
+
+The strongest takeaway is:
+
+> A probabilistic model should not only achieve the desired coverage overall; it should express uncertainty correctly in the specific parts of the input space where decisions are made.
+
+This is especially important for operational systems where data density varies across the operating envelope.
 
 ---
 
-## 11. One-Paragraph Literature Review Summary
+## 10. Clarifications From My Notes
 
-Sluijterman, Cator, and Heskes analyze how uncertainty estimates are evaluated in regression machine learning and argue that the two dominant evaluation strategies, namely prediction interval coverage probability and test log-likelihood, are insufficient for assessing the correctness of uncertainty estimates. They demonstrate that models may appear well calibrated under traditional metrics while producing poorly calibrated intervals locally across the input space. The authors introduce a simulation-based evaluation framework that measures pointwise coverage using repeated training experiments, along with metrics such as prediction interval coverage fraction and Brier scores. Through experiments with bootstrap and dropout methods, they show that aggregate metrics can favor inferior models and fail to reveal important miscalibration behavior. Their work provides a methodological foundation for more rigorous evaluation of probabilistic regression models and highlights the importance of analyzing uncertainty behavior across the entire input domain.
+### Confidence interval coverage in real life
+
+In real-world data-driven modelling, we usually cannot calculate true confidence interval coverage for \(f(x)\), because we do not know \(f(x)\).
+
+If we check whether held-out observed values fall inside intervals, we are checking prediction interval coverage. That is useful, but it is not the same as confidence interval coverage.
+
+Practical alternatives include:
+
+- repeated train/test splits;
+- cross-validation;
+- blocked or time-series validation;
+- bootstrapping;
+- synthetic simulations;
+- simulator-based stress tests;
+- local coverage diagnostics on observed outcomes.
+
+These can approximate parts of the repeated-experiment logic, but they do not magically reveal the true function.
+
+### "Coverage cannot be tested on a single data set"
+
+This means that coverage is a property of the interval-generating procedure over repeated samples and repeated model fits.
+
+One train/test split can estimate how many intervals covered observations in that particular split. It cannot prove that the interval procedure has the claimed coverage generally or locally.
+
+For a real system, this should be read as:
+
+> A single sample of system operation may hide uncertainty failures in under-sampled regions of the operating space.
+
+### Good PICP but no pointwise coverage
+
+The important idea is cancellation.
+
+Global PICP can look correct when:
+
+- one region is underconfident and produces intervals that are too wide;
+- another region is overconfident and produces intervals that are too narrow;
+- the average coverage across both regions happens to match the desired value.
+
+This is why conditional coverage by operating regime is more informative than one global coverage number.
+
+### Better log-likelihood is not a likelihood test
+
+The paper talks about log-likelihood as a scoring metric, not a traditional likelihood ratio testing procedure.
+
+The key warning is that a better log-likelihood may reflect better point predictions rather than better interval uncertainty.
+
+### Bootstrap as an ensemble
+
+The bootstrap method in the paper is naturally understood as an ensemble:
+
+- resample the data;
+- train multiple models;
+- predict with each model;
+- use the spread across model predictions as an uncertainty estimate.
+
+The "bootstrap" part describes how the ensemble members are generated.
+
+### Figure 8 and sparse operating regions
+
+Figure 8 is especially useful because it shows the distinction between a good score and sensible uncertainty behaviour.
+
+Dropout has better aggregate PICP and log-likelihood in that example, but its intervals shrink in the low-data region. Bootstrap has worse aggregate scores, but its intervals widen in the sparse region, which is more consistent with epistemic uncertainty.
+
+This is the paper's practical warning in one picture.
+
+---
+
+## 11. Action Items & Integration
+
+- Cite this paper when arguing that **global PICP is insufficient** for validating prediction intervals.
+- Use it to justify reporting **local or conditional coverage**, not only average coverage.
+- Distinguish carefully between **prediction intervals** and **confidence intervals** in my own writing.
+- Do not claim CICP in real data unless the true function is known through simulation or a trusted data-generating model.
+- When discussing sparse regions, avoid vague "one dataset" wording and instead refer to **under-sampled operating regimes** or **limited system coverage**.
+- Pair PICP with diagnostics such as coverage by feature regime, forecast horizon, season, demand level, weather state, or interval-width bin.
+- Use simulation-based or surrogate-based stress tests where possible, especially if comparing uncertainty methods.
+- When using XAI to explain uncertainty, first verify that the uncertainty estimates are meaningful in the relevant regimes.
+- Link this paper with Pernot's calibration, consistency, and adaptivity framework: Sluijterman et al. provide the pointwise-coverage critique; Pernot provides a broader diagnostic vocabulary for local adaptivity.
+
+---
+
+## 12. Pre-Written Assets
+
+### Literature review paragraph
+
+Sluijterman, Cator, and Heskes argue that common evaluation practices for regression uncertainty estimates can be misleading. In particular, they show that neither test-set log-likelihood nor prediction interval coverage probability is sufficient to establish that uncertainty estimates are locally reliable. Log-likelihood can improve because of better mean prediction rather than better uncertainty estimation, while PICP only measures marginal coverage and can hide overconfident and underconfident regions that cancel on average. The authors therefore propose simulation-based testing in which the data-generating function is known and the modelling process is repeated many times, allowing pointwise prediction and confidence interval coverage to be evaluated through PICF, CICF, Brier scores, and interval width. Their results with bootstrap and dropout methods show that aggregate scores can favour methods with undesirable interval behaviour, especially in sparse regions of the input space.
+
+### Methodological caution sentence
+
+Reporting a single PICP value is not enough to establish reliable probabilistic forecasts, because correct average coverage can mask severe local miscalibration across operating regimes.
+
+### Practical integration sentence
+
+For operational forecasting, the paper supports evaluating interval coverage conditionally across meaningful regimes such as forecast horizon, weather state, season, demand level, or sparse regions of the input space, rather than relying only on global PICP or log-likelihood.
+
+### One-line review
+
+This paper is a methodological warning that uncertainty estimates should be evaluated where they are used, not only averaged into a reassuring global score.
+
+---
+
+## 13. Bottom-Line Takeaway
+
+The paper's main value is its evaluation philosophy.
+
+It does not say that PICP or log-likelihood are useless. It says they answer weaker questions than many researchers assume. PICP answers whether intervals cover observations on average over a test set. Log-likelihood answers how well a predictive density fits held-out data. Neither one proves that uncertainty is correct locally, that model uncertainty is separated from data noise, or that intervals behave sensibly in sparse operating regions.
+
+For my own work, the important lesson is to treat uncertainty validation as a local and regime-aware problem. A probabilistic forecasting model should not merely be calibrated on average; it should be reliable in the parts of the system where the uncertainty will guide decisions.

@@ -12,13 +12,14 @@ categories:
   - Operations Research
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Nijat Mehdiyev, Maxim Majlatow, Peter Fettke (2025)
 - **Venue (Journal/Conference):** Annals of Operations Research *(Highly reputable OR journal)*
-- **Link/DOI:** [https://doi.org/10.1007/s10479-024-05943-4](https://doi.org/10.1007/s10479-024-05943-4)
+- **Link/DOI:** [10.1007/s10479-024-05943-4](https://doi.org/10.1007/s10479-024-05943-4)
 - **Code/Data Available?:** No (Uses a proprietary real-world dataset from a German manufacturer).
 - **Proximity/Threat Level:** High / Direct Competition (Focuses on combining UQ and XAI).
 - **Date Reviewed:** 2024-05-18
+:::
 
 ---
 
@@ -91,5 +92,4 @@ categories:
   - So even though the uncertainty explanation story is conceptually weaker than claimed, the profiling device itself is a genuinely useful contribution for operational communication.
 
 ---
-
 

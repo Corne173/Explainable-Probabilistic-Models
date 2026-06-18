@@ -10,10 +10,10 @@ categories:
   - Probabilistic evaluation
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Saad A. Alsamraee, Sanjeev Khanna (2025)
 - **Venue (Journal/Conference):** *Energy Strategy Reviews* *(strong applied energy systems journal with policy and strategy relevance)*
-- **DOI:** [https://doi.org/10.1016/j.esr.2025.101769](https://doi.org/10.1016/j.esr.2025.101769)
+- **DOI:** [10.1016/j.esr.2025.101769](https://doi.org/10.1016/j.esr.2025.101769)
 - **Institutional Context:** University of Missouri campus combined heat and power plant (CHPP)
 - **Primary Topic/Concept:** Long-term, high-resolution campus energy demand forecasting using lightweight machine learning models
 - **Models Compared:** Decision Tree (DT), Random Forest (RF), Support Vector Regressor (SVR), K-Nearest Neighbors (KNN), and XGBoost
@@ -22,6 +22,7 @@ categories:
 - **Data Availability:** The authors state that they do **not** have permission to share the data
 - **Proximity/Threat Level:** Moderate to High / Relevant benchmark for tabular long-horizon energy forecasting
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

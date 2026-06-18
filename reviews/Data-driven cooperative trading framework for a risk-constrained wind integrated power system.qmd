@@ -11,7 +11,7 @@ categories:
   - Firefly algorithm
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Rongquan Zhang, Gangqiang Li, Siqi Bu, Saddam Aziz, Rizwan Qureshi (2023)
 - **Venue (Journal/Conference):** *International Journal of Electrical Power and Energy Systems*  
 - **Study Focus:** Risk-constrained cooperative bidding for a wind-integrated power system under market uncertainties
@@ -19,6 +19,7 @@ categories:
 - **Test System:** Modified IEEE 30-bus system with 6 generators, including one 35 MW wind producer
 - **Market Context:** Two-settlement electricity market with day-ahead and real-time balancing interactions
 - **Keywords Reported by Paper:** Wind integrated power system, market uncertainties, risk, cooperative trading, improved firefly algorithm
+:::
 
 ---
 

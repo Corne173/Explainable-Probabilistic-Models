@@ -12,10 +12,10 @@ categories:
   - SHAP
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Muhammad Reshaeel, Mohamed I. Hassan Ali (2026)
 - **Venue (Journal/Conference):** *Energy*  
-- **DOI:** `10.1016/j.energy.2025.139895`
+- **DOI:** [10.1016/j.energy.2025.139895](https://doi.org/10.1016/j.energy.2025.139895)
 - **Primary Domain:** HVAC / VRF system energy prediction
 - **Core Modelling Family:** XGBoost
 - **Model Types Compared:** Pure black-box ML vs hybrid grey-box ML
@@ -24,6 +24,7 @@ categories:
 - **Dataset Type:** Limited experimental data from a VRF laboratory test bench
 - **Proximity/Threat Level:** High for any research involving interpretable, physics-informed HVAC or energy prediction under small-data conditions
 - **Why this paper matters:** It is one of the clearest demonstrations that embedding thermodynamic structure into a machine learning model can materially improve not only predictive accuracy, but also uncertainty behaviour and interpretability.
+:::
 
 ---
 

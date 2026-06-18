@@ -12,15 +12,15 @@ categories:
   - Bootstrap uncertainty
 ---
 
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** *Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts*
+::: {.paper-meta}
 - **Authors & Year:** Sujan Ghimire, Mohanad S. AL-Musaylh, Thong Nguyen-Huy, Ravinesh C. Deo, Rajendra Acharya, David Casillas-Pérez, Zaher Mundher Yaseen, and Sancho Salcedo-Sanz (2025 issue; accepted 2024)
 - **Venue:** *Applied Energy*  
-- **DOI:** `10.1016/j.apenergy.2024.124763`
+- **DOI:** [10.1016/j.apenergy.2024.124763](https://doi.org/10.1016/j.apenergy.2024.124763)
 - **Core Topic:** Explainable deep learning for **daily electricity demand forecasting** with both **point predictions** and **95% prediction intervals**
 - **Primary Methods:** Deeply Fused Network (FNET), residual bootstrapping, SHAP
 - **Study Region:** Four substations in Southeast Queensland, Australia
 - **Threat/Proximity Level:** High relevance for explainable probabilistic load forecasting, especially where climate predictors and uncertainty intervals are central
+:::
 
 ---
 

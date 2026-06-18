@@ -9,12 +9,13 @@ categories:
   - Neural Networks
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Arthur Thuy, Dries F. Benoit (2024)
 - **Venue:** European Journal of Operational Research *(Tier 1, OR + decision systems focus)*
 - **Core Idea:** Uncertainty estimation is reframed as an **explainable AI (XAI) mechanism** rather than just a statistical add-on.
 - **Key Contribution:** Links **uncertainty → explainability → trust → actionability → improved decision-making**
 - **Primary Topic:** Trustworthy decision-making with neural networks through uncertainty-aware explainability
+:::
 
 ---
 

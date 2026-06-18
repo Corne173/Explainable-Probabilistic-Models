@@ -7,22 +7,16 @@ categories:
   - In progress
 ---
 
-## Citation
-
+::: {.paper-meta}
 - **Authors & Year:** TODO
 - **Venue (Journal/Conference):** TODO
 - **Link/DOI:** TODO
-
-## Review Status
-
-> Review in progress.
-
-## 1. Quick Reference & Meta-Data
-
+- **Review Status:** Review in progress.
 - **Problem addressed:** TODO
 - **Method/model:** TODO
 - **Main domain:** TODO
 - **Why it matters to my work:** TODO
+:::
 
 ## 2. Core Contributions, Novelty & Motivation
 

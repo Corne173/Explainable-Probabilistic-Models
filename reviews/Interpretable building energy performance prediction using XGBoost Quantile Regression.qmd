@@ -11,16 +11,16 @@ categories:
   - Energy efficiency
 ---
 
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** *Interpretable building energy performance prediction using XGBoost Quantile Regression*
+::: {.paper-meta}
 - **Authors & Year:** Sinem Guler Kangalli Uyar, Bilge Kagan Ozbay, Berker Dal (2025)
 - **Venue (Journal/Conference):** *Energy & Buildings*
-- **DOI:** 10.1016/j.enbuild.2025.115815
+- **DOI:** [10.1016/j.enbuild.2025.115815](https://doi.org/10.1016/j.enbuild.2025.115815)
 - **Primary Topic:** Building Energy Performance Ratio (BEPR) prediction using interpretable machine learning
 - **Core Methods:** XGBoost, SHAP, XGBoost Quantile Regression (XGBoost-QR)
 - **Study Region:** Istanbul, Türkiye
 - **Dataset Size:** 3,594 residential buildings
 - **Threat / Relevance Level:** High relevance for interpretable building-energy modeling, especially for studies combining prediction with explanation and heterogeneous-effects analysis
+:::
 
 ---
 

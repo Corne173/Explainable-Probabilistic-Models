@@ -11,14 +11,15 @@ categories:
   - Quantile forecasting
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Chenbei Lu, Jinhao Liang, Wenqian Jiang, Jiaye Teng, Chenye Wu (2023)
 - **Venue (Journal/Conference):** *Journal of the Franklin Institute*
-- **DOI:** 10.1016/j.jfranklin.2023.02.010
+- **DOI:** [10.1016/j.jfranklin.2023.02.010](https://doi.org/10.1016/j.jfranklin.2023.02.010)
 - **Primary Topic:** High-resolution probabilistic load forecasting using a nonlinear ensemble learner
 - **Core Technical Theme:** Replacing conventional linear ensemble rules with a learned nonlinear combiner, then using Shapley values to quantify how much each base model contributes
 - **Date Reviewed:** 2026-03-13
 - **Proximity / Threat Level:** Moderate to high, especially if my work involves probabilistic forecasting, ensemble design, or SHAP/Shapley-based interpretation of model contributions
+:::
 
 ---
 

@@ -10,16 +10,16 @@ categories:
   - SHAP
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Ulf Johansson, Aicha Maalej, Cecilia Sönströd (2025)
 - **Venue (Journal/Conference):** *Proceedings of Machine Learning Research (PMLR 266), Conformal and Probabilistic Prediction with Applications*
-- **Paper Title:** *Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification*
 - **Primary Topic:** Interpreting conformal classification outputs using SHAP
 - **Core Methods:** Class-conditional conformal prediction, Random Forest, Tree SHAP
 - **Application Domain:** Benchmark classification datasets (Iris, Wisconsin Breast Cancer, Pima Diabetes)
 - **Code/Data Available?:** Not emphasized as a core contribution in the paper
 - **Proximity/Threat Level:** Medium to High / Conceptually relevant if working on interpretable uncertainty or explanation of uncertainty-aware outputs
 - **Date Reviewed:** 2024-05-18
+:::
 
 ---
 

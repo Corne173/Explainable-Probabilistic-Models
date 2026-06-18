@@ -7,13 +7,10 @@ categories:
   - Related load and demand forecasting
 ---
 
-## Citation
-
+::: {.paper-meta}
 - **Authors & Year:** Zhang, C.-B., et al. (2022)
 - **Working link:** [Google Scholar search](https://scholar.google.com/scholar?q=Weighted+residual+clustering-based+building+load+prediction+interval+estimation)
-
-## Review Status
-
-> Review in progress.
+- **Review Status:** Review in progress.
+:::
 
 This page is a placeholder for a future full review using the site template.

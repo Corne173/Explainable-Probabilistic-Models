@@ -1,32 +1,33 @@
 Citations | Title
 ---|---
-7 | Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis
-54 | Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective
-30 | Interpretable building energy performance prediction using XGBoost Quantile Regression
-181 | An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting
-0 | Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification
-76 | Explaining Predictive Uncertainty with Information Theoretic Shapley Values
-53 | Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression
-2 | UbiQTree: Uncertainty quantification in XAI with tree ensembles
-0 | Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction
-1 | Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning
-6 | Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems
-4 | Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants
-0 | A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks
-23 | Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts
-19 | Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression
+11 | Uncertainty-aware optimization of zeolite particle size: Utilizing quantile regression and SHAP analysis
+63 | Quantifying and explaining machine learning uncertainty in predictive process monitoring: an operations research perspective
+46 | Interpretable building energy performance prediction using XGBoost Quantile Regression
+195 | An interpretable probabilistic model for short-term solar power forecasting using natural gradient boosting
+1 | Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification
+84 | Explaining Predictive Uncertainty with Information Theoretic Shapley Values
+61 | Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression
+5 | UbiQTree: Uncertainty quantification in XAI with tree ensembles
+1 | Bayesian deep learning for probabilistic aquifer vulnerability and uncertainty prediction
+3 | Enhancing energy prediction in variable refrigerant flow cooling systems: A hybrid grey-box model integrating thermodynamic knowledge, experimental data and machine learning
+11 | Uncertainty-aware Bayesian neural network with SHAP interpretability for data-driven assembly quality prediction in complex manufacturing systems
+5 | Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants
+1 | A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks
+29 | Explainable deeply-fused nets electricity demand prediction model: Factoring climate predictors for accuracy and deeper insights with probabilistic confidence interval and point-based forecasts
+22 | Day-Ahead Electricity Price Probabilistic Forecasting Based on SHAP Feature Selection and LSTNet Quantile Regression
 0 | Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning
-26 | Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features
-0 | An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction
-15 | High-resolution probabilistic load forecasting: A learning ensemble approach
-27 | Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties
-18 | Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods
-10 | High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques
+32 | Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features
+2 | An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction
+17 | High-resolution probabilistic load forecasting: A learning ensemble approach
+28 | Data-driven cooperative trading framework for a risk-constrained wind integrated power system considering market uncertainties
+23 | Hybrid model for robust and accurate forecasting building electricity demand combining physical and data-driven methods
+12 | High-resolution energy consumption forecasting of a university campus power plant based on advanced machine learning techniques
 3 | Weighted residual clustering-based building load prediction interval estimation
-29 | Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression
-2607 | Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
-554 | Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift
-57 | How to Evaluate Uncertainty Estimates in Machine Learning for Regression
+33 | Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression
+2891 | Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
+601 | Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift
+70 | How to Evaluate Uncertainty Estimates in Machine Learning for Regression
 4 | Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts
-102 | Preventing dataset shift from breaking machine-learning biomarkers
-153 | A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective
+111 | Preventing dataset shift from breaking machine-learning biomarkers
+202 | A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective
+74 | Explainability through uncertainty: Trustworthy decision-making with neural networks

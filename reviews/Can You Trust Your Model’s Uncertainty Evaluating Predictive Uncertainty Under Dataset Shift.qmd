@@ -1,5 +1,5 @@
 ---
-title: "Tier 2 Research Review: Theory & Justification"
+title: "Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift"
 date: 2024-05-18
 categories:
   - Reviewed
@@ -10,14 +10,12 @@ categories:
   - Dataset Shift
 ---
 
-# 📝 TIER 2 RESEARCH REVIEW: Theory & Justification
-
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
+::: {.paper-meta}
 - **Authors & Year:** Yaniv Ovadia, Emily Fertig, Jie Ren, et al. (2019)
 - **Venue (Journal/Conference):** NeurIPS 2019 *(Highly authoritative; foundational paper from Google Research/DeepMind on dataset shift).*
 - **Link/DOI:** [arXiv:1906.02530](https://arxiv.org/abs/1906.02530)
 - **Primary Topic/Concept:** The failure of post-hoc calibration under dataset shift, the danger of models being "confidently wrong," and the necessity of capturing epistemic uncertainty.
+:::
 
 ---
 

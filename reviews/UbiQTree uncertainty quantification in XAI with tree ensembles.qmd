@@ -10,14 +10,15 @@ categories:
   - Healthcare AI
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Akshat Dubey, Aleksandar Anžel, Bahar Ilgen, Georges Hattab (2026)
 - **Venue (Journal/Conference):** *Patterns* *(high-visibility interdisciplinary journal, especially relevant for applied AI methods)*
-- **Link/DOI:** [https://doi.org/10.1016/j.patter.2025.101454](https://doi.org/10.1016/j.patter.2025.101454)
+- **Link/DOI:** [10.1016/j.patter.2025.101454](https://doi.org/10.1016/j.patter.2025.101454)
 - **Code/Data Available?:** Yes, code is available via GitHub and Zenodo
 - **Domain/Application Area:** Explainable AI, uncertainty quantification, healthcare-oriented ML
 - **Proximity/Threat Level:** Medium-High / Conceptually important
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

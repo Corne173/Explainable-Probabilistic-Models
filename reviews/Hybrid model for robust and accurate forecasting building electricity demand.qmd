@@ -10,15 +10,16 @@ categories:
   - Physical simulation
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Xianzhou Dong, Weiyong Guo, Cheng Zhou, Yongqiang Luo, Zhiyong Tian, Limao Zhang, Xiaoying Wu, Baobing Liu (2024)
 - **Venue (Journal/Conference):** *Energy*
-- **DOI:** https://doi.org/10.1016/j.energy.2024.133309
+- **DOI:** [10.1016/j.energy.2024.133309](https://doi.org/10.1016/j.energy.2024.133309)
 - **Application Domain:** Building electricity demand forecasting
 - **Core Methods:** Physical simulation + EMD + K-means + LSTM / TCN-GRU + SHAP + Monte Carlo + transfer learning
 - **Case Study:** Glodon Xi’an Digital Architecture R&D Building, China
 - **Proximity/Threat Level:** Medium to High / Relevant methodological inspiration
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

@@ -12,10 +12,9 @@ categories:
   - Energy markets
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Xiaodong Shen, Huixin Liu, Gao Qiu, Youbo Liu, Junyong Liu, and Shixiong Fan (2024)
 - **Venue (Journal/Conference):** *IEEE Transactions on Industrial Informatics*  
-- **Paper Title:** *Interpretable Interval Prediction-Based Outlier-Adaptive Day-Ahead Electricity Price Forecasting Involving Cross-Market Features*
 - **DOI:** [10.1109/TII.2024.3355105](https://doi.org/10.1109/TII.2024.3355105)
 - **Primary Topic/Concept:** Interpretable outlier-adaptive day-ahead electricity price forecasting using cross-market features and interval prediction
 - **Study Region / Testbed:** Danish day-ahead electricity market, specifically DK1 and DK2
@@ -23,6 +22,7 @@ categories:
 - **Code/Data Available?:** The paper cites public data sources for market variables, but it does **not** present a dedicated public code repository in the paper itself
 - **Proximity/Threat Level:** High / Directly relevant if your work concerns probabilistic or interpretable forecasting under extreme events
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

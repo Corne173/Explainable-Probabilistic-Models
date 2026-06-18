@@ -12,7 +12,7 @@ categories:
   - Out-of-Distribution Detection
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Wenchong He, Zhe Jiang (2023; arXiv version updated 2024)
 - **Venue (Journal/Conference):** *ACM Computing Surveys*  
 - **Paper Type:** Survey / Taxonomy paper
@@ -22,6 +22,7 @@ categories:
 - **Code/Data Available?:** No central code contribution; this is a conceptual and methodological survey
 - **Proximity/Threat Level:** Medium to High / Foundational framing paper
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 
@@ -322,4 +323,3 @@ One of the most useful parts of the survey is that it explicitly identifies open
     - and is understandable enough for operators in high-stakes domains.
 
 ---
-

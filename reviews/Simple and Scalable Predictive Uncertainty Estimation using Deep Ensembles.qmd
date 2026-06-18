@@ -11,14 +11,14 @@ categories:
   - Out-of-distribution robustness
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Balaji Lakshminarayanan, Alexander Pritzel, Charles Blundell (2017)
 - **Venue (Journal/Conference):** NeurIPS 2017 *(high-impact, flagship machine learning conference)*
-- **Paper Title:** *Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles*
 - **Core Topic:** Predictive uncertainty estimation for deep neural networks using non-Bayesian ensembles
 - **Primary Contribution Type:** Methodological benchmark / uncertainty estimation framework
 - **Proximity/Threat Level:** High / Foundational uncertainty-estimation baseline
 - **Date Reviewed:** 2026-03-17
+:::
 
 ---
 

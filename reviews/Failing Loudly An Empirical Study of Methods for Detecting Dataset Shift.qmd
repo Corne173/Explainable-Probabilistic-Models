@@ -9,13 +9,14 @@ categories:
   - Trustworthy AI
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Stephan Rabanser, Stephan Günnemann, Zachary C. Lipton (2019)
 - **Venue (Journal/Conference):** NeurIPS 2019 *(Highly reputable, Tier 1 conference in ML)*
 - **Link/DOI:** [arXiv:1810.11953](https://arxiv.org/abs/1810.11953) / NeurIPS Proceedings
 - **Code/Data Available?:** [Yes - GitHub Repository](https://github.com/steverab/failing-loudly)
 - **Proximity/Threat Level:** High / Foundational Methodology
 - **Date Reviewed:** 2024-05-18
+:::
 
 ---
 

@@ -12,17 +12,17 @@ categories:
   - Deep ensembles
 ---
 
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** *A Unified Framework for Interpretable and Uncertainty-Aware Battery State of Health Estimation Using Deep Neural Networks*
+::: {.paper-meta}
 - **Authors & Year:** Elias Isaac Huai-En Lim and Nicholas Heng Loong Wong (2025)
 - **Venue (Journal/Conference):** *2025 Asia Pacific Signal and Information Processing Association Annual Summit and Conference (APSIPA ASC)*
-- **DOI:** `10.1109/APSIPAASC65261.2025.11249263`
+- **DOI:** [10.1109/APSIPAASC65261.2025.11249263](https://doi.org/10.1109/APSIPAASC65261.2025.11249263)
 - **Primary Topic/Concept:** Integrating explainable AI (XAI) and uncertainty quantification (UQ) into deep neural network based battery state of health (SOH) estimation
 - **Application Domain:** Lithium-ion battery diagnostics for electric vehicles and battery management systems
 - **Datasets Used:** McMaster Battery Aging Dataset and Oxford Battery Degradation Dataset
 - **Code/Data Available?:** Public datasets are referenced; no dedicated code repository is explicitly provided in the paper
 - **Proximity/Threat Level:** Medium to High / Relevant methodological reference for trustworthy regression in energy systems
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

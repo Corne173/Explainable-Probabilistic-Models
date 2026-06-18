@@ -11,10 +11,10 @@ categories:
   - Quantile regression
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Huixin Liu, Xiaodong Shen, Xisheng Tang, Junyong Liu (2023)
 - **Venue (Journal/Conference):** *Energies*
-- **DOI:** `10.3390/en16135152`
+- **DOI:** [10.3390/en16135152](https://doi.org/10.3390/en16135152)
 - **Main Topic:** Probabilistic day-ahead electricity price forecasting
 - **Core Methods:** SHAP feature selection, LSTNet quantile regression, kernel density estimation (KDE)
 - **Dataset / Market:** Danish electricity market, forecasting the DK1 day-ahead tariff
@@ -22,6 +22,7 @@ categories:
 - **Train/Test Split:** Training: 1 May 2019 to 31 July 2019; Testing: 1 August 2019 to 31 August 2019
 - **Primary Contribution Type:** Hybrid forecasting framework combining interpretability, feature selection, and probabilistic forecasting
 - **Proximity / Threat Level:** Moderate to High, especially for research involving SHAP-based feature selection in energy-market forecasting
+:::
 
 ---
 

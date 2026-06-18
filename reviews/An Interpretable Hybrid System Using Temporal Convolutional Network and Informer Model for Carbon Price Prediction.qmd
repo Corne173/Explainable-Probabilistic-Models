@@ -1,5 +1,5 @@
 ---
-title: "An interpretable hybrid system using Temporal Convolutional Network and Informer model for carbon price prediction"
+title: "An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction"
 description: "Review of a 2025 Systems paper proposing a Boruta-BiTCN-Informer framework with SHAP interpretability and Monte Carlo dropout for interval carbon price forecasting."
 date: 2025-11-12
 categories:
@@ -13,16 +13,16 @@ categories:
   - TCN
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Pei Du, Xuankai Zhang, Tingting Chen, and Wendong Yang (2025)
 - **Venue (Journal/Conference):** *Systems* (MDPI)
 - **DOI:** [10.3390/systems13111011](https://doi.org/10.3390/systems13111011)
-- **Paper Title:** *An Interpretable Hybrid System Using Temporal Convolutional Network and Informer Model for Carbon Price Prediction*
 - **Primary Topic/Concept:** Hybrid deep learning for carbon price forecasting with feature selection, interpretability, and interval prediction
 - **Core Methods:** Boruta, BiTCN, Informer, SHAP, Monte Carlo Dropout
 - **Markets Studied:** Guangdong and Shanghai carbon markets, with additional robustness tests on EU carbon prices and U.S. Henry Hub natural gas
 - **Date Reviewed:** 2026-03-13
 - **Proximity/Threat Level:** Moderate to High, especially if your work also combines multivariate hybrid forecasting with explainability and uncertainty quantification
+:::
 
 ---
 

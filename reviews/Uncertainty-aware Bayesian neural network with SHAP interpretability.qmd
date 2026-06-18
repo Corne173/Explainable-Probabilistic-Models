@@ -10,16 +10,17 @@ categories:
   - SHAP
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Jie Wu, Yan-Ning Sun, Yi-Tian Song, Li-Lan Liu, Zeng-Gui Gao, and Wei Qin (2025)
 - **Venue (Journal/Conference):** *Advanced Engineering Informatics*
-- **DOI:** 10.1016/j.aei.2025.103730
+- **DOI:** [10.1016/j.aei.2025.103730](https://doi.org/10.1016/j.aei.2025.103730)
 - **Application Domain:** Complex manufacturing systems, specifically diesel engine assembly quality prediction
 - **Core Model:** Uncertainty-aware Bayesian neural network (UABNN) with SHAP interpretability
 - **Prediction Target:** Diesel engine output power under standard operating conditions
 - **Code/Data Available?:** Not explicitly stated in the paper
 - **Proximity/Threat Level:** Medium to High / Related methodological competition if your work involves uncertainty-aware interpretable industrial prediction
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

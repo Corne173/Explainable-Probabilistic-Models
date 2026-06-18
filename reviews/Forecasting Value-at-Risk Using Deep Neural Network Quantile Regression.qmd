@@ -11,16 +11,16 @@ categories:
   - Finance
 ---
 
-## 1. Quick Reference & Meta-Data
-- **Paper Title:** *Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression*
+::: {.paper-meta}
 - **Authors & Year:** Ilias Chronopoulos, Aristeidis Raftapostolos, and George Kapetanios (2024 journal version; advance access 2023)
 - **Venue (Journal/Conference):** *Journal of Financial Econometrics*
-- **DOI:** [https://doi.org/10.1093/jjfinec/nbad014](https://doi.org/10.1093/jjfinec/nbad014)
+- **DOI:** [10.1093/jjfinec/nbad014](https://doi.org/10.1093/jjfinec/nbad014)
 - **Primary Topic:** Deep neural network quantile regression for non-linear VaR forecasting
 - **Secondary Topics:** Mixed-frequency modeling, MIDAS, Monte Carlo validation, interpretability of quantile neural networks, SHAP, partial derivatives
 - **Code/Data Available?:** Not emphasized in the core paper text I reviewed
 - **Proximity/Threat Level:** Medium to High, especially if my work involves deep quantile forecasting, explainability, or benchmarking non-linear quantile models
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

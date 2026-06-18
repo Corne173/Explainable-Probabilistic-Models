@@ -11,9 +11,7 @@ categories:
   - Explainable AI
 ---
 
-## 1. Quick Reference & Meta-Data
-
-- **Paper Title:** Validation of uncertainty quantification metrics: a primer based on the consistency and adaptivity concepts  
+::: {.paper-meta}
 - **Authors & Year:** Pascal Pernot (2023)  
 - **Venue (Journal/Conference):** Methodological primer / review-style article on uncertainty quantification validation  
 - **Primary Topic:** Validation frameworks for uncertainty quantification (UQ) in machine learning models  
@@ -21,6 +19,7 @@ categories:
 - **Code/Data Available?:** No primary implementation focus; paper mainly introduces conceptual evaluation framework  
 - **Proximity / Threat Level:** Medium relevance / methodological support paper rather than a competing forecasting model  
 - **Date Reviewed:** 2024-05-18  
+:::
 
 ---
 

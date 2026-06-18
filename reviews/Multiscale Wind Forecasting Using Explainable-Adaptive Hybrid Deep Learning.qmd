@@ -11,11 +11,10 @@ categories:
   - CNN-BiLSTM
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Fatih Serttas (2026)
 - **Venue (Journal/Conference):** *Applied Sciences* (MDPI)
-- **Title:** *Multiscale Wind Forecasting Using Explainable-Adaptive Hybrid Deep Learning*
-- **DOI:** [https://doi.org/10.3390/app16021020](https://doi.org/10.3390/app16021020)
+- **DOI:** [10.3390/app16021020](https://doi.org/10.3390/app16021020)
 - **Study Type:** Journal article
 - **Code/Data Available?:** No public code repository reported in the paper. The meteorological dataset is **not publicly available** and must be requested from the Turkish State Meteorological Service (MGM) through official channels.
 - **Primary Domain:** Short-term wind speed forecasting
@@ -23,6 +22,7 @@ categories:
 - **Main Positioning:** Uncertainty-aware and explainable hybrid deep learning for wind forecasting
 - **Proximity/Threat Level:** Medium to High / Relevant methodological neighbor
 - **Date Reviewed:** 2026-03-13
+:::
 
 ---
 

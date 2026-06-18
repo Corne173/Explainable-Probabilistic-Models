@@ -11,10 +11,10 @@ categories:
   - Quantile regression averaging
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Arkadiusz Lipiecki, Bartosz Uniejewski, Rafał Weron (2024)
 - **Venue (Journal/Conference):** *Energy Economics*
-- **DOI:** https://doi.org/10.1016/j.eneco.2024.107934
+- **DOI:** [10.1016/j.eneco.2024.107934](https://doi.org/10.1016/j.eneco.2024.107934)
 - **Core Topic:** Postprocessing point forecasts into full probabilistic forecasts for day-ahead electricity prices
 - **Main Methods Studied:** Quantile Regression Averaging (QRA), Conformal Prediction (CP), and Isotonic Distributional Regression (IDR)
 - **Markets Studied:** Germany and Spain
@@ -22,6 +22,7 @@ categories:
 - **Code/Data Availability:** They mention using public data and an open-source Julia package, **PostForecasts.jl**, for postprocessing
 - **Proximity/Threat Level:** High / Directly relevant if I work on probabilistic forecasting, postprocessing, calibration, or distributional evaluation
 - **Why this paper matters:** It shows that strong probabilistic forecasts do not necessarily require end-to-end distributional deep learning; carefully designed postprocessing on top of strong point forecasts can outperform more complex neural distribution models
+:::
 
 ---
 

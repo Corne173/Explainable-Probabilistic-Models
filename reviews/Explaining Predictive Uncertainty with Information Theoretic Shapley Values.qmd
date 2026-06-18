@@ -10,15 +10,15 @@ categories:
   - Active learning
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** David S. Watson, Joshua O’Hara, Niek Tax, Richard Mudd, Ido Guy (2023)
 - **Venue (Journal/Conference):** NeurIPS 2023
-- **Paper Title:** *Explaining Predictive Uncertainty with Information Theoretic Shapley Values*
 - **Code/Data Available?:** Yes, the paper states that code for experiments and figures is available in their GitHub repository (`facebookresearch/infoshap`)
 - **Primary Topic:** Local explanation of predictive uncertainty rather than only point predictions
 - **Core Framing:** Extends Shapley-style feature attribution into an information-theoretic framework so that one can explain entropy, epistemic uncertainty, aleatoric uncertainty, and related uncertainty-driven behaviours
 - **Proximity/Threat Level:** Medium to High / Conceptually important for any research involving XAI for uncertainty-aware forecasting
 - **Source:** Based on the uploaded PDF :contentReference[oaicite:0]{index=0}
+:::
 
 ---
 

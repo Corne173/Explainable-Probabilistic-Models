@@ -1,0 +1,191 @@
+---
+title: "Uncertainty taxonomy and language for deterministic readers"
+description: "A source-grounded synthesis of uncertainty terminology, taxonomy, probability, confidence, and probabilistic forecasting language."
+date: 2026-06-07
+categories:
+  - Uncertainty quantification
+  - Concept note
+  - In progress
+---
+
+::: {.paper-meta}
+- **Purpose:** Build a plain-language bridge for readers who are used to deterministic models and point forecasts.
+- **Evidence base:** The PDFs in `To be reviewed/` were text-extracted and searched for uncertainty definitions, taxonomy language, interval terminology, calibration, confidence, and uncertainty-explanation framing.
+- **Best conceptual sources:** Hullermeier and Waegeman; Kendall and Gal; He and Jiang; Nemani et al.; Hong and Fan; Van Beers and De Visser; Pernot; Ovadia et al.; Watson et al.; Bley et al.
+- **Review Status:** Synthesis note in progress.
+:::
+
+## 1. Core Framing
+
+For a deterministic reader, uncertainty is often heard as a weakness: the model is inaccurate, incomplete, or hesitant. The literature gives a better framing. Uncertainty is information about what is still unresolved after a model has made a prediction. It can describe the spread of plausible outcomes, the reliability of the model's knowledge, or both.
+
+A deterministic forecast answers:
+
+> What single value should we expect?
+
+A probabilistic forecast answers:
+
+> What values are plausible, how likely are they, and when should the prediction be treated with caution?
+
+This distinction is important because a point forecast can be accurate on average while still being unhelpful for decisions that depend on risk, extremes, or asymmetric costs. In energy forecasting, for example, under-prediction and over-prediction may have very different consequences. This is why several forecasting papers describe probabilistic forecasts as distributions, quantiles, prediction intervals, or densities rather than as one expected value.
+
+## 2. A Useful Taxonomy
+
+| Term | Plain-language meaning | Reducible? | Typical examples | Practical implication |
+|---|---|---:|---|---|
+| **Aleatoric / aleatory uncertainty** | Variability that is inherent in the process being measured or forecast. | Usually no, within the current measurement/model setup. | Sensor noise, weather variability, overlapping classes, noisy target values, random load fluctuation. | Better sensors or a different problem formulation may help, but simply adding more of the same data often will not remove it. |
+| **Epistemic uncertainty** | Uncertainty caused by limited knowledge about the model, parameters, data coverage, or operating context. | In principle, yes. | Sparse data, poor coverage of rare operating regimes, model-form choice, parameter uncertainty, out-of-distribution inputs, dataset shift. | Can often be reduced with targeted data collection, model refinement, better features, or explicit out-of-distribution handling. |
+| **Data uncertainty** | Uncertainty that comes from the data generation or observation process. | Often treated as aleatoric, but not always. | Measurement noise, label ambiguity, unresolved class overlap. | Explain whether the data are noisy because the world is variable or because the measurement process is weak. |
+| **Model uncertainty** | Uncertainty about the model's structure, parameters, or suitability for the current input. | Usually epistemic. | Neural-network architecture choice, limited training data, parameter posterior spread, distribution shift. | Useful for deciding where the model does not yet know enough. |
+| **Total predictive uncertainty** | The combined uncertainty attached to a prediction. | Mixed. | Prediction variance, predictive entropy, forecast interval width, full predictive distribution. | Useful as a risk signal, but it can hide different causes unless decomposed. |
+| **Uncertainty under shift / OOD uncertainty** | Uncertainty caused by applying the model outside the conditions it learned from. | Usually epistemic. | New operating regimes, unusual weather, unseen equipment states, shifted feature distributions. | High uncertainty should trigger caution, abstention, human review, or data collection. |
+
+The most helpful short version is:
+
+> Aleatoric uncertainty means the outcome is variable even if the model is well informed. Epistemic uncertainty means the model is not yet sufficiently informed.
+
+That distinction should be presented as useful rather than absolute. Hullermeier and Waegeman emphasize that aleatoric and epistemic uncertainty depend on the modelling context. A source of uncertainty can move category when the measurement system, feature set, or modelling assumptions change. A class overlap that looks irreducible with one feature set may become reducible after adding a more informative sensor.
+
+## 3. Probability, Confidence, and Intervals
+
+### Probability
+
+Probability is the model's numerical statement about possible outcomes. In classification it may be a probability assigned to each class. In regression or forecasting it is better to think in terms of a full conditional distribution:
+
+> Given the current inputs, what distribution of future outcomes does the model assign?
+
+Quantiles, prediction intervals, densities, and scenarios with assigned probabilities are all ways of communicating this distribution. Scenarios without probabilities are not yet probabilistic forecasts; they are possible futures, but not weighted possible futures.
+
+### Confidence
+
+Confidence is used less consistently than probability. In classification papers, confidence often means the maximum predicted class probability. In regression and forecasting papers, confidence may refer to an interval level, an observed coverage rate, or the model's practical trustworthiness. The safest research language is therefore:
+
+> I use confidence only when I define the metric. Otherwise I use probability, coverage, calibration, entropy, variance, or interval width.
+
+For deterministic readers, this distinction matters:
+
+> A probability can be part of the forecast. Confidence is about how much trust we should place in that probability or prediction.
+
+A model can assign a high probability and still be overconfident if similar predictions are wrong more often than the probability implies. This is the calibration problem.
+
+### Prediction Intervals vs. Confidence Intervals
+
+The load-forecasting literature is especially useful here because it explicitly warns that many papers misuse "confidence interval" when they mean "prediction interval."
+
+| Interval term | What it refers to | Better wording |
+|---|---|---|
+| **Prediction interval** | A range intended to contain a future observation or realised outcome with a stated long-run coverage. | "A 90% prediction interval should contain about 90% of comparable future observations." |
+| **Confidence interval** | A range for an estimated parameter, fitted function, or model quantity. | "A 95% confidence interval describes uncertainty in the estimated mean/function/parameter." |
+
+For forecasting research, the default term should usually be **prediction interval**, not confidence interval, because the object of interest is normally the future observed value, not only an unknown parameter.
+
+## 4. Deterministic-to-Probabilistic Translation
+
+| Deterministic language | Probabilistic counterpart | Explanation for readers |
+|---|---|---|
+| Point forecast | Predictive distribution | A point forecast gives one number; a predictive distribution gives the range and relative plausibility of many numbers. |
+| Expected value / mean | Conditional mean | The average outcome implied by the distribution, not the whole forecast. |
+| Median forecast | P50 quantile | Half the probability mass lies below and half above. |
+| Upper/lower forecast band | Quantile pair or prediction interval | The model is describing a plausible range, not just an error bar decoration. |
+| Forecast error | Calibration and coverage | The question becomes whether stated uncertainty matches realised uncertainty. |
+| Smaller error | Sharper calibrated forecast | A useful probabilistic forecast is as narrow as possible while still covering the right amount. |
+| Model confidence | Calibrated reliability | The stated probability/interval should agree with observed correctness over comparable cases. |
+
+Three evaluation terms are worth introducing early:
+
+**Calibration / reliability:** When the model says 90%, does the event occur about 90% of the time in comparable cases?
+
+**Sharpness:** Among calibrated forecasts, are the intervals/distributions as concentrated as possible? A forecast that always gives a very wide interval may be calibrated but not useful.
+
+**Resolution / adaptivity:** Does the uncertainty change meaningfully across inputs and operating regimes? If all cases receive the same interval width, the model may be ignoring important structure.
+
+Pernot's validation primer adds a useful refinement. Average calibration is not enough. An uncertainty method can look correct on average while being too narrow in one region of the input space and too wide in another. His terms are:
+
+| Validation target | Meaning |
+|---|---|
+| **Average calibration** | The uncertainty is correct on average across the validation set. |
+| **Consistency** | The uncertainty is reliable across different predicted uncertainty levels. |
+| **Adaptivity** | The uncertainty is reliable across the relevant input-feature space. |
+
+This is an excellent language bridge for deterministic readers because it says: "We are not asking you to trust a vague uncertainty number. We are asking whether that number behaves correctly where it is used."
+
+## 5. How This Supports Explainability
+
+Most XAI methods explain the point prediction: which inputs pushed the forecast up or down. The uncertainty-explanation papers argue that this is incomplete because the uncertainty itself can vary across the feature space.
+
+For this research, the stronger claim is:
+
+> It is not enough to explain the predicted value. We also need to explain why the prediction became more or less uncertain.
+
+That framing supports feature-attribution work on:
+
+- the lower quantile,
+- the upper quantile,
+- the interval width,
+- the predictive entropy,
+- the predictive variance,
+- the difference between aleatoric and epistemic uncertainty,
+- and the cases where high uncertainty is caused by feature interactions rather than by a single feature.
+
+Watson et al. provide the clean theoretical bridge: explain predictive uncertainty by attributing features to conditional entropy or related information-theoretic quantities. Bley et al. provide a more applied bridge: in ensembles, uncertainty can be dominated by second-order feature and feature-interaction effects, so explaining uncertainty may require more than applying ordinary first-order SHAP-style reasoning to a point forecast.
+
+## 6. Reusable Paragraphs
+
+### Short Conceptual Introduction
+
+This study treats uncertainty as a property of the prediction, not merely as a symptom of model error. A deterministic model returns a single expected value, while a probabilistic model returns information about the range and relative plausibility of possible outcomes. This is important in operational forecasting because decisions are often affected not only by the most likely value, but also by the risk of high, low, or unusual outcomes.
+
+### Aleatoric and Epistemic Uncertainty
+
+The uncertainty literature commonly distinguishes between aleatoric and epistemic uncertainty. Aleatoric uncertainty refers to variability that remains even when the model is well informed, such as measurement noise, natural system variability, or overlapping outcome regions. Epistemic uncertainty refers to uncertainty caused by limited knowledge, such as sparse training data, uncertain model parameters, model-form choices, or inputs that differ from the training distribution. In practical terms, aleatoric uncertainty describes what is inherently variable, while epistemic uncertainty describes what the model has not yet learned.
+
+### Probability and Confidence
+
+Probability and confidence should not be used as loose synonyms. Probability is the numerical statement made by the predictive model about possible outcomes. Confidence is better reserved for a defined reliability concept, such as calibrated class confidence, interval coverage, or observed confidence. A model can assign a high probability to an outcome and still be overconfident if similar predictions fail more often than the probability implies.
+
+### Prediction Intervals
+
+In forecasting, the appropriate interval is usually a prediction interval rather than a confidence interval. A prediction interval is intended to contain future observations with a stated long-run coverage level. For example, a 90% prediction interval should contain approximately 90% of comparable realised outcomes if the forecasting system is well calibrated. This interpretation differs from a confidence interval, which describes uncertainty in an estimated parameter or fitted function.
+
+### Explaining Uncertainty
+
+Explainability should extend beyond the point forecast. A feature can influence not only the predicted mean or median, but also the width, asymmetry, or entropy of the predictive distribution. Explaining the prediction interval therefore asks a different question from explaining the point forecast: which inputs made the outcome more or less predictable? This distinction is central when the goal is to understand risk, not only expected value.
+
+## 7. Wording To Avoid
+
+| Avoid | Prefer |
+|---|---|
+| "The model is 90% confident the true value is inside this interval." | "The 90% prediction interval should contain about 90% of comparable future observations if calibrated." |
+| "The confidence interval around the forecast." | "The prediction interval around the forecast," unless the interval is for a fitted parameter or function. |
+| "Low probability means low uncertainty." | "Low probability for one outcome may still be a confident prediction if the distribution is well specified." |
+| "The model is uncertain." | "The model has high predictive entropy / wide prediction interval / high epistemic uncertainty," depending on the metric. |
+| "More data will reduce uncertainty." | "More representative data can reduce epistemic uncertainty; aleatoric uncertainty may remain." |
+
+## 8. Source Map
+
+| Source | Best use in the research |
+|---|---|
+| **Hullermeier and Waegeman, "Aleatoric and Epistemic Uncertainty in Machine Learning"** | Best conceptual foundation. Use for reducible vs. irreducible uncertainty, probability vs. ignorance, and the caution that aleatoric/epistemic categories are context-dependent. |
+| **Kendall and Gal, "What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?"** | Clear practical definitions: aleatoric as observation noise; epistemic as model uncertainty reducible with enough data. Good for explaining OOD behavior and safety-critical relevance. |
+| **He and Jiang, "A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source's Perspective"** | Best source-based taxonomy: data uncertainty, model uncertainty, and methods grouped by which source they capture. |
+| **Nemani et al., "Uncertainty Quantification in Machine Learning for Engineering Design and Health Prognostics: A Tutorial"** | Best engineering-facing explanation of aleatory/epistemic sources, total predictive uncertainty, confidence communication, and decomposition by total variance. |
+| **Hong and Fan, "Probabilistic Electric Load Forecasting: A Tutorial Review"** | Best forecasting terminology source. Use for quantiles, intervals, densities, scenarios with probabilities, and the distinction between prediction intervals and confidence intervals. |
+| **Wen et al., "A Multi-Horizon Quantile Recurrent Forecaster"** | Clean deterministic-vs-probabilistic contrast: probabilistic forecast as a conditional distribution versus point forecast as conditional mean. Good for quantile forecasting language. |
+| **Van Beers and De Visser, "How to Evaluate Uncertainty Estimates in Machine Learning for Regression"** | Best caution on interval evaluation. Use for confidence vs. prediction intervals, pointwise vs. marginal coverage, and why PICP can be misleading. |
+| **Pernot, "Validation of Uncertainty Quantification Metrics"** | Best validation language: calibration, consistency, adaptivity, and why average calibration alone does not guarantee reliable uncertainty for individual predictions. |
+| **Ovadia et al., "Can You Trust Your Model's Uncertainty?"** | Best cautionary evidence that calibration can degrade under dataset shift and that confidence must align with accuracy in deployment conditions. |
+| **Watson et al., "Explaining Predictive Uncertainty with Information Theoretic Shapley Values"** | Best theoretical bridge from UQ to XAI: explain conditional entropy and uncertainty components, not only point estimates. |
+| **Bley et al., "Explaining Predictive Uncertainty by Exposing Second-Order Effects"** | Best applied bridge for explaining uncertainty with feature and feature-interaction effects, especially in ensembles and energy-price examples. |
+| **Salvi et al., "Explainability and Uncertainty: Two Sides of the Same Coin"** | Useful framing that XAI alone cannot guarantee reliability and that uncertainty should be communicated alongside explanations. |
+
+## 9. Suggested Placement In The Research
+
+This material probably belongs early in the literature review or methodology chapter, before introducing the proposed explainable probabilistic model. The clean sequence would be:
+
+1. Deterministic prediction gives a point estimate.
+2. Probabilistic prediction gives a distribution, interval, or quantiles.
+3. Predictive uncertainty can come from inherent variability or lack of knowledge.
+4. Probability, confidence, and prediction intervals need precise wording.
+5. A good uncertainty estimate must be calibrated, sharp, and adaptive.
+6. The research contribution is to explain not only the forecast, but the uncertainty around the forecast.
+

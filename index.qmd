@@ -23,6 +23,15 @@ Some entries are already fully reviewed, while others are placeholder pages mark
 - [Related load / demand forecasting with prediction intervals and XAI](#related-load--demand-forecasting-with-prediction-intervals-and-xai)
 - [Critical papers on uncertainty quantification in deep learning](#critical-papers-on-uncertainty-quantification-in-deep-learning)
 - [Explaining uncertainty and explainability of UQ](#explaining-uncertainty-and-explainability-of-uq)
+- [Conceptual bridge for deterministic readers](#conceptual-bridge-for-deterministic-readers)
+
+## Conceptual bridge for deterministic readers
+
+This note synthesizes the papers that are most useful for explaining uncertainty taxonomy, uncertainty language, probability, confidence, calibration, and prediction intervals to readers who are more familiar with deterministic models.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| Jun 2026 | - | [Uncertainty taxonomy and language for deterministic readers](<reviews/Uncertainty taxonomy and language for deterministic readers.qmd>) | Reusable conceptual bridge for defining aleatoric/epistemic uncertainty, probability vs confidence, prediction intervals vs confidence intervals, calibration, sharpness, consistency, adaptivity, and uncertainty-focused explainability. |
 
 ## Explaining prediction intervals and quantiles with SHAP
 

@@ -10,13 +10,14 @@ categories:
   - NGBoost
 ---
 
-## 1. Quick Reference & Meta-Data
+::: {.paper-meta}
 - **Authors & Year:** Georgios Mitrentsis, Hendrik Lens (2022)
 - **Venue (Journal/Conference):** Applied Energy *(Highly reputable, Tier 1 journal in energy)*
-- **Link/DOI:** [https://doi.org/10.1016/j.apenergy.2021.118473](https://doi.org/10.1016/j.apenergy.2021.118473)
+- **Link/DOI:** [10.1016/j.apenergy.2021.118473](https://doi.org/10.1016/j.apenergy.2021.118473)
 - **Code/Data Available?:** [Yes - GitHub Repository](https://github.com/mitre7/ngboost_pv_forecasting)
 - **Proximity/Threat Level:** High / Direct Competition
 - **Date Reviewed:** 2024-05-18
+:::
 
 ---
 
