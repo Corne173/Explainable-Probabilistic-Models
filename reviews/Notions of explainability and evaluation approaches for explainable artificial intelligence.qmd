@@ -1,0 +1,235 @@
+---
+title: "Notions of explainability and evaluation approaches for explainable artificial intelligence"
+description: "Review of a 2021 Information Fusion systematic review that organises XAI notions and evaluation approaches, with emphasis on what explanations should achieve and how explanation quality can be validated."
+date: 2026-06-18
+categories:
+  - Explainable AI
+  - XAI methodology
+  - Explainability evaluation
+  - Human-centred AI
+  - Foundational theory
+---
+
+::: {.paper-meta}
+- **Authors & Year:** Giulia Vilone and Luca Longo (2021)
+- **Venue:** *Information Fusion*, 76, 89-106
+- **DOI:** [10.1016/j.inffus.2021.05.009](https://doi.org/10.1016/j.inffus.2021.05.009)
+- **Article Type:** Systematic review / conceptual taxonomy
+- **Primary Topic/Concept:** Notions of explainability and evaluation approaches for explainable artificial intelligence
+- **Application Domain:** General AI and machine learning; useful as a methodology foundation rather than as a domain-specific forecasting paper
+- **Evidence Base:** 406 peer-reviewed articles from 1975 to 2020, filtered around XAI notions and explanation-evaluation approaches
+- **Code/Data Available?:** No code; the value is the taxonomy of explanation goals, attributes, and validation approaches
+- **Proximity/Threat Level:** High / Foundational support for defining what my XAI component should achieve and how I should judge whether it works
+- **Date Reviewed:** 2026-06-18
+:::
+
+---
+
+## 2. Core Contributions, Novelty & Motivation
+
+### Why This Paper Matters
+- This is not a direct competitor paper. It is a methodology foundation paper.
+- The useful contribution is that it asks the prior question before selecting an XAI method: **what is an explanation supposed to do?**
+- For my work, this matters because an XAI layer should not be justified only by saying that SHAP, feature importance, saliency, or another explainer was applied.
+- The explanation must have a purpose: it should improve understanding, support decision-making, expose model behaviour, reveal failure modes, or help users decide when to trust the model.
+
+### The Problem It Addresses
+- Machine learning models, especially deep learning models, can be accurate but difficult for users to understand.
+- This creates practical problems around transparency, user interaction, trust, liability, and the ability to challenge automated decisions.
+- XAI research has produced many explanation methods, but the field does not have a single agreed definition of what makes an explanation valid, reliable, useful, or understandable.
+
+### What the Paper Contributes
+- The paper organises the XAI literature into a hierarchy of concepts.
+- The two branches most relevant to my work are:
+  - **notions of explainability**: the qualities an explanation should have
+  - **evaluation approaches**: the ways explanation quality can be assessed
+- The paper separates explanation quality into both technical and human-facing dimensions.
+- This is important because an explanation can be technically impressive but still fail if users cannot understand it or cannot use it to make better decisions.
+
+---
+
+## 3. What XAI Is Supposed To Achieve
+
+### XAI as Human-Agent Interaction
+- A central framing in the paper is that explainability is not only a property of a model.
+- It is also an interaction between an explainer, an explanation, and an end-user.
+- This means the quality of an explanation depends on the user's task, prior knowledge, domain context, and decision needs.
+
+### Four Purposes of Explanation
+The paper highlights four broad reasons for explaining a model:
+
+1. **Explain to justify**
+   - The explanation should support the legitimacy of a prediction or decision.
+   - In my work, this means explaining why a forecast, interval, or uncertainty estimate is defensible.
+
+2. **Explain to control**
+   - The explanation should expose model behaviour enough to debug, monitor, or identify failures.
+   - In my work, this supports checking whether uncertainty explanations reveal data leakage, unrealistic drivers, or unreliable operating regions.
+
+3. **Explain to improve**
+   - The explanation should help improve the model or the modelling process.
+   - In my work, this could mean using explanation patterns to refine features, diagnose poor interval behaviour, or identify conditions where the model needs more data.
+
+4. **Explain to discover**
+   - The explanation should help users learn relationships and patterns that were not obvious before.
+   - In my work, this is relevant when using XAI to discover which conditions drive uncertainty, interval widening, or asymmetric risk.
+
+### Explanation Quality Criteria
+The paper collects many notions that can be used as criteria for explanation quality. The most useful ones for my methodology are:
+
+| Criterion | Meaning for my research |
+|---|---|
+| **Actionability** | The explanation should help the user decide what to do next, not just describe the model. |
+| **Causality / causal plausibility** | The explanation should be interpreted carefully: model associations are not automatically causal, but explanations should still be checked against domain logic. |
+| **Completeness** | The explanation should describe enough of the model behaviour to be useful. |
+| **Comprehensibility** | The explanation should be understandable to the intended audience. |
+| **Effectiveness** | The explanation should support better decisions. |
+| **Efficiency** | The explanation should help users make decisions faster or with less unnecessary effort. |
+| **Faithfulness** | The explanation should reflect the actual model behaviour, not an attractive but misleading story. |
+| **Informativeness** | The explanation should provide information that is relevant to the user's question. |
+| **Justifiability** | The explanation should be assessable against domain knowledge. |
+| **Robustness / stability** | Similar inputs or small irrelevant perturbations should not produce wildly different explanations. |
+| **Sensitivity** | The explanation should reflect meaningful changes in the model output when inputs change. |
+| **Understandability** | The user should be able to form a useful mental model of the system. |
+
+### Important Distinction
+- The paper is useful because it prevents a shallow version of XAI.
+- XAI is not simply "generate a plot".
+- XAI should answer a user-relevant question such as:
+  - Why did the model make this prediction?
+  - Why is this prediction uncertain?
+  - Why is the interval wide here?
+  - Which inputs are driving the upper and lower risk bounds?
+  - Is this explanation stable enough to trust?
+  - Does this explanation change the decision I should make?
+
+---
+
+## 4. Evaluation Strategy
+
+### Two Main Evaluation Families
+The paper groups evaluation approaches into two broad families:
+
+1. **Objective evaluations**
+   - These use formal, automated, or quantitative metrics.
+   - They are useful for checking whether an explanation behaves consistently with the model.
+
+2. **Human-centred evaluations**
+   - These involve users, domain experts, or human judgement.
+   - They are useful for checking whether the explanation is understandable, useful, trustworthy, and decision-relevant.
+
+This split is important for my research because a good XAI evaluation should ideally include both.
+
+### Objective Evaluation Ideas
+Objective evaluation can include:
+
+- **Sensitivity to input perturbation**
+  - Change, remove, mask, or perturb input features and check whether explanations respond in a sensible way.
+
+- **Sensitivity to model parameter randomisation**
+  - Compare explanations from a trained model with explanations from a randomised or partially randomised model.
+  - If the explanation barely changes when the model is randomised, the explainer may not be faithful to the trained model.
+
+- **Explanation completeness**
+  - Check how much of the model's inferential process the explanation captures.
+
+- **Robustness and stability**
+  - Similar observations should produce similar explanations when the model prediction is similar.
+
+- **Faithfulness checks**
+  - Features identified as important should actually affect the model output when perturbed.
+
+- **Counterfactual validity**
+  - Counterfactual examples should remain feasible and logically connected to the data domain.
+
+For my work, the most relevant objective checks are likely faithfulness, perturbation sensitivity, stability across nearby inputs, and consistency across retraining or resampling.
+
+### Human-Centred Evaluation Ideas
+Human-centred evaluation can include:
+
+- asking users or domain experts whether explanations are understandable
+- asking whether the explanation agrees with domain knowledge
+- measuring task accuracy with and without explanations
+- measuring decision time or cognitive load
+- collecting confidence, trust, usefulness, or satisfaction ratings
+- using open-ended feedback to identify confusion or missing information
+- asking whether the explanation would change a user's decision
+
+The important point is that explanations are ultimately consumed by humans. Therefore, a technically faithful explanation can still be incomplete if it does not help the intended user build a useful mental model or make a better decision.
+
+### Useful Validation Map for My Research
+
+| XAI objective | Validation question | Possible validation approach |
+|---|---|---|
+| Explain forecast behaviour | Do important features actually affect the forecast? | Perturbation tests, feature removal, retraining checks |
+| Explain uncertainty or interval width | Do the highlighted drivers change the uncertainty estimate or prediction interval? | Perturb upper/lower quantile drivers and observe interval response |
+| Build appropriate trust | Does the explanation help users identify reliable vs risky predictions? | Expert review, decision task, trust calibration survey |
+| Support actionability | Does the explanation change what the user would do? | Scenario-based evaluation with domain users |
+| Support debugging | Does the explanation reveal unrealistic feature reliance or data issues? | Domain audit of high-impact explanations |
+| Support stability | Are explanations consistent across similar cases? | Neighbourhood stability and repeated-training checks |
+| Support comprehensibility | Can the target user explain back the model behaviour? | Interview, questionnaire, or short interpretation task |
+
+---
+
+## 5. Methodology Support for My Research
+
+### How I Should Use This Paper
+This paper gives me language for the methodology chapter. It supports the claim that an XAI component must be designed around:
+
+- the intended user
+- the decision context
+- the explanation question
+- the desired explanation qualities
+- the validation method used to judge the explanation
+
+This is especially useful because my work is not only about producing forecasts or uncertainty estimates. It is about making those uncertainty estimates interpretable and useful.
+
+### Direct Implications for My XAI Design
+- I should explicitly state what my explanations are meant to achieve.
+- I should avoid treating feature attribution as automatically equivalent to explanation.
+- I should connect the explanation target to the actual decision problem.
+- If I explain uncertainty, I should explain the uncertainty object itself, such as interval width, quantile spread, prediction risk, or epistemic/aleatoric contribution.
+- I should evaluate explanations using both technical checks and human/domain reasoning where possible.
+- I should be careful with causal language. XAI can reveal model dependence, but that is not automatically the same as real-world causation.
+
+### Methodological Principle I Can Reuse
+> An XAI method is useful only if it produces explanations that are faithful enough to the model, understandable enough for the target user, and actionable enough to support the relevant decision.
+
+This principle is the main reason the paper belongs in the methodology foundation of my review.
+
+---
+
+## 6. How This Connects To My Literature Review
+
+### Position in the Review
+- This paper should be cited before or during the section where I define what I mean by XAI.
+- It is also useful in the evaluation section, where I justify why explanation quality must be assessed rather than assumed.
+- It can support a paragraph arguing that explanation methods should be selected and validated according to the user-facing purpose of the explanation.
+
+### Suggested Use in My Argument
+I can use this paper to support three methodological claims:
+
+1. **XAI must be purpose-driven.**
+   - The explanation should be linked to justification, control, improvement, discovery, decision support, or trust calibration.
+
+2. **XAI quality is multidimensional.**
+   - A useful explanation must balance faithfulness, stability, comprehensibility, informativeness, actionability, and domain plausibility.
+
+3. **XAI must be evaluated.**
+   - Evaluation should not stop at visual inspection. It should include objective checks and, where possible, human-centred or expert-centred validation.
+
+---
+
+## 7. Final Takeaway
+
+This paper is a foundation for deciding whether I am "doing XAI correctly".
+
+The central lesson is that XAI is not the act of attaching an explainer to a model. XAI is the design and validation of explanations that help a specific user understand, question, trust, debug, or act on a model's output.
+
+For my research, this means the XAI component should be evaluated against explanation quality criteria such as faithfulness, stability, understandability, domain plausibility, and actionability. This is especially important when the explanation target is not only the point forecast, but also the uncertainty around that forecast.
+
+---
+
+## 8. How You Can Cite It
+
+> Vilone and Longo (2021) provide a systematic taxonomy of XAI notions and evaluation approaches, showing that useful explanations should be understandable, faithful, actionable, and supportive of decision-making, and that explanation quality should be assessed through both objective metrics and human-centred evaluation.

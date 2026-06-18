@@ -1,0 +1,423 @@
+---
+title: "Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation"
+description: "Methodology-focused review of Bengs, Hullermeier, and Waegeman's argument that epistemic uncertainty cannot be learned faithfully by ordinary loss minimisation over second-order predictions."
+date: 2026-06-18
+categories:
+  - Reviewed
+  - Epistemic uncertainty
+  - Uncertainty quantification
+  - Loss minimisation
+  - Evidential deep learning
+  - Second-order uncertainty
+  - Deep ensembles
+  - Methodological foundation
+---
+
+::: {.paper-meta}
+- **Authors & Year:** Viktor Bengs, Eyke Hullermeier, Willem Waegeman (2022)
+- **Venue (Journal/Conference):** arXiv preprint, cs.LG
+- **DOI / arXiv:** [10.48550/arXiv.2203.06102](https://doi.org/10.48550/arXiv.2203.06102)
+- **Primary Topic:** Why direct loss-based learning of epistemic uncertainty is problematic
+- **Contribution Type:** Theoretical caution / methodological foundation for epistemic uncertainty quantification
+- **Methods Discussed:** Second-order predictors, Dirichlet distributions, evidential deep learning, posterior networks, proper scoring rules, Brier score, cross-entropy, Bayesian regularisation
+- **Core Claim:** A model cannot be reliably incentivised to report honest epistemic uncertainty merely by minimising a pointwise loss against observed labels.
+- **Proximity / Threat Level:** High relevance / supports the methodological choice to use ensemble disagreement as an epistemic uncertainty mechanism rather than relying on self-reported uncertainty from a single loss-minimising model
+- **Date Reviewed:** 2026-06-18
+:::
+
+---
+
+## 2. Plain-Language Explanation
+
+This paper asks a deceptively simple question:
+
+> Can we train a model to output its own epistemic uncertainty just by giving it the right loss function?
+
+The authors argue that the answer is generally no, at least for the loss functions used in several direct uncertainty-estimation methods.
+
+The key distinction is between three levels.
+
+- **Level 0:** the observed label, such as class 0 or class 1.
+- **Level 1:** the true class probability, such as the probability that an input belongs to class 1.
+- **Level 2:** uncertainty about the level-1 probability itself.
+
+Aleatoric uncertainty lives mainly at level 1. It describes randomness in the data-generating process. Even if the true class probability is known, the individual label may still be uncertain.
+
+Epistemic uncertainty lives at level 2. It describes the learner's lack of knowledge about the true probability or the true predictor. It should reduce when the learner receives more relevant information.
+
+The problem is that training data usually contains level-0 observations: individual labels. It does not contain direct observations of level-1 probabilities, and it definitely does not contain direct observations of level-2 uncertainty. Therefore, if a method asks a neural network to output a distribution over class-probability distributions, there is no direct ground-truth epistemic uncertainty target for the loss to compare against.
+
+That is the paper's central warning:
+
+> A loss function can reward accurate predictions, but that does not mean it rewards honest epistemic uncertainty.
+
+For my work, this is important because it supports a cautious methodological position. Epistemic uncertainty should not be treated as just another supervised target that a single model can learn because the loss says so. It needs a modelling mechanism that represents multiple plausible predictors, such as an ensemble, Bayesian posterior approximation, or another explicit model-uncertainty construction.
+
+---
+
+## 3. Core Contributions, Novelty & Motivation
+
+### What problem are they solving?
+
+Many uncertainty-aware deep learning methods try to make the model predict both:
+
+- the class probabilities, and
+- a measure of uncertainty around those probabilities.
+
+In classification, this is often done using a **second-order distribution**. Instead of predicting one probability vector, the model predicts a distribution over probability vectors. For example, a model may predict the parameters of a Dirichlet distribution. A sharp Dirichlet distribution means the model claims high certainty about the class probabilities. A broad Dirichlet distribution means the model claims more epistemic uncertainty.
+
+This idea is attractive because it appears to let a single neural network output uncertainty directly. The authors question whether the training loss actually gives the correct incentive.
+
+### Main claim
+
+The main claim is:
+
+> Loss minimisation over observed labels does not, by itself, give a reliable incentive to represent epistemic uncertainty faithfully.
+
+The model may still produce uncertainty-looking numbers. But the paper shows that those numbers can be driven by the mathematical structure of the loss and regularisation, rather than by a faithful representation of the learner's lack of knowledge.
+
+### Why this matters
+
+This matters because epistemic uncertainty is not directly observed in the dataset. There is no ordinary label that says:
+
+> Here is the correct amount of model uncertainty for this input.
+
+For first-order probability prediction, proper scoring rules such as log-loss or Brier score work because the expected loss is minimised by the true class probability. For second-order epistemic uncertainty, there is no equivalent ground-truth second-order target in the usual supervised data.
+
+Therefore, methods that claim to learn epistemic uncertainty by minimising a pointwise loss need to be treated carefully.
+
+### Why this is useful for my review
+
+This paper gives theoretical support for a methodological decision:
+
+- I should not rely only on a single model that is trained to output its own epistemic uncertainty through an auxiliary loss.
+- I need an uncertainty mechanism that reflects uncertainty over the predictor itself.
+- Deep ensembles are attractive because they express epistemic uncertainty through disagreement between multiple fitted models, rather than through a single self-reported uncertainty head.
+
+The paper does not prove that deep ensembles are always better than MC dropout or Bayesian neural networks. Its value is more foundational: it explains why direct loss-based epistemic uncertainty is conceptually fragile.
+
+---
+
+## 4. Methodology & Technical Details
+
+### The three-level uncertainty setup
+
+The paper uses classification notation.
+
+At level 1, the true conditional class distribution is:
+
+\[
+\theta^*(x) = p(\cdot \mid x)
+\]
+
+A normal probabilistic classifier predicts:
+
+\[
+\hat{\theta}(x)
+\]
+
+and can be trained with a proper scoring rule such as cross-entropy or Brier score.
+
+At level 2, the model predicts a distribution over possible level-1 class-probability vectors:
+
+\[
+Q(x) \in P(P(Y))
+\]
+
+For example, in a Dirichlet-based method, \(Q(x)\) may be represented by Dirichlet parameters \(\alpha(x)\). A concentrated \(Q(x)\) means the model claims to know the class probabilities well. A diffuse \(Q(x)\) means the model claims epistemic uncertainty.
+
+### Why level-2 learning is harder than level-1 learning
+
+For level-1 learning, the observed class labels give statistical evidence about the true class probabilities.
+
+For level-2 learning, the learner would need evidence about distributions over probability vectors. But such evidence is not available in ordinary supervised datasets. The dataset gives labels, not repeated samples of the true probability vector.
+
+The authors make an important point:
+
+> Learning at the epistemic level cannot be treated as ordinary frequentist learning in the same way as learning class probabilities.
+
+This is why priors, model assumptions, hypothesis spaces, or model-sampling mechanisms matter. Epistemic uncertainty depends on the learner's state of knowledge, not only on the data-generating distribution.
+
+### Loss form 1: Averaging first-order losses
+
+One natural idea is to define a second-order loss by averaging a normal first-order loss over the model's predicted second-order distribution:
+
+\[
+L_2(Q, y) = \mathbb{E}_{\theta \sim Q}[L_1(\theta, y)]
+\]
+
+where:
+
+- \(Q\) is the predicted distribution over probability vectors;
+- \(\theta\) is a sampled probability vector;
+- \(L_1\) is a normal first-order loss such as cross-entropy or Brier score;
+- \(y\) is the observed label.
+
+The problem is that if \(L_1\) is convex, Jensen's inequality implies that the expected loss is at least as large as the loss at the mean prediction:
+
+\[
+L_1(\mathbb{E}_{\theta \sim Q}[\theta], y)
+\le
+\mathbb{E}_{\theta \sim Q}[L_1(\theta, y)]
+\]
+
+So the loss rewards the learner for collapsing \(Q\) onto its mean. In other words, the model has an incentive to pretend full certainty.
+
+This is a serious problem for epistemic uncertainty. A model with little data should often be uncertain, but the loss can still prefer a sharply peaked second-order prediction.
+
+### Loss form 2: Bayesian-style regularisation
+
+Another idea is to add a regularisation term that penalises deviation from a prior:
+
+\[
+L_2(Q, y) =
+\mathbb{E}_{\theta \sim Q}[L_1(\theta, y)]
++
+\lambda D_{KL}(Q \| Q_0)
+\]
+
+where:
+
+- \(Q_0\) is a prior distribution over probability vectors;
+- \(D_{KL}\) measures deviation from that prior;
+- \(\lambda\) controls the strength of the prior/regularisation term.
+
+If the prior is uniform, this can also be interpreted as rewarding entropy. This looks more reasonable because it prevents the model from always collapsing to a point mass.
+
+However, the paper shows that this does not solve the problem cleanly. The amount of epistemic uncertainty now depends strongly on:
+
+- the chosen first-order loss \(L_1\);
+- the prior \(Q_0\);
+- the regularisation parameter \(\lambda\);
+- the true class probability itself.
+
+That means the reported uncertainty can be controlled by design choices rather than by the learner's actual state of knowledge.
+
+### What an appropriate level-2 loss should do
+
+The authors propose two minimal requirements for a level-2 epistemic uncertainty loss.
+
+1. **Uncertainty should decrease as sample size increases.**
+
+   With more observations, the learner should generally become less epistemically uncertain.
+
+2. **In the infinite-data limit, epistemic uncertainty should vanish.**
+
+   If the learner receives enough relevant data, the second-order distribution should converge to a point mass at the true probability.
+
+These requirements are deliberately modest. They do not demand a perfect uncertainty measure. They only require the uncertainty to behave in the direction epistemic uncertainty is supposed to behave.
+
+---
+
+## 5. Main Findings
+
+### Finding 1: Averaging first-order losses encourages false certainty
+
+For convex first-order losses such as Brier score and log-loss, the empirical loss minimiser becomes a Dirac distribution. In practical terms, the model reports complete certainty.
+
+This can happen regardless of sample size.
+
+That is exactly the opposite of what epistemic uncertainty should do. With few samples, the model should usually admit lack of knowledge. But the loss minimisation objective can still reward a collapsed distribution.
+
+### Finding 2: Regularisation can push the model toward arbitrary uncertainty
+
+Adding a KL penalty or entropy-style regularisation prevents immediate collapse, but it introduces a different problem.
+
+The uncertainty is now strongly controlled by the regularisation weight \(\lambda\). If \(\lambda\) is too small, the model becomes too certain. If \(\lambda\) is too large, the model can remain too uncertain even with many observations.
+
+This means the uncertainty estimate can be tuned into existence rather than learned faithfully.
+
+### Finding 3: The problem is not only a Dirichlet problem
+
+Although the discussion is motivated partly by Dirichlet-style second-order predictors, the formal results are broader. The issue is not just that one specific distributional family is flawed.
+
+The deeper issue is that a pointwise loss comparing \(Q(x)\) with a single observed label \(y\) does not have enough information to judge whether \(Q(x)\) is an honest representation of epistemic uncertainty.
+
+### Finding 4: More data does not necessarily produce the right epistemic behaviour
+
+In the synthetic experiments, the reported level-2 uncertainty does not reliably behave like epistemic uncertainty should.
+
+For small regularisation values, the empirical loss minimiser collapses to a point mass. For large regularisation values, it can remain highly uncertain even at large sample sizes. The change between these behaviours can be abrupt.
+
+This supports the theoretical result: the loss does not naturally encode the desired learning dynamic.
+
+### Finding 5: The paper questions the incentive structure, not the usefulness of uncertainty
+
+The authors are not arguing that epistemic uncertainty is unimportant. They argue the opposite: epistemic uncertainty is important, but difficult.
+
+Their concern is that some methods produce uncertainty values without a trustworthy reason to believe those values are faithful.
+
+---
+
+## 6. Why This Paper Supports an Ensemble-Based Methodology
+
+This paper is useful for justifying ensembles because it clarifies what epistemic uncertainty is uncertainty about.
+
+Epistemic uncertainty is not just another output variable. It is uncertainty about the predictor, the hypothesis, or the class-probability function that should be used. Therefore, a method for epistemic uncertainty should represent multiple plausible predictors or model states.
+
+Deep ensembles do this in a direct and practical way:
+
+- train multiple models independently;
+- let each model represent a plausible fitted function;
+- use disagreement between models as evidence of model uncertainty;
+- treat agreement as evidence that the prediction is more stable under the modelling procedure.
+
+This is methodologically different from asking one model to produce a second-order uncertainty value through a pointwise loss. The ensemble does not need a direct epistemic uncertainty label. Its uncertainty signal comes from variation across fitted predictors.
+
+### The argument this paper gives me
+
+The paper supports the following chain of reasoning:
+
+1. Epistemic uncertainty has no direct supervised ground truth.
+2. A loss against observed labels can reward predictive accuracy without rewarding honest epistemic uncertainty.
+3. Direct second-order uncertainty heads can therefore be overconfident, underconfident, or strongly controlled by regularisation.
+4. A more defensible epistemic uncertainty mechanism should represent alternative plausible predictors.
+5. Deep ensembles are a practical way to approximate this by using independently trained models and measuring their disagreement.
+
+### How this helps position ensembles against MC dropout
+
+This paper is not mainly an MC dropout paper, so I should not cite it as direct empirical evidence that ensembles outperform MC dropout.
+
+Instead, I should use it for the deeper methodological point:
+
+> Epistemic uncertainty should come from uncertainty over predictors, not merely from a single model being trained to output an uncertainty score.
+
+That point pairs naturally with the deep-ensemble literature. Compared with MC dropout, which samples stochastic subnetworks around one trained model and depends on dropout design choices, deep ensembles make the model-plurality mechanism more explicit. Each independently trained model can occupy a different fitted solution, and disagreement between those fitted solutions is easier to interpret as epistemic uncertainty.
+
+So this paper is best used together with:
+
+- [Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles](<Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles.qmd>)
+- [Deep Ensembles: A Loss Landscape Perspective](<Deep Ensembles A Loss Landscape Perspective.qmd>)
+- [Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift](<Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.qmd>)
+
+The combined argument is:
+
+- Bengs et al. explain why direct loss-based epistemic uncertainty is conceptually fragile.
+- Lakshminarayanan et al. show that deep ensembles work well empirically for predictive uncertainty.
+- Fort et al. explain why independently trained ensembles generate useful function-space diversity.
+- Ovadia et al. show why epistemic uncertainty matters under dataset shift.
+
+---
+
+## 7. Scope Notes Rather Than Heavy Criticism
+
+I am using this paper as methodological support, so the important caveats are scope notes rather than reasons to dismiss it.
+
+### Scope note 1: The formal results target specific loss families
+
+The authors are careful to say that their formal results apply to the proposed loss functions they analyse. They do not prove that no possible level-2 loss could ever work.
+
+For my review, the fair claim is:
+
+> Existing direct loss-minimisation approaches to second-order epistemic uncertainty can fail to provide faithful epistemic incentives.
+
+not:
+
+> All possible direct uncertainty losses are impossible.
+
+### Scope note 2: The paper focuses on classification
+
+The technical setup is classification, with probability vectors and Dirichlet-style second-order distributions.
+
+My work may involve regression, prediction intervals, or forecasting. The exact theorems do not transfer automatically. However, the conceptual warning does transfer well:
+
+> If the training target does not contain epistemic uncertainty labels, the loss may not be able to validate epistemic uncertainty directly.
+
+### Scope note 3: The paper is not a direct ensemble benchmark
+
+The paper does not compare deep ensembles, MC dropout, and Bayesian neural networks in an empirical benchmark.
+
+It supports ensembles indirectly by clarifying why epistemic uncertainty should be tied to uncertainty over predictors. For direct ensemble evidence, I should cite the ensemble papers alongside this one.
+
+### Scope note 4: It does not remove the need to validate ensemble uncertainty
+
+Using ensembles avoids the specific pitfall of a single model self-reporting epistemic uncertainty through a level-2 loss, but it does not automatically guarantee perfect uncertainty quality.
+
+An ensemble still needs:
+
+- calibration checks;
+- interval coverage checks;
+- uncertainty-error relationship tests;
+- dataset-shift or sparse-regime evaluation;
+- evidence that ensemble members are meaningfully diverse.
+
+---
+
+## 8. Relevance to My Research / How I Will Use It
+
+### Why I would cite this paper
+
+I would cite this paper when motivating why epistemic uncertainty should not be treated as an ordinary supervised prediction target.
+
+The most useful citation claim is:
+
+> Bengs, Hullermeier, and Waegeman show that loss functions proposed for direct second-order epistemic uncertainty prediction can fail to incentivise faithful epistemic uncertainty, because observed labels do not provide direct feedback about the learner's uncertainty over the true probability distribution.
+
+### How it supports my methodology
+
+This paper supports a methodology where epistemic uncertainty is estimated from a mechanism that represents multiple plausible predictors.
+
+For my work, that points toward:
+
+- deep ensembles;
+- ensemble disagreement;
+- function-space diversity;
+- uncertainty validation under shift;
+- caution toward uncertainty values produced only by an auxiliary loss head.
+
+### How it connects to explainability
+
+The paper is not an XAI paper in the feature-attribution sense. Its relevance to explainability is methodological.
+
+If I want to explain uncertainty, I first need the uncertainty estimate itself to be meaningful. This paper warns that an uncertainty output can look interpretable while being produced by a loss incentive that does not actually reward honest epistemic uncertainty.
+
+That supports the idea that explainable uncertainty should start with a defensible uncertainty-generation mechanism.
+
+### Best use in my literature review
+
+This paper should sit in the methodological-foundation part of the review, close to:
+
+- deep ensembles as a practical epistemic uncertainty mechanism;
+- loss landscape explanations for ensemble diversity;
+- uncertainty under dataset shift;
+- papers that distinguish aleatoric and epistemic uncertainty.
+
+It is not mainly a paper about energy forecasting or SHAP. It is a theoretical support paper for why the epistemic uncertainty mechanism matters.
+
+---
+
+## 9. Pre-Written Assets
+
+### Literature review paragraph
+
+Bengs, Hullermeier, and Waegeman provide an important methodological caution for epistemic uncertainty quantification. They argue that, unlike first-order probability estimation, second-order epistemic uncertainty cannot be learned faithfully by simply minimising a pointwise loss against observed labels. Their analysis shows that losses used for direct second-order uncertainty prediction can incentivise a model to become artificially overconfident, remain arbitrarily uncertain under regularisation, or report uncertainty that depends more on loss design choices than on the learner's actual state of knowledge. This motivates the use of epistemic uncertainty mechanisms that represent uncertainty over predictors themselves, such as deep ensembles, rather than relying only on a single model's self-reported uncertainty head.
+
+### Methodology justification sentence
+
+Because epistemic uncertainty has no direct supervised target, I use ensemble disagreement as a practical model-uncertainty mechanism rather than relying solely on a single model trained to output epistemic uncertainty through loss minimisation.
+
+### Ensemble justification sentence
+
+Deep ensembles are methodologically attractive for epistemic uncertainty because they represent multiple plausible fitted functions, so disagreement between ensemble members provides a more direct signal of model uncertainty than a loss-trained self-reported confidence score.
+
+### MC dropout comparison sentence
+
+This paper does not directly benchmark MC dropout, but it supports the broader concern that epistemic uncertainty should be represented through uncertainty over predictors; this favours ensemble-based disagreement when a transparent and defensible epistemic mechanism is needed.
+
+### Caution sentence
+
+The paper should not be used to claim that all non-ensemble uncertainty methods are invalid; its strongest use is to show that direct loss-based second-order uncertainty estimates need careful justification and validation.
+
+### One-line review
+
+This paper explains why epistemic uncertainty cannot simply be learned as another loss-minimising output: without direct uncertainty labels, the loss can reward confidence behaviour that is mathematically convenient but epistemically unfaithful.
+
+---
+
+## 10. Bottom-Line Takeaway
+
+The core value of this paper is that it strengthens the methodological case for being careful about where epistemic uncertainty comes from.
+
+It tells me not to treat an uncertainty number as trustworthy merely because a neural network was trained to output it. For epistemic uncertainty, the model must somehow represent uncertainty over possible predictors. Deep ensembles provide a practical way to do that through disagreement between independently fitted models.
+
+For my review, this paper supports the theoretical justification for using ensembles as an epistemic uncertainty mechanism, especially when paired with papers that show ensembles are empirically strong and functionally diverse.

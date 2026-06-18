@@ -1,0 +1,377 @@
+---
+title: "Deep Ensembles: A Loss Landscape Perspective"
+description: "Methodology-focused review of Fort, Hu, and Lakshminarayanan's explanation of why independently initialized deep ensembles are effective for predictive uncertainty, especially under dataset shift."
+date: 2026-06-18
+categories:
+  - Reviewed
+  - Predictive uncertainty
+  - Deep ensembles
+  - Loss landscapes
+  - Function-space diversity
+  - Dataset shift
+  - Methodological foundation
+---
+
+::: {.paper-meta}
+- **Authors & Year:** Stanislav Fort, Huiyi Hu, Balaji Lakshminarayanan (2019; arXiv v2 in 2020)
+- **Venue (Journal/Conference):** arXiv preprint, stat.ML / cs.LG
+- **DOI / arXiv:** [10.48550/arXiv.1912.02757](https://doi.org/10.48550/arXiv.1912.02757)
+- **Primary Topic:** Why independently initialized deep ensembles work well for accuracy, uncertainty, and robustness
+- **Contribution Type:** Methodological explanation / empirical foundation for ensemble diversity
+- **Methods Discussed:** Deep ensembles, MC dropout, diagonal Gaussian subspace sampling, low-rank/PCA Gaussian subspace sampling, random subspace sampling, weight averaging, cyclic SGMCMC
+- **Datasets / Benchmarks:** CIFAR-10, CIFAR-100, ImageNet, CIFAR-10-C, ImageNet-C, SVHN
+- **Core Metrics / Diagnostics:** Accuracy, Brier score, prediction disagreement, cosine similarity in weight space, t-SNE of predictions, Jensen-Shannon divergence, diversity-accuracy trade-off
+- **Proximity / Threat Level:** High relevance / theoretical support for using deep ensembles as a practical epistemic uncertainty baseline
+- **Date Reviewed:** 2026-06-18
+:::
+
+---
+
+## 2. Plain-Language Explanation
+
+This paper asks a very specific question:
+
+> Why do deep ensembles work so well, even when they are trained simply by using different random initializations?
+
+The original deep-ensemble paper showed that training several neural networks independently and averaging their predictive distributions gives strong uncertainty estimates. This follow-up paper tries to explain the mechanism behind that result.
+
+The key idea is that a neural network's parameter space and its function space are not the same thing.
+
+- **Parameter space** is the space of weights and biases.
+- **Function space** is the space of predictions the model actually makes.
+
+Two neural networks can be far apart in parameter space but still make very similar predictions. Conversely, two networks can have similarly good training loss but make meaningfully different predictions. For uncertainty estimation, the second point is the important one. An ensemble is useful when its members are both:
+
+- individually accurate, and
+- different enough in their predictions that averaging them reduces overconfidence.
+
+The paper argues that random initialization is powerful because it pushes neural networks toward different functional modes. In other words, independently trained models often end up as different but accurate solutions. That diversity is exactly what makes the ensemble useful for epistemic uncertainty.
+
+By contrast, many scalable Bayesian or subspace methods sample around one trained solution. Those samples may move around in weight space, but the resulting predictions often remain close to the same functional mode. This means they may not produce enough predictive diversity to match a full deep ensemble.
+
+---
+
+## 3. Core Contributions, Novelty & Motivation
+
+### What problem are they solving?
+
+Deep ensembles are empirically strong, but their success is not fully explained by the usual bootstrap story.
+
+The original motivation for ensembles often comes from bootstrap logic: resample the data, train several models, and use variation across models as uncertainty. But in deep learning practice, simply training the same architecture several times from different random initializations often works extremely well, even without bootstrap resampling.
+
+That creates a methodological question:
+
+> If all ensemble members see the same data and use the same architecture, why do they still provide useful uncertainty?
+
+The paper's answer is that random initialization helps the optimizer find different solutions in function space.
+
+### Main claim
+
+The main claim is:
+
+> Deep ensembles work because independently initialized training runs discover diverse, accurate functions, while many local posterior or subspace approximations remain trapped near one function-space mode.
+
+This matters because epistemic uncertainty depends on representing plausible alternative models. If all sampled models make nearly the same predictions, the uncertainty estimate will be weak even if the method looks Bayesian or probabilistic on paper.
+
+### Novelty
+
+The paper contributes three useful ideas.
+
+1. **Function-space view of deep ensembles**
+
+   The authors shift attention from weight-space distance to prediction-space diversity. This is important because uncertainty is expressed through predictions, not directly through weights.
+
+2. **Diversity-accuracy plane**
+
+   The paper introduces a diagnostic view where candidate ensemble members are judged by both accuracy and diversity. A good uncertainty method should generate models that are accurate enough to be useful but diverse enough to reduce overconfident errors.
+
+3. **Explanation of why local subspace methods can underperform ensembles**
+
+   The authors compare independent random initializations against MC dropout, diagonal Gaussian sampling, low-rank Gaussian sampling, random subspace sampling, and weight averaging. Their results suggest that these local methods often sample variations of the same function rather than genuinely different functional modes.
+
+### Why this matters for uncertainty quantification
+
+For uncertainty quantification, this paper supports a practical design principle:
+
+> The quality of epistemic uncertainty depends on functional diversity, not only on whether a method has a probabilistic interpretation.
+
+This is especially relevant under dataset shift. If several models all make the same overconfident mistake on shifted inputs, averaging them will not help much. If the models disagree, the ensemble can express uncertainty through a broader or less confident predictive distribution.
+
+---
+
+## 4. Methodology & Technical Details
+
+### Bayesian framing
+
+The paper starts from the standard Bayesian neural-network view:
+
+\[
+p(\theta \mid D) \propto p(\theta) \prod_{n=1}^{N} p(y_n \mid x_n, \theta)
+\]
+
+where \(\theta\) represents the network parameters and \(D\) is the training data.
+
+Exact posterior inference is not practical for modern deep networks, so approximate Bayesian methods try to represent uncertainty over \(\theta\). However, many scalable methods approximate only a local region around one solution.
+
+The authors contrast this with deep ensembles:
+
+1. Randomly initialize a model.
+2. Train it to a local optimum.
+3. Repeat this process several times.
+4. Average the resulting predictive distributions.
+
+The important point is that each trained model can correspond to a different function-space mode.
+
+### Function-space similarity
+
+The authors measure model similarity in terms of predictions.
+
+They use diagnostics such as:
+
+- disagreement in predicted class labels;
+- softmax prediction vectors;
+- t-SNE visualizations of prediction vectors;
+- Jensen-Shannon divergence between predictive distributions.
+
+This is more relevant than simply measuring distance between weights, because two networks can be far apart in weight space but still behave similarly.
+
+### Subspace methods compared
+
+The paper compares independently initialized ensemble members against several ways of sampling near one trained trajectory:
+
+- **MC dropout:** sample predictions by applying dropout at test time.
+- **Diagonal Gaussian subspace:** approximate recent training weights with independent Gaussian variation per parameter.
+- **Low-rank / PCA Gaussian subspace:** approximate recent training movement using a low-rank covariance structure.
+- **Random subspace sampling:** move from a trained solution along random weight-space directions.
+- **Weight averaging:** use an average of weights along the later part of training as a stronger point estimate within a mode.
+
+The core finding is that these methods can move the weights, but the resulting predictions often remain close to the same trained solution.
+
+### Diversity-accuracy trade-off
+
+The paper's diversity-accuracy plane is one of its most useful methodological contributions.
+
+The logic is:
+
+- **High accuracy** matters because weak ensemble members add bias.
+- **High diversity** matters because highly correlated ensemble members do not reduce uncertainty or overconfidence very much.
+
+Deep ensembles occupy a better region of this plane than the local subspace methods tested in the paper. They produce models that are both accurate and more functionally diverse.
+
+### Dataset-shift evaluation
+
+The paper also evaluates behavior under corrupted and out-of-distribution data:
+
+- CIFAR-10-C
+- ImageNet-C
+- SVHN as an OOD dataset for CIFAR-10-trained models
+
+The relevant result is not only that ensembles perform well, but that their predictive diversity remains more useful under shift. The authors show that independent runs tend to have higher Jensen-Shannon divergence than local sampling methods, especially as corruption increases.
+
+This supports the idea that ensemble disagreement is a practical signal of epistemic uncertainty when the test input moves away from the training distribution.
+
+---
+
+## 5. Main Findings
+
+### Finding 1: Random initializations find different functions
+
+Different independently trained networks often reach similarly good accuracy, but their predictions are not identical. They represent different accurate solutions.
+
+This explains why deep ensembles can work even without bootstrap resampling.
+
+### Finding 2: One training trajectory mostly stays within one functional mode
+
+Checkpoints from the same optimization trajectory are much more similar to one another in prediction space than checkpoints from different random initializations.
+
+This matters because sampling along one trajectory may not be enough to represent the full range of plausible functions.
+
+### Finding 3: Local subspace sampling has limited decorrelation power
+
+Dropout, diagonal Gaussian sampling, low-rank Gaussian sampling, and random subspace sampling produce some variation, but they generally do not match the prediction diversity produced by independent training runs.
+
+This is the paper's strongest support for using full deep ensembles when reliable epistemic uncertainty matters.
+
+### Finding 4: Function-space diversity matters under dataset shift
+
+Under corrupted inputs and OOD inputs, independent ensemble members disagree more than local subspace samples.
+
+That disagreement helps avoid overconfident predictions and supports better uncertainty behavior under shift.
+
+### Finding 5: Subspace methods and ensembles can be complementary
+
+The authors do not argue that subspace methods are useless. In fact, they show that combining ensembling with subspace sampling can provide complementary gains.
+
+The practical interpretation is:
+
+- random initialization gives broad diversity across modes;
+- subspace or averaging methods may improve behavior within each mode;
+- the strongest systems may combine both, depending on compute budget.
+
+---
+
+## 6. Why This Paper Is Useful as Methodological Support
+
+This paper is useful for my review because it provides theoretical and empirical support for choosing deep ensembles as a serious uncertainty method, rather than treating them as a naive engineering trick.
+
+It supports four methodological decisions.
+
+### 1. Deep ensembles are a defensible epistemic uncertainty baseline
+
+If I use or discuss deep ensembles, I can cite this paper to justify why independent random initializations matter. The ensemble is not just averaging redundant models. It is sampling multiple accurate functions that occupy different regions of prediction space.
+
+### 2. Function-space diversity should be treated as a design criterion
+
+The paper makes it clear that uncertainty methods should be judged by the diversity of their predictions, not only by their mathematical label.
+
+This is useful when comparing:
+
+- MC dropout;
+- Bayesian neural-network approximations;
+- subspace methods;
+- bootstrap ensembles;
+- independently initialized deep ensembles.
+
+The question should be:
+
+> Does the method generate accurate models that disagree meaningfully where the data do not determine a single answer?
+
+### 3. Deep ensembles are especially relevant for dataset shift
+
+Because random initializations produce more diverse functions, deep ensembles have a practical advantage when inputs are corrupted, shifted, or out of distribution.
+
+This supports using ensemble disagreement as a reliability signal in deployed systems.
+
+### 4. The paper helps explain the gap between Bayesian theory and applied performance
+
+Bayesian neural networks are theoretically appealing, but scalable approximations often focus on one posterior mode. This paper gives a concrete reason why those methods may underperform deep ensembles in practice: they may represent within-mode uncertainty but miss between-mode uncertainty.
+
+That distinction is useful for explaining why a non-Bayesian ensemble can sometimes be more useful than an approximate Bayesian method.
+
+---
+
+## 7. Scope Notes Rather Than Heavy Criticism
+
+I am using this paper mainly as methodological support, so the important limitations are scope notes rather than reasons to dismiss it.
+
+### Scope note 1: The experiments are image-classification focused
+
+The paper uses CIFAR-10, CIFAR-100, ImageNet, corrupted image benchmarks, and SVHN. This is strong evidence for computer vision, but it does not directly prove the same behavior in tabular, time-series, load forecasting, energy forecasting, or battery SOH regression.
+
+For my work, the paper should support the general principle of ensemble diversity, not a domain-specific claim about energy systems.
+
+### Scope note 2: It explains epistemic diversity more than aleatoric uncertainty
+
+The paper is mainly about model diversity and epistemic uncertainty. It does not provide a full framework for separating aleatoric and epistemic uncertainty in regression.
+
+So it should be paired with papers that address:
+
+- heteroscedastic noise;
+- prediction intervals;
+- calibration;
+- interval coverage;
+- aleatoric/epistemic decomposition.
+
+### Scope note 3: Deep ensembles remain computationally expensive
+
+The paper strengthens the case for deep ensembles, but it also implies a practical cost: to get the diversity benefit, multiple models must be trained.
+
+For applied forecasting, the trade-off is between:
+
+- uncertainty quality and robustness;
+- training cost;
+- memory cost;
+- inference latency.
+
+### Scope note 4: Diversity is necessary, not sufficient
+
+Functional diversity helps, but it does not automatically guarantee calibrated uncertainty. A strong methodology still needs calibration checks and interval-quality evaluation.
+
+This links the paper naturally to work on:
+
+- dataset shift evaluation;
+- Brier score and calibration;
+- prediction interval coverage;
+- local or regime-aware uncertainty validation.
+
+---
+
+## 8. Relevance to My Research / How I Will Use It
+
+### Why I would cite this paper
+
+I would cite this paper when explaining why deep ensembles are a strong baseline for uncertainty-aware machine learning.
+
+The most useful citation claim is:
+
+> Independently initialized neural networks can discover different accurate functions, and this function-space diversity helps explain why deep ensembles provide strong predictive uncertainty and robustness under dataset shift.
+
+### How it supports my methodology
+
+This paper supports a methodology where uncertainty is not treated as a decorative confidence score. Instead, uncertainty should come from a modelling process that produces meaningful alternative predictions.
+
+For my review, the paper helps justify:
+
+- using deep ensembles as an epistemic uncertainty mechanism;
+- treating ensemble disagreement as informative;
+- caring about model diversity, not only model accuracy;
+- comparing uncertainty methods under shift or sparse operating regimes;
+- being cautious about local approximate Bayesian methods if they do not explore multiple functional modes.
+
+### How it connects to explainability
+
+The paper is not a feature-attribution XAI paper. Its relevance to explainability is more structural.
+
+It helps explain why an uncertainty estimate exists in the first place:
+
+- if ensemble members agree, the model family has found a stable answer;
+- if ensemble members disagree, the input may sit in a region where the data do not strongly determine one prediction;
+- under shift, disagreement can act as a warning that the model is extrapolating.
+
+That makes ensemble diversity a model-level explanation of reliability.
+
+### Best use in my literature review
+
+This paper should sit in the methodological-foundation part of the review, close to:
+
+- Lakshminarayanan et al. on the practical deep-ensemble method;
+- Ovadia et al. on uncertainty under dataset shift;
+- papers on aleatoric/epistemic decomposition;
+- papers on evaluating uncertainty quality.
+
+It is not the paper that tells me how to explain interval width with SHAP. It is the paper that supports why a deep ensemble can be a reasonable uncertainty-generating mechanism before I try to explain that uncertainty.
+
+---
+
+## 9. Pre-Written Assets
+
+### Literature review paragraph
+
+Fort, Hu, and Lakshminarayanan provide a methodological explanation for the empirical strength of deep ensembles. They argue that independently initialized neural networks tend to discover different accurate functions in prediction space, whereas many scalable Bayesian or subspace-based approximations remain close to a single function-space mode. Their experiments on CIFAR-10, CIFAR-100, ImageNet, corrupted image benchmarks, and OOD inputs show that random initialization provides a stronger diversity-accuracy trade-off than several local sampling methods. This supports the use of deep ensembles as a practical epistemic uncertainty baseline, particularly when robustness under dataset shift and model disagreement are important.
+
+### Methodology justification sentence
+
+Deep ensembles are used as a practical epistemic uncertainty mechanism because independently initialized models can occupy different accurate regions of function space, making their disagreement informative about model uncertainty and potential dataset shift.
+
+### Link to explainability sentence
+
+In this framing, ensemble disagreement provides a model-level explanation of predictive reliability: agreement suggests a stable prediction, while disagreement signals that multiple plausible functions remain consistent with the available data.
+
+### Caution sentence
+
+Although this paper supports the use of deep ensembles for epistemic uncertainty, it should be paired with calibration and interval-coverage evaluation because functional diversity alone does not guarantee reliable probabilistic forecasts.
+
+### One-line review
+
+This paper explains why deep ensembles work: random initialization gives access to diverse, accurate functions, and that function-space diversity is central to robust predictive uncertainty.
+
+---
+
+## 10. Bottom-Line Takeaway
+
+The core value of this paper is that it makes deep ensembles feel methodologically justified.
+
+The important message is not simply "train five models instead of one." The important message is that independently trained models can represent different plausible functions. That diversity is what gives ensemble uncertainty its practical value.
+
+For my review, this paper supports the foundational decision to treat deep ensembles as a serious uncertainty-estimation mechanism, especially for epistemic uncertainty and dataset-shift awareness. It also gives me useful language for explaining why uncertainty quality depends on prediction-space diversity rather than only on probabilistic formalism.
+

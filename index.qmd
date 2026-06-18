@@ -24,6 +24,7 @@ Some entries are already fully reviewed, while others are placeholder pages mark
 - [Critical papers on uncertainty quantification in deep learning](#critical-papers-on-uncertainty-quantification-in-deep-learning)
 - [Explaining uncertainty and explainability of UQ](#explaining-uncertainty-and-explainability-of-uq)
 - [Conceptual bridge for deterministic readers](#conceptual-bridge-for-deterministic-readers)
+- [Foundational XAI methodology and evaluation](#foundational-xai-methodology-and-evaluation)
 
 ## Conceptual bridge for deterministic readers
 
@@ -32,6 +33,14 @@ This note synthesizes the papers that are most useful for explaining uncertainty
 | Published | Citations | Paper | Why it matters |
 |---|---|---|---|
 | Jun 2026 | - | [Uncertainty taxonomy and language for deterministic readers](<reviews/Uncertainty taxonomy and language for deterministic readers.qmd>) | Reusable conceptual bridge for defining aleatoric/epistemic uncertainty, probability vs confidence, prediction intervals vs confidence intervals, calibration, sharpness, consistency, adaptivity, and uncertainty-focused explainability. |
+
+## Foundational XAI methodology and evaluation
+
+These papers define what XAI should achieve, what counts as a useful explanation, and how explanation quality should be validated.
+
+| Published | Citations | Paper | Why it matters |
+|---|---|---|---|
+| May 2021 | - | [Notions of explainability and evaluation approaches for explainable artificial intelligence](<reviews/Notions of explainability and evaluation approaches for explainable artificial intelligence.qmd>) | Foundational taxonomy for explanation goals, quality criteria, and validation approaches; supports methodology choices for evaluating whether XAI is understandable, faithful, actionable, and decision-relevant. |
 
 ## Explaining prediction intervals and quantiles with SHAP
 
@@ -103,6 +112,8 @@ These papers help frame the broader methodological caution: uncertainty estimate
 
 | Published | Citations | Paper | Why it matters |
 |---|---|---|---|
+| Oct 2022 | - | [Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation](<reviews/Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation.qmd>) | Theoretical caution that epistemic uncertainty cannot be made trustworthy merely by training a model to output second-order uncertainty through pointwise loss minimisation; supports using ensemble disagreement as an explicit model-uncertainty mechanism. |
+| Dec 2019 | - | [Deep Ensembles: A Loss Landscape Perspective](<reviews/Deep Ensembles A Loss Landscape Perspective.qmd>) | Methodological support for why independently initialized deep ensembles provide useful epistemic uncertainty: they find diverse, accurate functions in prediction space. |
 | Jan 2023 | 153 | [A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective](<reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.qmd>) | Broad survey for positioning the deep-learning UQ landscape, strengths, and open problems. |
 
 ## Explaining uncertainty and explainability of UQ
