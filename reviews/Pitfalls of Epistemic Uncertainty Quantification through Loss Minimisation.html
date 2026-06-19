@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-18">
-<meta name="description" content="Review of a NeurIPS 2019 paper establishing a practical pipeline for dataset shift detection, characterization, and malignancy assessment using dimensionality reduction and two-sample testing.">
+<meta name="dcterms.date" content="2026-06-18">
+<meta name="description" content="Methodology-focused review of Bengs, Hullermeier, and Waegeman’s argument that epistemic uncertainty cannot be learned faithfully by ordinary loss minimisation over second-order predictions.">
 
-<title>Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift – Review Articles</title>
+<title>Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation – Review Articles</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,8 +32,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" rel="next">
-<link href="../reviews/Explaining Set-Valued Predictions.html" rel="prev">
+<link href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" rel="next">
+<link href="../reviews/Notions of explainability and evaluation approaches for explainable artificial intelligence.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -72,35 +72,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -141,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation.html">Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -279,7 +250,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
   </div>
 </li>
@@ -345,7 +316,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reviews/Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation.html" class="sidebar-item-text sidebar-link">
+  <a href="../reviews/Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation</span></a>
   </div>
 </li>
@@ -432,20 +403,24 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation.html">Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</h1>
+<h1 class="title">Pitfalls of Epistemic Uncertainty Quantification through Loss Minimisation</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Dataset Shift</div>
-    <div class="quarto-category">Out-of-Distribution Detection</div>
-    <div class="quarto-category">Machine Learning Operations (MLOps)</div>
-    <div class="quarto-category">Trustworthy AI</div>
+    <div class="quarto-category">Reviewed</div>
+    <div class="quarto-category">Epistemic uncertainty</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">Loss minimisation</div>
+    <div class="quarto-category">Evidential deep learning</div>
+    <div class="quarto-category">Second-order uncertainty</div>
+    <div class="quarto-category">Deep ensembles</div>
+    <div class="quarto-category">Methodological foundation</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Review of a NeurIPS 2019 paper establishing a practical pipeline for dataset shift detection, characterization, and malignancy assessment using dimensionality reduction and two-sample testing.
+    Methodology-focused review of Bengs, Hullermeier, and Waegeman’s argument that epistemic uncertainty cannot be learned faithfully by ordinary loss minimisation over second-order predictions.
   </div>
 </div>
 
@@ -456,7 +431,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 18, 2024</p>
+      <p class="date">June 18, 2026</p>
     </div>
   </div>
   
@@ -470,123 +445,350 @@ window.Quarto = {
 
 <div class="paper-meta">
 <ul>
-<li><strong>Authors &amp; Year:</strong> Stephan Rabanser, Stephan Günnemann, Zachary C. Lipton (2019)</li>
-<li><strong>Venue (Journal/Conference):</strong> NeurIPS 2019 <em>(Highly reputable, Tier 1 conference in ML)</em></li>
-<li><strong>Link/DOI:</strong> <a href="https://arxiv.org/abs/1810.11953">arXiv:1810.11953</a> / NeurIPS Proceedings</li>
-<li><strong>Code/Data Available?:</strong> <a href="https://github.com/steverab/failing-loudly">Yes - GitHub Repository</a></li>
-<li><strong>Proximity/Threat Level:</strong> High / Foundational Methodology</li>
-<li><strong>Date Reviewed:</strong> 2024-05-18</li>
+<li><strong>Authors &amp; Year:</strong> Viktor Bengs, Eyke Hullermeier, Willem Waegeman (2022)</li>
+<li><strong>Venue (Journal/Conference):</strong> arXiv preprint, cs.LG</li>
+<li><strong>DOI / arXiv:</strong> <a href="https://doi.org/10.48550/arXiv.2203.06102">10.48550/arXiv.2203.06102</a></li>
+<li><strong>Primary Topic:</strong> Why direct loss-based learning of epistemic uncertainty is problematic</li>
+<li><strong>Contribution Type:</strong> Theoretical caution / methodological foundation for epistemic uncertainty quantification</li>
+<li><strong>Methods Discussed:</strong> Second-order predictors, Dirichlet distributions, evidential deep learning, posterior networks, proper scoring rules, Brier score, cross-entropy, Bayesian regularisation</li>
+<li><strong>Core Claim:</strong> A model cannot be reliably incentivised to report honest epistemic uncertainty merely by minimising a pointwise loss against observed labels.</li>
+<li><strong>Proximity / Threat Level:</strong> High relevance / supports the methodological choice to use ensemble disagreement as an epistemic uncertainty mechanism rather than relying on self-reported uncertainty from a single loss-minimising model</li>
+<li><strong>Date Reviewed:</strong> 2026-06-18</li>
 </ul>
 </div>
 <hr>
-<section id="core-contributions-novelty-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="plain-language-explanation" class="level2">
+<h2 class="anchored" data-anchor-id="plain-language-explanation">2. Plain-Language Explanation</h2>
+<p>This paper asks a deceptively simple question:</p>
+<blockquote class="blockquote">
+<p>Can we train a model to output its own epistemic uncertainty just by giving it the right loss function?</p>
+</blockquote>
+<p>The authors argue that the answer is generally no, at least for the loss functions used in several direct uncertainty-estimation methods.</p>
+<p>The key distinction is between three levels.</p>
 <ul>
-<li><strong>The Motivation (Why “Fail Loudly”?):</strong>
-<ul>
-<li>Standard software systems rely on explicit tests and type-checks to throw exceptions (“fail loudly”) when inputs violate assumptions. Machine learning systems, however, generally assume test data is drawn i.i.d. from the training distribution. When this assumption is violated (dataset shift), ML models <em>fail silently</em>, outputting highly confident but incorrect predictions without alerting the operator.</li>
-</ul></li>
-<li><strong>The Core Problem:</strong>
-<ul>
-<li>High-dimensional data (like images) makes traditional statistical two-sample testing incredibly weak due to the curse of dimensionality. There are no established best practices for detecting shift in complex real-world ML pipelines.</li>
-</ul></li>
-<li><strong>Their Claim to Fame / Novelty:</strong>
-<ul>
-<li>The paper provides a comprehensive empirical framework for achieving three distinct goals during deployment:
-<ol type="1">
-<li><strong>Detect</strong> shift using as few examples as possible.</li>
-<li><strong>Characterize</strong> shift by identifying the samples most representative of the change.</li>
-<li><strong>Determine Malignancy</strong>, separating shifts that safely preserve model accuracy from those that actively destroy it.</li>
-</ol></li>
-</ul></li>
-<li><strong>The Value Derived from the Pipeline (What did they actually find?):</strong>
-<ul>
-<li><strong>BBSDs Reigns Supreme:</strong> Using the soft predictions (softmax outputs) of the black-box classifier itself as a dimensionality reduction technique (BBSDs), followed by simple univariate testing, works astonishingly well across a massive variety of shifts—even when the underlying label-shift assumption is violated.</li>
-<li><strong>Univariate <span class="math inline">\(\approx\)</span> Multivariate:</strong> Surprisingly, running multiple univariate Kolmogorov-Smirnov (KS) tests across latent dimensions (with a heavy Bonferroni correction) performs comparably to complex, computationally heavy multivariate kernel tests like MMD.</li>
-<li><strong>The MNIST Bombshell:</strong> By applying their framework to standard datasets, they discovered that the widely used, supposedly i.i.d. original MNIST train/test split actually contains a statistically significant distribution shift (specifically, the digit ‘6’ is drawn at a different rotation/openness in the test set).</li>
-</ul></li>
+<li><strong>Level 0:</strong> the observed label, such as class 0 or class 1.</li>
+<li><strong>Level 1:</strong> the true class probability, such as the probability that an input belongs to class 1.</li>
+<li><strong>Level 2:</strong> uncertainty about the level-1 probability itself.</li>
 </ul>
+<p>Aleatoric uncertainty lives mainly at level 1. It describes randomness in the data-generating process. Even if the true class probability is known, the individual label may still be uncertain.</p>
+<p>Epistemic uncertainty lives at level 2. It describes the learner’s lack of knowledge about the true probability or the true predictor. It should reduce when the learner receives more relevant information.</p>
+<p>The problem is that training data usually contains level-0 observations: individual labels. It does not contain direct observations of level-1 probabilities, and it definitely does not contain direct observations of level-2 uncertainty. Therefore, if a method asks a neural network to output a distribution over class-probability distributions, there is no direct ground-truth epistemic uncertainty target for the loss to compare against.</p>
+<p>That is the paper’s central warning:</p>
+<blockquote class="blockquote">
+<p>A loss function can reward accurate predictions, but that does not mean it rewards honest epistemic uncertainty.</p>
+</blockquote>
+<p>For my work, this is important because it supports a cautious methodological position. Epistemic uncertainty should not be treated as just another supervised target that a single model can learn because the loss says so. It needs a modelling mechanism that represents multiple plausible predictors, such as an ensemble, Bayesian posterior approximation, or another explicit model-uncertainty construction.</p>
 <hr>
+</section>
+<section id="core-contributions-novelty-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">3. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="what-problem-are-they-solving" class="level3">
+<h3 class="anchored" data-anchor-id="what-problem-are-they-solving">What problem are they solving?</h3>
+<p>Many uncertainty-aware deep learning methods try to make the model predict both:</p>
+<ul>
+<li>the class probabilities, and</li>
+<li>a measure of uncertainty around those probabilities.</li>
+</ul>
+<p>In classification, this is often done using a <strong>second-order distribution</strong>. Instead of predicting one probability vector, the model predicts a distribution over probability vectors. For example, a model may predict the parameters of a Dirichlet distribution. A sharp Dirichlet distribution means the model claims high certainty about the class probabilities. A broad Dirichlet distribution means the model claims more epistemic uncertainty.</p>
+<p>This idea is attractive because it appears to let a single neural network output uncertainty directly. The authors question whether the training loss actually gives the correct incentive.</p>
+</section>
+<section id="main-claim" class="level3">
+<h3 class="anchored" data-anchor-id="main-claim">Main claim</h3>
+<p>The main claim is:</p>
+<blockquote class="blockquote">
+<p>Loss minimisation over observed labels does not, by itself, give a reliable incentive to represent epistemic uncertainty faithfully.</p>
+</blockquote>
+<p>The model may still produce uncertainty-looking numbers. But the paper shows that those numbers can be driven by the mathematical structure of the loss and regularisation, rather than by a faithful representation of the learner’s lack of knowledge.</p>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why this matters</h3>
+<p>This matters because epistemic uncertainty is not directly observed in the dataset. There is no ordinary label that says:</p>
+<blockquote class="blockquote">
+<p>Here is the correct amount of model uncertainty for this input.</p>
+</blockquote>
+<p>For first-order probability prediction, proper scoring rules such as log-loss or Brier score work because the expected loss is minimised by the true class probability. For second-order epistemic uncertainty, there is no equivalent ground-truth second-order target in the usual supervised data.</p>
+<p>Therefore, methods that claim to learn epistemic uncertainty by minimising a pointwise loss need to be treated carefully.</p>
+</section>
+<section id="why-this-is-useful-for-my-review" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-useful-for-my-review">Why this is useful for my review</h3>
+<p>This paper gives theoretical support for a methodological decision:</p>
+<ul>
+<li>I should not rely only on a single model that is trained to output its own epistemic uncertainty through an auxiliary loss.</li>
+<li>I need an uncertainty mechanism that reflects uncertainty over the predictor itself.</li>
+<li>Deep ensembles are attractive because they express epistemic uncertainty through disagreement between multiple fitted models, rather than through a single self-reported uncertainty head.</li>
+</ul>
+<p>The paper does not prove that deep ensembles are always better than MC dropout or Bayesian neural networks. Its value is more foundational: it explains why direct loss-based epistemic uncertainty is conceptually fragile.</p>
+<hr>
+</section>
 </section>
 <section id="methodology-technical-details" class="level2">
-<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
+<h2 class="anchored" data-anchor-id="methodology-technical-details">4. Methodology &amp; Technical Details</h2>
+<section id="the-three-level-uncertainty-setup" class="level3">
+<h3 class="anchored" data-anchor-id="the-three-level-uncertainty-setup">The three-level uncertainty setup</h3>
+<p>The paper uses classification notation.</p>
+<p>At level 1, the true conditional class distribution is:</p>
+<p>[ ^*(x) = p(x) ]</p>
+<p>A normal probabilistic classifier predicts:</p>
+<p>[ (x) ]</p>
+<p>and can be trained with a proper scoring rule such as cross-entropy or Brier score.</p>
+<p>At level 2, the model predicts a distribution over possible level-1 class-probability vectors:</p>
+<p>[ Q(x) P(P(Y)) ]</p>
+<p>For example, in a Dirichlet-based method, (Q(x)) may be represented by Dirichlet parameters ((x)). A concentrated (Q(x)) means the model claims to know the class probabilities well. A diffuse (Q(x)) means the model claims epistemic uncertainty.</p>
+</section>
+<section id="why-level-2-learning-is-harder-than-level-1-learning" class="level3">
+<h3 class="anchored" data-anchor-id="why-level-2-learning-is-harder-than-level-1-learning">Why level-2 learning is harder than level-1 learning</h3>
+<p>For level-1 learning, the observed class labels give statistical evidence about the true class probabilities.</p>
+<p>For level-2 learning, the learner would need evidence about distributions over probability vectors. But such evidence is not available in ordinary supervised datasets. The dataset gives labels, not repeated samples of the true probability vector.</p>
+<p>The authors make an important point:</p>
+<blockquote class="blockquote">
+<p>Learning at the epistemic level cannot be treated as ordinary frequentist learning in the same way as learning class probabilities.</p>
+</blockquote>
+<p>This is why priors, model assumptions, hypothesis spaces, or model-sampling mechanisms matter. Epistemic uncertainty depends on the learner’s state of knowledge, not only on the data-generating distribution.</p>
+</section>
+<section id="loss-form-1-averaging-first-order-losses" class="level3">
+<h3 class="anchored" data-anchor-id="loss-form-1-averaging-first-order-losses">Loss form 1: Averaging first-order losses</h3>
+<p>One natural idea is to define a second-order loss by averaging a normal first-order loss over the model’s predicted second-order distribution:</p>
+<p>[ L_2(Q, y) = _{Q}[L_1(, y)] ]</p>
+<p>where:</p>
 <ul>
-<li><strong>The Pipeline Design:</strong>
+<li>(Q) is the predicted distribution over probability vectors;</li>
+<li>() is a sampled probability vector;</li>
+<li>(L_1) is a normal first-order loss such as cross-entropy or Brier score;</li>
+<li>(y) is the observed label.</li>
+</ul>
+<p>The problem is that if (L_1) is convex, Jensen’s inequality implies that the expected loss is at least as large as the loss at the mean prediction:</p>
+<p>[ L_1(<em>{Q}[], y) </em>{Q}[L_1(, y)] ]</p>
+<p>So the loss rewards the learner for collapsing (Q) onto its mean. In other words, the model has an incentive to pretend full certainty.</p>
+<p>This is a serious problem for epistemic uncertainty. A model with little data should often be uncertain, but the loss can still prefer a sharply peaked second-order prediction.</p>
+</section>
+<section id="loss-form-2-bayesian-style-regularisation" class="level3">
+<h3 class="anchored" data-anchor-id="loss-form-2-bayesian-style-regularisation">Loss form 2: Bayesian-style regularisation</h3>
+<p>Another idea is to add a regularisation term that penalises deviation from a prior:</p>
+<p>[ L_2(Q, y) = <em>{Q}[L_1(, y)] + D</em>{KL}(Q | Q_0) ]</p>
+<p>where:</p>
 <ul>
-<li><strong>Step 1: Dimensionality Reduction (DR).</strong> Reduce raw high-dimensional inputs to a lower-dimensional latent space <span class="math inline">\(K\)</span>.</li>
-<li><strong>Step 2: Two-Sample Testing (TST).</strong> Run statistical tests comparing the source (training) latent representations against the target (deployment) latent representations.</li>
-</ul></li>
-<li><strong>Dimensionality Reduction Methods Compared:</strong>
+<li>(Q_0) is a prior distribution over probability vectors;</li>
+<li>(D_{KL}) measures deviation from that prior;</li>
+<li>() controls the strength of the prior/regularisation term.</li>
+</ul>
+<p>If the prior is uniform, this can also be interpreted as rewarding entropy. This looks more reasonable because it prevents the model from always collapsing to a point mass.</p>
+<p>However, the paper shows that this does not solve the problem cleanly. The amount of epistemic uncertainty now depends strongly on:</p>
 <ul>
-<li><em>No Reduction</em> (Raw pixels)</li>
-<li><em>PCA</em> (Principal Component Analysis)</li>
-<li><em>SRP</em> (Sparse Random Projection)</li>
-<li><em>UAE / TAE</em> (Untrained and Trained Autoencoders)</li>
-<li><em>BBSDs / BBSDh</em> (Black-Box Shift Detection using the classifier’s own Softmax or Hard predictions)</li>
-<li><em>Domain Classifier</em> (A model explicitly trained to distinguish source vs.&nbsp;target data).</li>
-</ul></li>
-<li><strong>Statistical Tests Used:</strong>
+<li>the chosen first-order loss (L_1);</li>
+<li>the prior (Q_0);</li>
+<li>the regularisation parameter ();</li>
+<li>the true class probability itself.</li>
+</ul>
+<p>That means the reported uncertainty can be controlled by design choices rather than by the learner’s actual state of knowledge.</p>
+</section>
+<section id="what-an-appropriate-level-2-loss-should-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-an-appropriate-level-2-loss-should-do">What an appropriate level-2 loss should do</h3>
+<p>The authors propose two minimal requirements for a level-2 epistemic uncertainty loss.</p>
+<ol type="1">
+<li><p><strong>Uncertainty should decrease as sample size increases.</strong></p>
+<p>With more observations, the learner should generally become less epistemically uncertain.</p></li>
+<li><p><strong>In the infinite-data limit, epistemic uncertainty should vanish.</strong></p>
+<p>If the learner receives enough relevant data, the second-order distribution should converge to a point mass at the true probability.</p></li>
+</ol>
+<p>These requirements are deliberately modest. They do not demand a perfect uncertainty measure. They only require the uncertainty to behave in the direction epistemic uncertainty is supposed to behave.</p>
+<hr>
+</section>
+</section>
+<section id="main-findings" class="level2">
+<h2 class="anchored" data-anchor-id="main-findings">5. Main Findings</h2>
+<section id="finding-1-averaging-first-order-losses-encourages-false-certainty" class="level3">
+<h3 class="anchored" data-anchor-id="finding-1-averaging-first-order-losses-encourages-false-certainty">Finding 1: Averaging first-order losses encourages false certainty</h3>
+<p>For convex first-order losses such as Brier score and log-loss, the empirical loss minimiser becomes a Dirac distribution. In practical terms, the model reports complete certainty.</p>
+<p>This can happen regardless of sample size.</p>
+<p>That is exactly the opposite of what epistemic uncertainty should do. With few samples, the model should usually admit lack of knowledge. But the loss minimisation objective can still reward a collapsed distribution.</p>
+</section>
+<section id="finding-2-regularisation-can-push-the-model-toward-arbitrary-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="finding-2-regularisation-can-push-the-model-toward-arbitrary-uncertainty">Finding 2: Regularisation can push the model toward arbitrary uncertainty</h3>
+<p>Adding a KL penalty or entropy-style regularisation prevents immediate collapse, but it introduces a different problem.</p>
+<p>The uncertainty is now strongly controlled by the regularisation weight (). If () is too small, the model becomes too certain. If () is too large, the model can remain too uncertain even with many observations.</p>
+<p>This means the uncertainty estimate can be tuned into existence rather than learned faithfully.</p>
+</section>
+<section id="finding-3-the-problem-is-not-only-a-dirichlet-problem" class="level3">
+<h3 class="anchored" data-anchor-id="finding-3-the-problem-is-not-only-a-dirichlet-problem">Finding 3: The problem is not only a Dirichlet problem</h3>
+<p>Although the discussion is motivated partly by Dirichlet-style second-order predictors, the formal results are broader. The issue is not just that one specific distributional family is flawed.</p>
+<p>The deeper issue is that a pointwise loss comparing (Q(x)) with a single observed label (y) does not have enough information to judge whether (Q(x)) is an honest representation of epistemic uncertainty.</p>
+</section>
+<section id="finding-4-more-data-does-not-necessarily-produce-the-right-epistemic-behaviour" class="level3">
+<h3 class="anchored" data-anchor-id="finding-4-more-data-does-not-necessarily-produce-the-right-epistemic-behaviour">Finding 4: More data does not necessarily produce the right epistemic behaviour</h3>
+<p>In the synthetic experiments, the reported level-2 uncertainty does not reliably behave like epistemic uncertainty should.</p>
+<p>For small regularisation values, the empirical loss minimiser collapses to a point mass. For large regularisation values, it can remain highly uncertain even at large sample sizes. The change between these behaviours can be abrupt.</p>
+<p>This supports the theoretical result: the loss does not naturally encode the desired learning dynamic.</p>
+</section>
+<section id="finding-5-the-paper-questions-the-incentive-structure-not-the-usefulness-of-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="finding-5-the-paper-questions-the-incentive-structure-not-the-usefulness-of-uncertainty">Finding 5: The paper questions the incentive structure, not the usefulness of uncertainty</h3>
+<p>The authors are not arguing that epistemic uncertainty is unimportant. They argue the opposite: epistemic uncertainty is important, but difficult.</p>
+<p>Their concern is that some methods produce uncertainty values without a trustworthy reason to believe those values are faithful.</p>
+<hr>
+</section>
+</section>
+<section id="why-this-paper-supports-an-ensemble-based-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-paper-supports-an-ensemble-based-methodology">6. Why This Paper Supports an Ensemble-Based Methodology</h2>
+<p>This paper is useful for justifying ensembles because it clarifies what epistemic uncertainty is uncertainty about.</p>
+<p>Epistemic uncertainty is not just another output variable. It is uncertainty about the predictor, the hypothesis, or the class-probability function that should be used. Therefore, a method for epistemic uncertainty should represent multiple plausible predictors or model states.</p>
+<p>Deep ensembles do this in a direct and practical way:</p>
 <ul>
-<li><em>Multivariate:</em> Maximum Mean Discrepancy (MMD) with a permutation test.</li>
-<li><em>Univariate:</em> Kolmogorov-Smirnov (KS) test aggregated via Bonferroni correction.</li>
-<li><em>Categorical/Binomial:</em> Chi-Squared (for hard labels) and Binomial test (for domain classifiers).</li>
-</ul></li>
-<li><strong>Datasets &amp; Simulated Shifts:</strong>
+<li>train multiple models independently;</li>
+<li>let each model represent a plausible fitted function;</li>
+<li>use disagreement between models as evidence of model uncertainty;</li>
+<li>treat agreement as evidence that the prediction is more stable under the modelling procedure.</li>
+</ul>
+<p>This is methodologically different from asking one model to produce a second-order uncertainty value through a pointwise loss. The ensemble does not need a direct epistemic uncertainty label. Its uncertainty signal comes from variation across fitted predictors.</p>
+<section id="the-argument-this-paper-gives-me" class="level3">
+<h3 class="anchored" data-anchor-id="the-argument-this-paper-gives-me">The argument this paper gives me</h3>
+<p>The paper supports the following chain of reasoning:</p>
+<ol type="1">
+<li>Epistemic uncertainty has no direct supervised ground truth.</li>
+<li>A loss against observed labels can reward predictive accuracy without rewarding honest epistemic uncertainty.</li>
+<li>Direct second-order uncertainty heads can therefore be overconfident, underconfident, or strongly controlled by regularisation.</li>
+<li>A more defensible epistemic uncertainty mechanism should represent alternative plausible predictors.</li>
+<li>Deep ensembles are a practical way to approximate this by using independently trained models and measuring their disagreement.</li>
+</ol>
+</section>
+<section id="how-this-helps-position-ensembles-against-mc-dropout" class="level3">
+<h3 class="anchored" data-anchor-id="how-this-helps-position-ensembles-against-mc-dropout">How this helps position ensembles against MC dropout</h3>
+<p>This paper is not mainly an MC dropout paper, so I should not cite it as direct empirical evidence that ensembles outperform MC dropout.</p>
+<p>Instead, I should use it for the deeper methodological point:</p>
+<blockquote class="blockquote">
+<p>Epistemic uncertainty should come from uncertainty over predictors, not merely from a single model being trained to output an uncertainty score.</p>
+</blockquote>
+<p>That point pairs naturally with the deep-ensemble literature. Compared with MC dropout, which samples stochastic subnetworks around one trained model and depends on dropout design choices, deep ensembles make the model-plurality mechanism more explicit. Each independently trained model can occupy a different fitted solution, and disagreement between those fitted solutions is easier to interpret as epistemic uncertainty.</p>
+<p>So this paper is best used together with:</p>
 <ul>
-<li>Tested on MNIST, CIFAR-10, USPS, and COIL-100.</li>
-<li>Perturbations included: Adversarial (FGSM), Knock-out (class imbalance), Gaussian noise, and Image transforms (rotation, translation, zoom). Shifts were varied by intensity and fraction of affected data (10% to 100%).</li>
-</ul></li>
+<li><a href="../reviews/Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles.html">Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles</a></li>
+<li><a href="../reviews/Deep Ensembles A Loss Landscape Perspective.html">Deep Ensembles: A Loss Landscape Perspective</a></li>
+<li><a href="../reviews/Can You Trust Your Model’s Uncertainty Evaluating Predictive Uncertainty Under Dataset Shift.html">Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift</a></li>
+</ul>
+<p>The combined argument is:</p>
+<ul>
+<li>Bengs et al.&nbsp;explain why direct loss-based epistemic uncertainty is conceptually fragile.</li>
+<li>Lakshminarayanan et al.&nbsp;show that deep ensembles work well empirically for predictive uncertainty.</li>
+<li>Fort et al.&nbsp;explain why independently trained ensembles generate useful function-space diversity.</li>
+<li>Ovadia et al.&nbsp;show why epistemic uncertainty matters under dataset shift.</li>
 </ul>
 <hr>
 </section>
-<section id="validation-strategy-detection-characterization-malignancy" class="level2">
-<h2 class="anchored" data-anchor-id="validation-strategy-detection-characterization-malignancy">4. Validation Strategy (Detection, Characterization, &amp; Malignancy)</h2>
+</section>
+<section id="scope-notes-rather-than-heavy-criticism" class="level2">
+<h2 class="anchored" data-anchor-id="scope-notes-rather-than-heavy-criticism">7. Scope Notes Rather Than Heavy Criticism</h2>
+<p>I am using this paper as methodological support, so the important caveats are scope notes rather than reasons to dismiss it.</p>
+<section id="scope-note-1-the-formal-results-target-specific-loss-families" class="level3">
+<h3 class="anchored" data-anchor-id="scope-note-1-the-formal-results-target-specific-loss-families">Scope note 1: The formal results target specific loss families</h3>
+<p>The authors are careful to say that their formal results apply to the proposed loss functions they analyse. They do not prove that no possible level-2 loss could ever work.</p>
+<p>For my review, the fair claim is:</p>
+<blockquote class="blockquote">
+<p>Existing direct loss-minimisation approaches to second-order epistemic uncertainty can fail to provide faithful epistemic incentives.</p>
+</blockquote>
+<p>not:</p>
+<blockquote class="blockquote">
+<p>All possible direct uncertainty losses are impossible.</p>
+</blockquote>
+</section>
+<section id="scope-note-2-the-paper-focuses-on-classification" class="level3">
+<h3 class="anchored" data-anchor-id="scope-note-2-the-paper-focuses-on-classification">Scope note 2: The paper focuses on classification</h3>
+<p>The technical setup is classification, with probability vectors and Dirichlet-style second-order distributions.</p>
+<p>My work may involve regression, prediction intervals, or forecasting. The exact theorems do not transfer automatically. However, the conceptual warning does transfer well:</p>
+<blockquote class="blockquote">
+<p>If the training target does not contain epistemic uncertainty labels, the loss may not be able to validate epistemic uncertainty directly.</p>
+</blockquote>
+</section>
+<section id="scope-note-3-the-paper-is-not-a-direct-ensemble-benchmark" class="level3">
+<h3 class="anchored" data-anchor-id="scope-note-3-the-paper-is-not-a-direct-ensemble-benchmark">Scope note 3: The paper is not a direct ensemble benchmark</h3>
+<p>The paper does not compare deep ensembles, MC dropout, and Bayesian neural networks in an empirical benchmark.</p>
+<p>It supports ensembles indirectly by clarifying why epistemic uncertainty should be tied to uncertainty over predictors. For direct ensemble evidence, I should cite the ensemble papers alongside this one.</p>
+</section>
+<section id="scope-note-4-it-does-not-remove-the-need-to-validate-ensemble-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="scope-note-4-it-does-not-remove-the-need-to-validate-ensemble-uncertainty">Scope note 4: It does not remove the need to validate ensemble uncertainty</h3>
+<p>Using ensembles avoids the specific pitfall of a single model self-reporting epistemic uncertainty through a level-2 loss, but it does not automatically guarantee perfect uncertainty quality.</p>
+<p>An ensemble still needs:</p>
 <ul>
-<li><strong>Validating Shift Detection:</strong>
-<ul>
-<li>The authors evaluated the p-value evolution and detection accuracy across varying target sample sizes (<span class="math inline">\(s \in \{10, \dots, 10000\}\)</span>). BBSDs could reliably detect large shifts with just 20 samples, vastly outperforming methods like PCA or untrained autoencoders.</li>
-</ul></li>
-<li><strong>Validating Shift Characterization (Most Anomalous Samples):</strong>
-<ul>
-<li>Instead of standard anomaly detection, they used the output probabilities of the <em>Domain Classifier</em> to rank samples. The items the domain classifier most confidently placed in the “target” bucket were presented as exemplars of the shift.</li>
-</ul></li>
-<li><strong>Validating Shift Malignancy:</strong>
-<ul>
-<li><strong>The Heuristic:</strong> To figure out if a shift actually hurts the primary task classifier, they took the “most anomalous” samples identified by the domain classifier and obtained their <em>true labels</em> via an external labeling function. They then checked the black-box model’s accuracy on <em>just</em> those anomalous samples. If accuracy drops significantly compared to the source baseline, the shift is flagged as malignant.</li>
-</ul></li>
+<li>calibration checks;</li>
+<li>interval coverage checks;</li>
+<li>uncertainty-error relationship tests;</li>
+<li>dataset-shift or sparse-regime evaluation;</li>
+<li>evidence that ensemble members are meaningfully diverse.</li>
 </ul>
 <hr>
 </section>
-<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">5. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
+</section>
+<section id="relevance-to-my-research-how-i-will-use-it" class="level2">
+<h2 class="anchored" data-anchor-id="relevance-to-my-research-how-i-will-use-it">8. Relevance to My Research / How I Will Use It</h2>
+<section id="why-i-would-cite-this-paper" class="level3">
+<h3 class="anchored" data-anchor-id="why-i-would-cite-this-paper">Why I would cite this paper</h3>
+<p>I would cite this paper when motivating why epistemic uncertainty should not be treated as an ordinary supervised prediction target.</p>
+<p>The most useful citation claim is:</p>
+<blockquote class="blockquote">
+<p>Bengs, Hullermeier, and Waegeman show that loss functions proposed for direct second-order epistemic uncertainty prediction can fail to incentivise faithful epistemic uncertainty, because observed labels do not provide direct feedback about the learner’s uncertainty over the true probability distribution.</p>
+</blockquote>
+</section>
+<section id="how-it-supports-my-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-supports-my-methodology">How it supports my methodology</h3>
+<p>This paper supports a methodology where epistemic uncertainty is estimated from a mechanism that represents multiple plausible predictors.</p>
+<p>For my work, that points toward:</p>
 <ul>
-<li><strong>Criticism 1 (AI): The Malignancy “Catch-22” (Label Requirement):</strong>
-<ul>
-<li>The framework’s method for determining if a shift is <em>harmful</em> requires passing the most anomalous target samples to an “external labeling function.” In real-world unsupervised deployment—where distribution shift detection is most critical precisely <em>because</em> we lack labels—this is a massive, often prohibitive assumption. While they argue you only need to label a tiny fraction of data, waiting for human-in-the-loop labeling defeats the purpose of an automated, real-time “loud failure.”</li>
-</ul></li>
-<li><strong>Criticism 2 (AI): Batch vs.&nbsp;Streaming Evaluation:</strong>
-<ul>
-<li>The methodology relies on classical two-sample testing (p vs q), which inherently assumes we are comparing two static <em>batches</em> of data. Real-world ML pipelines face continuous, time-correlated data streams. Standard KS or MMD tests assume i.i.d. samples within the target window; if the incoming stream has temporal auto-correlation, these tests will throw massive false-positive alarms. The authors briefly acknowledge this in their conclusion, but it remains a critical barrier to out-of-the-box deployment.</li>
-</ul></li>
-<li><strong>Criticism 3 (AI): Image-Centric Bias &amp; Softmax Geometries:</strong>
-<ul>
-<li>The finding that BBSDs (Softmax outputs) is the ultimate DR technique is highly specific to the geometry of neural networks trained on image classification (ResNet-18). Does this hold up in tabular environments using Gradient Boosted Trees? Does it hold in LLMs? Softmax calibration degrades terribly under shift; while this makes it <em>great</em> for detecting that a shift occurred, it might be overly sensitive to entirely benign shifts in strictly bounded tabular domains.</li>
-</ul></li>
-<li><strong>Criticism 4 (AI): The Danger of the Bonferroni Correction:</strong>
-<ul>
-<li>Using multiple univariate KS tests combined with a Bonferroni correction worked well here because the latent dimension <span class="math inline">\(K\)</span> was small (<span class="math inline">\(K=10\)</span> for BBSDs on CIFAR/MNIST). However, Bonferroni scales terribly. If applied to an ImageNet classifier (<span class="math inline">\(K=1000\)</span>), the threshold <span class="math inline">\(\alpha/K\)</span> becomes so conservative that the statistical power of the test would likely vanish, rendering the model blind to subtle shifts.</li>
-</ul></li>
+<li>deep ensembles;</li>
+<li>ensemble disagreement;</li>
+<li>function-space diversity;</li>
+<li>uncertainty validation under shift;</li>
+<li>caution toward uncertainty values produced only by an auxiliary loss head.</li>
 </ul>
+</section>
+<section id="how-it-connects-to-explainability" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-connects-to-explainability">How it connects to explainability</h3>
+<p>The paper is not an XAI paper in the feature-attribution sense. Its relevance to explainability is methodological.</p>
+<p>If I want to explain uncertainty, I first need the uncertainty estimate itself to be meaningful. This paper warns that an uncertainty output can look interpretable while being produced by a loss incentive that does not actually reward honest epistemic uncertainty.</p>
+<p>That supports the idea that explainable uncertainty should start with a defensible uncertainty-generation mechanism.</p>
+</section>
+<section id="best-use-in-my-literature-review" class="level3">
+<h3 class="anchored" data-anchor-id="best-use-in-my-literature-review">Best use in my literature review</h3>
+<p>This paper should sit in the methodological-foundation part of the review, close to:</p>
+<ul>
+<li>deep ensembles as a practical epistemic uncertainty mechanism;</li>
+<li>loss landscape explanations for ensemble diversity;</li>
+<li>uncertainty under dataset shift;</li>
+<li>papers that distinguish aleatoric and epistemic uncertainty.</li>
+</ul>
+<p>It is not mainly a paper about energy forecasting or SHAP. It is a theoretical support paper for why the epistemic uncertainty mechanism matters.</p>
 <hr>
 </section>
-<section id="action-items-integration-into-my-work" class="level2">
-<h2 class="anchored" data-anchor-id="action-items-integration-into-my-work">6. Action Items &amp; Integration into My Work</h2>
-<ul class="task-list">
-<li><label><input type="checkbox"><strong>Adopt BBSDs as a Core Baseline:</strong> Any framework I build for monitoring ML models in production <em>must</em> benchmark against BBSDs + KS Test. It is computationally virtually free (since the model is already computing softmax anyway) and serves as the gold-standard baseline.</label></li>
-<li><label><input type="checkbox"><strong>Address the Malignancy Gap:</strong> Position my own research as solving the exact limitation this paper introduces: How do we determine shift <em>malignancy</em> entirely unsupervised, without requiring an external labeling oracle? (e.g., via predictive variance, entropy tracking, or self-consistency metrics).</label></li>
-<li><label><input type="checkbox"><strong>Incorporate the “Domain Classifier” concept for Explainability:</strong> Use their method of ranking anomalies via Domain Classifier confidence to explain <em>what</em> shifted in my own datasets, rather than just firing a binary alarm.</label></li>
-<li><label><input type="checkbox"><strong>Quote the “Failing Loudly” paradigm:</strong> This is an excellent philosophical framing for the introduction of my thesis. ML should not fail silently; MLOps pipelines must be designed with explicit statistical circuit-breakers.</label></li>
-</ul>
+</section>
+<section id="pre-written-assets" class="level2">
+<h2 class="anchored" data-anchor-id="pre-written-assets">9. Pre-Written Assets</h2>
+<section id="literature-review-paragraph" class="level3">
+<h3 class="anchored" data-anchor-id="literature-review-paragraph">Literature review paragraph</h3>
+<p>Bengs, Hullermeier, and Waegeman provide an important methodological caution for epistemic uncertainty quantification. They argue that, unlike first-order probability estimation, second-order epistemic uncertainty cannot be learned faithfully by simply minimising a pointwise loss against observed labels. Their analysis shows that losses used for direct second-order uncertainty prediction can incentivise a model to become artificially overconfident, remain arbitrarily uncertain under regularisation, or report uncertainty that depends more on loss design choices than on the learner’s actual state of knowledge. This motivates the use of epistemic uncertainty mechanisms that represent uncertainty over predictors themselves, such as deep ensembles, rather than relying only on a single model’s self-reported uncertainty head.</p>
+</section>
+<section id="methodology-justification-sentence" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-justification-sentence">Methodology justification sentence</h3>
+<p>Because epistemic uncertainty has no direct supervised target, I use ensemble disagreement as a practical model-uncertainty mechanism rather than relying solely on a single model trained to output epistemic uncertainty through loss minimisation.</p>
+</section>
+<section id="ensemble-justification-sentence" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-justification-sentence">Ensemble justification sentence</h3>
+<p>Deep ensembles are methodologically attractive for epistemic uncertainty because they represent multiple plausible fitted functions, so disagreement between ensemble members provides a more direct signal of model uncertainty than a loss-trained self-reported confidence score.</p>
+</section>
+<section id="mc-dropout-comparison-sentence" class="level3">
+<h3 class="anchored" data-anchor-id="mc-dropout-comparison-sentence">MC dropout comparison sentence</h3>
+<p>This paper does not directly benchmark MC dropout, but it supports the broader concern that epistemic uncertainty should be represented through uncertainty over predictors; this favours ensemble-based disagreement when a transparent and defensible epistemic mechanism is needed.</p>
+</section>
+<section id="caution-sentence" class="level3">
+<h3 class="anchored" data-anchor-id="caution-sentence">Caution sentence</h3>
+<p>The paper should not be used to claim that all non-ensemble uncertainty methods are invalid; its strongest use is to show that direct loss-based second-order uncertainty estimates need careful justification and validation.</p>
+</section>
+<section id="one-line-review" class="level3">
+<h3 class="anchored" data-anchor-id="one-line-review">One-line review</h3>
+<p>This paper explains why epistemic uncertainty cannot simply be learned as another loss-minimising output: without direct uncertainty labels, the loss can reward confidence behaviour that is mathematically convenient but epistemically unfaithful.</p>
+<hr>
+</section>
+</section>
+<section id="bottom-line-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="bottom-line-takeaway">10. Bottom-Line Takeaway</h2>
+<p>The core value of this paper is that it strengthens the methodological case for being careful about where epistemic uncertainty comes from.</p>
+<p>It tells me not to treat an uncertainty number as trustworthy merely because a neural network was trained to output it. For epistemic uncertainty, the model must somehow represent uncertainty over possible predictors. Deep ensembles provide a practical way to do that through disagreement between independently fitted models.</p>
+<p>For my review, this paper supports the theoretical justification for using ensembles as an epistemic uncertainty mechanism, especially when paired with papers that show ensembles are empirically strong and functionally diverse.</p>
 
 
 </section>
@@ -993,13 +1195,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reviews/Explaining Set-Valued Predictions.html" class="pagination-link" aria-label="Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span>
+      <a href="../reviews/Notions of explainability and evaluation approaches for explainable artificial intelligence.html" class="pagination-link" aria-label="Notions of explainability and evaluation approaches for explainable artificial intelligence">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Notions of explainability and evaluation approaches for explainable artificial intelligence</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="pagination-link" aria-label="Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression">
-        <span class="nav-page-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reviews/Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices.html" class="pagination-link" aria-label="Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression">
+        <span class="nav-page-text">Postprocessing of point predictions for probabilistic forecasting of day-ahead electricity prices: The benefits of using isotonic distributional regression</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-18">
-<meta name="description" content="Review of a NeurIPS 2019 paper establishing a practical pipeline for dataset shift detection, characterization, and malignancy assessment using dimensionality reduction and two-sample testing.">
+<meta name="dcterms.date" content="2026-06-07">
+<meta name="description" content="A source-grounded synthesis of uncertainty terminology, taxonomy, probability, confidence, and probabilistic forecasting language.">
 
-<title>Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift – Review Articles</title>
+<title>Uncertainty taxonomy and language for deterministic readers – Review Articles</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,8 +32,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" rel="next">
-<link href="../reviews/Explaining Set-Valued Predictions.html" rel="prev">
+<link href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" rel="next">
+<link href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -72,35 +72,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -141,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Uncertainty taxonomy and language for deterministic readers.html">Uncertainty taxonomy and language for deterministic readers</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -279,7 +250,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</span></a>
   </div>
 </li>
@@ -387,7 +358,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reviews/Uncertainty taxonomy and language for deterministic readers.html" class="sidebar-item-text sidebar-link">
+  <a href="../reviews/Uncertainty taxonomy and language for deterministic readers.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Uncertainty taxonomy and language for deterministic readers</span></a>
   </div>
 </li>
@@ -432,20 +403,19 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Failing Loudly An Empirical Study of Methods for Detecting Dataset Shift.html">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reviews/A Survey on Uncertainty Quantification for Deep Learning An Uncertainty Source’s Perspective.html">All Reviews</a></li><li class="breadcrumb-item"><a href="../reviews/Uncertainty taxonomy and language for deterministic readers.html">Uncertainty taxonomy and language for deterministic readers</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</h1>
+<h1 class="title">Uncertainty taxonomy and language for deterministic readers</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Dataset Shift</div>
-    <div class="quarto-category">Out-of-Distribution Detection</div>
-    <div class="quarto-category">Machine Learning Operations (MLOps)</div>
-    <div class="quarto-category">Trustworthy AI</div>
+    <div class="quarto-category">Uncertainty quantification</div>
+    <div class="quarto-category">Concept note</div>
+    <div class="quarto-category">In progress</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Review of a NeurIPS 2019 paper establishing a practical pipeline for dataset shift detection, characterization, and malignancy assessment using dimensionality reduction and two-sample testing.
+    A source-grounded synthesis of uncertainty terminology, taxonomy, probability, confidence, and probabilistic forecasting language.
   </div>
 </div>
 
@@ -456,7 +426,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 18, 2024</p>
+      <p class="date">June 7, 2026</p>
     </div>
   </div>
   
@@ -470,123 +440,390 @@ window.Quarto = {
 
 <div class="paper-meta">
 <ul>
-<li><strong>Authors &amp; Year:</strong> Stephan Rabanser, Stephan Günnemann, Zachary C. Lipton (2019)</li>
-<li><strong>Venue (Journal/Conference):</strong> NeurIPS 2019 <em>(Highly reputable, Tier 1 conference in ML)</em></li>
-<li><strong>Link/DOI:</strong> <a href="https://arxiv.org/abs/1810.11953">arXiv:1810.11953</a> / NeurIPS Proceedings</li>
-<li><strong>Code/Data Available?:</strong> <a href="https://github.com/steverab/failing-loudly">Yes - GitHub Repository</a></li>
-<li><strong>Proximity/Threat Level:</strong> High / Foundational Methodology</li>
-<li><strong>Date Reviewed:</strong> 2024-05-18</li>
+<li><strong>Purpose:</strong> Build a plain-language bridge for readers who are used to deterministic models and point forecasts.</li>
+<li><strong>Evidence base:</strong> The PDFs in <code>To be reviewed/</code> were text-extracted and searched for uncertainty definitions, taxonomy language, interval terminology, calibration, confidence, and uncertainty-explanation framing.</li>
+<li><strong>Best conceptual sources:</strong> Hullermeier and Waegeman; Kendall and Gal; He and Jiang; Nemani et al.; Hong and Fan; Van Beers and De Visser; Pernot; Ovadia et al.; Watson et al.; Bley et al.</li>
+<li><strong>Review Status:</strong> Synthesis note in progress.</li>
 </ul>
 </div>
-<hr>
-<section id="core-contributions-novelty-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="core-contributions-novelty-motivation">2. Core Contributions, Novelty &amp; Motivation</h2>
+<section id="core-framing" class="level2">
+<h2 class="anchored" data-anchor-id="core-framing">1. Core Framing</h2>
+<p>For a deterministic reader, uncertainty is often heard as a weakness: the model is inaccurate, incomplete, or hesitant. The literature gives a better framing. Uncertainty is information about what is still unresolved after a model has made a prediction. It can describe the spread of plausible outcomes, the reliability of the model’s knowledge, or both.</p>
+<p>A deterministic forecast answers:</p>
+<blockquote class="blockquote">
+<p>What single value should we expect?</p>
+</blockquote>
+<p>A probabilistic forecast answers:</p>
+<blockquote class="blockquote">
+<p>What values are plausible, how likely are they, and when should the prediction be treated with caution?</p>
+</blockquote>
+<p>This distinction is important because a point forecast can be accurate on average while still being unhelpful for decisions that depend on risk, extremes, or asymmetric costs. In energy forecasting, for example, under-prediction and over-prediction may have very different consequences. This is why several forecasting papers describe probabilistic forecasts as distributions, quantiles, prediction intervals, or densities rather than as one expected value.</p>
+</section>
+<section id="a-useful-taxonomy" class="level2">
+<h2 class="anchored" data-anchor-id="a-useful-taxonomy">2. A Useful Taxonomy</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 25%">
+<col style="width: 18%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-language meaning</th>
+<th style="text-align: right;">Reducible?</th>
+<th>Typical examples</th>
+<th>Practical implication</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Aleatoric / aleatory uncertainty</strong></td>
+<td>Variability that is inherent in the process being measured or forecast.</td>
+<td style="text-align: right;">Usually no, within the current measurement/model setup.</td>
+<td>Sensor noise, weather variability, overlapping classes, noisy target values, random load fluctuation.</td>
+<td>Better sensors or a different problem formulation may help, but simply adding more of the same data often will not remove it.</td>
+</tr>
+<tr class="even">
+<td><strong>Epistemic uncertainty</strong></td>
+<td>Uncertainty caused by limited knowledge about the model, parameters, data coverage, or operating context.</td>
+<td style="text-align: right;">In principle, yes.</td>
+<td>Sparse data, poor coverage of rare operating regimes, model-form choice, parameter uncertainty, out-of-distribution inputs, dataset shift.</td>
+<td>Can often be reduced with targeted data collection, model refinement, better features, or explicit out-of-distribution handling.</td>
+</tr>
+<tr class="odd">
+<td><strong>Data uncertainty</strong></td>
+<td>Uncertainty that comes from the data generation or observation process.</td>
+<td style="text-align: right;">Often treated as aleatoric, but not always.</td>
+<td>Measurement noise, label ambiguity, unresolved class overlap.</td>
+<td>Explain whether the data are noisy because the world is variable or because the measurement process is weak.</td>
+</tr>
+<tr class="even">
+<td><strong>Model uncertainty</strong></td>
+<td>Uncertainty about the model’s structure, parameters, or suitability for the current input.</td>
+<td style="text-align: right;">Usually epistemic.</td>
+<td>Neural-network architecture choice, limited training data, parameter posterior spread, distribution shift.</td>
+<td>Useful for deciding where the model does not yet know enough.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total predictive uncertainty</strong></td>
+<td>The combined uncertainty attached to a prediction.</td>
+<td style="text-align: right;">Mixed.</td>
+<td>Prediction variance, predictive entropy, forecast interval width, full predictive distribution.</td>
+<td>Useful as a risk signal, but it can hide different causes unless decomposed.</td>
+</tr>
+<tr class="even">
+<td><strong>Uncertainty under shift / OOD uncertainty</strong></td>
+<td>Uncertainty caused by applying the model outside the conditions it learned from.</td>
+<td style="text-align: right;">Usually epistemic.</td>
+<td>New operating regimes, unusual weather, unseen equipment states, shifted feature distributions.</td>
+<td>High uncertainty should trigger caution, abstention, human review, or data collection.</td>
+</tr>
+</tbody>
+</table>
+<p>The most helpful short version is:</p>
+<blockquote class="blockquote">
+<p>Aleatoric uncertainty means the outcome is variable even if the model is well informed. Epistemic uncertainty means the model is not yet sufficiently informed.</p>
+</blockquote>
+<p>That distinction should be presented as useful rather than absolute. Hullermeier and Waegeman emphasize that aleatoric and epistemic uncertainty depend on the modelling context. A source of uncertainty can move category when the measurement system, feature set, or modelling assumptions change. A class overlap that looks irreducible with one feature set may become reducible after adding a more informative sensor.</p>
+</section>
+<section id="probability-confidence-and-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="probability-confidence-and-intervals">3. Probability, Confidence, and Intervals</h2>
+<section id="probability" class="level3">
+<h3 class="anchored" data-anchor-id="probability">Probability</h3>
+<p>Probability is the model’s numerical statement about possible outcomes. In classification it may be a probability assigned to each class. In regression or forecasting it is better to think in terms of a full conditional distribution:</p>
+<blockquote class="blockquote">
+<p>Given the current inputs, what distribution of future outcomes does the model assign?</p>
+</blockquote>
+<p>Quantiles, prediction intervals, densities, and scenarios with assigned probabilities are all ways of communicating this distribution. Scenarios without probabilities are not yet probabilistic forecasts; they are possible futures, but not weighted possible futures.</p>
+</section>
+<section id="confidence" class="level3">
+<h3 class="anchored" data-anchor-id="confidence">Confidence</h3>
+<p>Confidence is used less consistently than probability. In classification papers, confidence often means the maximum predicted class probability. In regression and forecasting papers, confidence may refer to an interval level, an observed coverage rate, or the model’s practical trustworthiness. The safest research language is therefore:</p>
+<blockquote class="blockquote">
+<p>I use confidence only when I define the metric. Otherwise I use probability, coverage, calibration, entropy, variance, or interval width.</p>
+</blockquote>
+<p>For deterministic readers, this distinction matters:</p>
+<blockquote class="blockquote">
+<p>A probability can be part of the forecast. Confidence is about how much trust we should place in that probability or prediction.</p>
+</blockquote>
+<p>A model can assign a high probability and still be overconfident if similar predictions are wrong more often than the probability implies. This is the calibration problem.</p>
+</section>
+<section id="prediction-intervals-vs.-confidence-intervals" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-intervals-vs.-confidence-intervals">Prediction Intervals vs.&nbsp;Confidence Intervals</h3>
+<p>The load-forecasting literature is especially useful here because it explicitly warns that many papers misuse “confidence interval” when they mean “prediction interval.”</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Interval term</th>
+<th>What it refers to</th>
+<th>Better wording</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Prediction interval</strong></td>
+<td>A range intended to contain a future observation or realised outcome with a stated long-run coverage.</td>
+<td>“A 90% prediction interval should contain about 90% of comparable future observations.”</td>
+</tr>
+<tr class="even">
+<td><strong>Confidence interval</strong></td>
+<td>A range for an estimated parameter, fitted function, or model quantity.</td>
+<td>“A 95% confidence interval describes uncertainty in the estimated mean/function/parameter.”</td>
+</tr>
+</tbody>
+</table>
+<p>For forecasting research, the default term should usually be <strong>prediction interval</strong>, not confidence interval, because the object of interest is normally the future observed value, not only an unknown parameter.</p>
+</section>
+</section>
+<section id="deterministic-to-probabilistic-translation" class="level2">
+<h2 class="anchored" data-anchor-id="deterministic-to-probabilistic-translation">4. Deterministic-to-Probabilistic Translation</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Deterministic language</th>
+<th>Probabilistic counterpart</th>
+<th>Explanation for readers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Point forecast</td>
+<td>Predictive distribution</td>
+<td>A point forecast gives one number; a predictive distribution gives the range and relative plausibility of many numbers.</td>
+</tr>
+<tr class="even">
+<td>Expected value / mean</td>
+<td>Conditional mean</td>
+<td>The average outcome implied by the distribution, not the whole forecast.</td>
+</tr>
+<tr class="odd">
+<td>Median forecast</td>
+<td>P50 quantile</td>
+<td>Half the probability mass lies below and half above.</td>
+</tr>
+<tr class="even">
+<td>Upper/lower forecast band</td>
+<td>Quantile pair or prediction interval</td>
+<td>The model is describing a plausible range, not just an error bar decoration.</td>
+</tr>
+<tr class="odd">
+<td>Forecast error</td>
+<td>Calibration and coverage</td>
+<td>The question becomes whether stated uncertainty matches realised uncertainty.</td>
+</tr>
+<tr class="even">
+<td>Smaller error</td>
+<td>Sharper calibrated forecast</td>
+<td>A useful probabilistic forecast is as narrow as possible while still covering the right amount.</td>
+</tr>
+<tr class="odd">
+<td>Model confidence</td>
+<td>Calibrated reliability</td>
+<td>The stated probability/interval should agree with observed correctness over comparable cases.</td>
+</tr>
+</tbody>
+</table>
+<p>Three evaluation terms are worth introducing early:</p>
+<p><strong>Calibration / reliability:</strong> When the model says 90%, does the event occur about 90% of the time in comparable cases?</p>
+<p><strong>Sharpness:</strong> Among calibrated forecasts, are the intervals/distributions as concentrated as possible? A forecast that always gives a very wide interval may be calibrated but not useful.</p>
+<p><strong>Resolution / adaptivity:</strong> Does the uncertainty change meaningfully across inputs and operating regimes? If all cases receive the same interval width, the model may be ignoring important structure.</p>
+<p>Pernot’s validation primer adds a useful refinement. Average calibration is not enough. An uncertainty method can look correct on average while being too narrow in one region of the input space and too wide in another. His terms are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Validation target</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Average calibration</strong></td>
+<td>The uncertainty is correct on average across the validation set.</td>
+</tr>
+<tr class="even">
+<td><strong>Consistency</strong></td>
+<td>The uncertainty is reliable across different predicted uncertainty levels.</td>
+</tr>
+<tr class="odd">
+<td><strong>Adaptivity</strong></td>
+<td>The uncertainty is reliable across the relevant input-feature space.</td>
+</tr>
+</tbody>
+</table>
+<p>This is an excellent language bridge for deterministic readers because it says: “We are not asking you to trust a vague uncertainty number. We are asking whether that number behaves correctly where it is used.”</p>
+</section>
+<section id="how-this-supports-explainability" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-supports-explainability">5. How This Supports Explainability</h2>
+<p>Most XAI methods explain the point prediction: which inputs pushed the forecast up or down. The uncertainty-explanation papers argue that this is incomplete because the uncertainty itself can vary across the feature space.</p>
+<p>For this research, the stronger claim is:</p>
+<blockquote class="blockquote">
+<p>It is not enough to explain the predicted value. We also need to explain why the prediction became more or less uncertain.</p>
+</blockquote>
+<p>That framing supports feature-attribution work on:</p>
 <ul>
-<li><strong>The Motivation (Why “Fail Loudly”?):</strong>
-<ul>
-<li>Standard software systems rely on explicit tests and type-checks to throw exceptions (“fail loudly”) when inputs violate assumptions. Machine learning systems, however, generally assume test data is drawn i.i.d. from the training distribution. When this assumption is violated (dataset shift), ML models <em>fail silently</em>, outputting highly confident but incorrect predictions without alerting the operator.</li>
-</ul></li>
-<li><strong>The Core Problem:</strong>
-<ul>
-<li>High-dimensional data (like images) makes traditional statistical two-sample testing incredibly weak due to the curse of dimensionality. There are no established best practices for detecting shift in complex real-world ML pipelines.</li>
-</ul></li>
-<li><strong>Their Claim to Fame / Novelty:</strong>
-<ul>
-<li>The paper provides a comprehensive empirical framework for achieving three distinct goals during deployment:
+<li>the lower quantile,</li>
+<li>the upper quantile,</li>
+<li>the interval width,</li>
+<li>the predictive entropy,</li>
+<li>the predictive variance,</li>
+<li>the difference between aleatoric and epistemic uncertainty,</li>
+<li>and the cases where high uncertainty is caused by feature interactions rather than by a single feature.</li>
+</ul>
+<p>Watson et al.&nbsp;provide the clean theoretical bridge: explain predictive uncertainty by attributing features to conditional entropy or related information-theoretic quantities. Bley et al.&nbsp;provide a more applied bridge: in ensembles, uncertainty can be dominated by second-order feature and feature-interaction effects, so explaining uncertainty may require more than applying ordinary first-order SHAP-style reasoning to a point forecast.</p>
+</section>
+<section id="reusable-paragraphs" class="level2">
+<h2 class="anchored" data-anchor-id="reusable-paragraphs">6. Reusable Paragraphs</h2>
+<section id="short-conceptual-introduction" class="level3">
+<h3 class="anchored" data-anchor-id="short-conceptual-introduction">Short Conceptual Introduction</h3>
+<p>This study treats uncertainty as a property of the prediction, not merely as a symptom of model error. A deterministic model returns a single expected value, while a probabilistic model returns information about the range and relative plausibility of possible outcomes. This is important in operational forecasting because decisions are often affected not only by the most likely value, but also by the risk of high, low, or unusual outcomes.</p>
+</section>
+<section id="aleatoric-and-epistemic-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="aleatoric-and-epistemic-uncertainty">Aleatoric and Epistemic Uncertainty</h3>
+<p>The uncertainty literature commonly distinguishes between aleatoric and epistemic uncertainty. Aleatoric uncertainty refers to variability that remains even when the model is well informed, such as measurement noise, natural system variability, or overlapping outcome regions. Epistemic uncertainty refers to uncertainty caused by limited knowledge, such as sparse training data, uncertain model parameters, model-form choices, or inputs that differ from the training distribution. In practical terms, aleatoric uncertainty describes what is inherently variable, while epistemic uncertainty describes what the model has not yet learned.</p>
+</section>
+<section id="probability-and-confidence" class="level3">
+<h3 class="anchored" data-anchor-id="probability-and-confidence">Probability and Confidence</h3>
+<p>Probability and confidence should not be used as loose synonyms. Probability is the numerical statement made by the predictive model about possible outcomes. Confidence is better reserved for a defined reliability concept, such as calibrated class confidence, interval coverage, or observed confidence. A model can assign a high probability to an outcome and still be overconfident if similar predictions fail more often than the probability implies.</p>
+</section>
+<section id="prediction-intervals" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-intervals">Prediction Intervals</h3>
+<p>In forecasting, the appropriate interval is usually a prediction interval rather than a confidence interval. A prediction interval is intended to contain future observations with a stated long-run coverage level. For example, a 90% prediction interval should contain approximately 90% of comparable realised outcomes if the forecasting system is well calibrated. This interpretation differs from a confidence interval, which describes uncertainty in an estimated parameter or fitted function.</p>
+</section>
+<section id="explaining-uncertainty" class="level3">
+<h3 class="anchored" data-anchor-id="explaining-uncertainty">Explaining Uncertainty</h3>
+<p>Explainability should extend beyond the point forecast. A feature can influence not only the predicted mean or median, but also the width, asymmetry, or entropy of the predictive distribution. Explaining the prediction interval therefore asks a different question from explaining the point forecast: which inputs made the outcome more or less predictable? This distinction is central when the goal is to understand risk, not only expected value.</p>
+</section>
+</section>
+<section id="wording-to-avoid" class="level2">
+<h2 class="anchored" data-anchor-id="wording-to-avoid">7. Wording To Avoid</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Avoid</th>
+<th>Prefer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“The model is 90% confident the true value is inside this interval.”</td>
+<td>“The 90% prediction interval should contain about 90% of comparable future observations if calibrated.”</td>
+</tr>
+<tr class="even">
+<td>“The confidence interval around the forecast.”</td>
+<td>“The prediction interval around the forecast,” unless the interval is for a fitted parameter or function.</td>
+</tr>
+<tr class="odd">
+<td>“Low probability means low uncertainty.”</td>
+<td>“Low probability for one outcome may still be a confident prediction if the distribution is well specified.”</td>
+</tr>
+<tr class="even">
+<td>“The model is uncertain.”</td>
+<td>“The model has high predictive entropy / wide prediction interval / high epistemic uncertainty,” depending on the metric.</td>
+</tr>
+<tr class="odd">
+<td>“More data will reduce uncertainty.”</td>
+<td>“More representative data can reduce epistemic uncertainty; aleatoric uncertainty may remain.”</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-map" class="level2">
+<h2 class="anchored" data-anchor-id="source-map">8. Source Map</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>Best use in the research</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Hullermeier and Waegeman, “Aleatoric and Epistemic Uncertainty in Machine Learning”</strong></td>
+<td>Best conceptual foundation. Use for reducible vs.&nbsp;irreducible uncertainty, probability vs.&nbsp;ignorance, and the caution that aleatoric/epistemic categories are context-dependent.</td>
+</tr>
+<tr class="even">
+<td><strong>Kendall and Gal, “What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?”</strong></td>
+<td>Clear practical definitions: aleatoric as observation noise; epistemic as model uncertainty reducible with enough data. Good for explaining OOD behavior and safety-critical relevance.</td>
+</tr>
+<tr class="odd">
+<td><strong>He and Jiang, “A Survey on Uncertainty Quantification for Deep Learning: An Uncertainty Source’s Perspective”</strong></td>
+<td>Best source-based taxonomy: data uncertainty, model uncertainty, and methods grouped by which source they capture.</td>
+</tr>
+<tr class="even">
+<td><strong>Nemani et al., “Uncertainty Quantification in Machine Learning for Engineering Design and Health Prognostics: A Tutorial”</strong></td>
+<td>Best engineering-facing explanation of aleatory/epistemic sources, total predictive uncertainty, confidence communication, and decomposition by total variance.</td>
+</tr>
+<tr class="odd">
+<td><strong>Hong and Fan, “Probabilistic Electric Load Forecasting: A Tutorial Review”</strong></td>
+<td>Best forecasting terminology source. Use for quantiles, intervals, densities, scenarios with probabilities, and the distinction between prediction intervals and confidence intervals.</td>
+</tr>
+<tr class="even">
+<td><strong>Wen et al., “A Multi-Horizon Quantile Recurrent Forecaster”</strong></td>
+<td>Clean deterministic-vs-probabilistic contrast: probabilistic forecast as a conditional distribution versus point forecast as conditional mean. Good for quantile forecasting language.</td>
+</tr>
+<tr class="odd">
+<td><strong>Van Beers and De Visser, “How to Evaluate Uncertainty Estimates in Machine Learning for Regression”</strong></td>
+<td>Best caution on interval evaluation. Use for confidence vs.&nbsp;prediction intervals, pointwise vs.&nbsp;marginal coverage, and why PICP can be misleading.</td>
+</tr>
+<tr class="even">
+<td><strong>Pernot, “Validation of Uncertainty Quantification Metrics”</strong></td>
+<td>Best validation language: calibration, consistency, adaptivity, and why average calibration alone does not guarantee reliable uncertainty for individual predictions.</td>
+</tr>
+<tr class="odd">
+<td><strong>Ovadia et al., “Can You Trust Your Model’s Uncertainty?”</strong></td>
+<td>Best cautionary evidence that calibration can degrade under dataset shift and that confidence must align with accuracy in deployment conditions.</td>
+</tr>
+<tr class="even">
+<td><strong>Watson et al., “Explaining Predictive Uncertainty with Information Theoretic Shapley Values”</strong></td>
+<td>Best theoretical bridge from UQ to XAI: explain conditional entropy and uncertainty components, not only point estimates.</td>
+</tr>
+<tr class="odd">
+<td><strong>Bley et al., “Explaining Predictive Uncertainty by Exposing Second-Order Effects”</strong></td>
+<td>Best applied bridge for explaining uncertainty with feature and feature-interaction effects, especially in ensembles and energy-price examples.</td>
+</tr>
+<tr class="even">
+<td><strong>Salvi et al., “Explainability and Uncertainty: Two Sides of the Same Coin”</strong></td>
+<td>Useful framing that XAI alone cannot guarantee reliability and that uncertainty should be communicated alongside explanations.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="suggested-placement-in-the-research" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-placement-in-the-research">9. Suggested Placement In The Research</h2>
+<p>This material probably belongs early in the literature review or methodology chapter, before introducing the proposed explainable probabilistic model. The clean sequence would be:</p>
 <ol type="1">
-<li><strong>Detect</strong> shift using as few examples as possible.</li>
-<li><strong>Characterize</strong> shift by identifying the samples most representative of the change.</li>
-<li><strong>Determine Malignancy</strong>, separating shifts that safely preserve model accuracy from those that actively destroy it.</li>
-</ol></li>
-</ul></li>
-<li><strong>The Value Derived from the Pipeline (What did they actually find?):</strong>
-<ul>
-<li><strong>BBSDs Reigns Supreme:</strong> Using the soft predictions (softmax outputs) of the black-box classifier itself as a dimensionality reduction technique (BBSDs), followed by simple univariate testing, works astonishingly well across a massive variety of shifts—even when the underlying label-shift assumption is violated.</li>
-<li><strong>Univariate <span class="math inline">\(\approx\)</span> Multivariate:</strong> Surprisingly, running multiple univariate Kolmogorov-Smirnov (KS) tests across latent dimensions (with a heavy Bonferroni correction) performs comparably to complex, computationally heavy multivariate kernel tests like MMD.</li>
-<li><strong>The MNIST Bombshell:</strong> By applying their framework to standard datasets, they discovered that the widely used, supposedly i.i.d. original MNIST train/test split actually contains a statistically significant distribution shift (specifically, the digit ‘6’ is drawn at a different rotation/openness in the test set).</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="methodology-technical-details" class="level2">
-<h2 class="anchored" data-anchor-id="methodology-technical-details">3. Methodology &amp; Technical Details</h2>
-<ul>
-<li><strong>The Pipeline Design:</strong>
-<ul>
-<li><strong>Step 1: Dimensionality Reduction (DR).</strong> Reduce raw high-dimensional inputs to a lower-dimensional latent space <span class="math inline">\(K\)</span>.</li>
-<li><strong>Step 2: Two-Sample Testing (TST).</strong> Run statistical tests comparing the source (training) latent representations against the target (deployment) latent representations.</li>
-</ul></li>
-<li><strong>Dimensionality Reduction Methods Compared:</strong>
-<ul>
-<li><em>No Reduction</em> (Raw pixels)</li>
-<li><em>PCA</em> (Principal Component Analysis)</li>
-<li><em>SRP</em> (Sparse Random Projection)</li>
-<li><em>UAE / TAE</em> (Untrained and Trained Autoencoders)</li>
-<li><em>BBSDs / BBSDh</em> (Black-Box Shift Detection using the classifier’s own Softmax or Hard predictions)</li>
-<li><em>Domain Classifier</em> (A model explicitly trained to distinguish source vs.&nbsp;target data).</li>
-</ul></li>
-<li><strong>Statistical Tests Used:</strong>
-<ul>
-<li><em>Multivariate:</em> Maximum Mean Discrepancy (MMD) with a permutation test.</li>
-<li><em>Univariate:</em> Kolmogorov-Smirnov (KS) test aggregated via Bonferroni correction.</li>
-<li><em>Categorical/Binomial:</em> Chi-Squared (for hard labels) and Binomial test (for domain classifiers).</li>
-</ul></li>
-<li><strong>Datasets &amp; Simulated Shifts:</strong>
-<ul>
-<li>Tested on MNIST, CIFAR-10, USPS, and COIL-100.</li>
-<li>Perturbations included: Adversarial (FGSM), Knock-out (class imbalance), Gaussian noise, and Image transforms (rotation, translation, zoom). Shifts were varied by intensity and fraction of affected data (10% to 100%).</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="validation-strategy-detection-characterization-malignancy" class="level2">
-<h2 class="anchored" data-anchor-id="validation-strategy-detection-characterization-malignancy">4. Validation Strategy (Detection, Characterization, &amp; Malignancy)</h2>
-<ul>
-<li><strong>Validating Shift Detection:</strong>
-<ul>
-<li>The authors evaluated the p-value evolution and detection accuracy across varying target sample sizes (<span class="math inline">\(s \in \{10, \dots, 10000\}\)</span>). BBSDs could reliably detect large shifts with just 20 samples, vastly outperforming methods like PCA or untrained autoencoders.</li>
-</ul></li>
-<li><strong>Validating Shift Characterization (Most Anomalous Samples):</strong>
-<ul>
-<li>Instead of standard anomaly detection, they used the output probabilities of the <em>Domain Classifier</em> to rank samples. The items the domain classifier most confidently placed in the “target” bucket were presented as exemplars of the shift.</li>
-</ul></li>
-<li><strong>Validating Shift Malignancy:</strong>
-<ul>
-<li><strong>The Heuristic:</strong> To figure out if a shift actually hurts the primary task classifier, they took the “most anomalous” samples identified by the domain classifier and obtained their <em>true labels</em> via an external labeling function. They then checked the black-box model’s accuracy on <em>just</em> those anomalous samples. If accuracy drops significantly compared to the source baseline, the shift is flagged as malignant.</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="my-thoughts-criticisms-unstated-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="my-thoughts-criticisms-unstated-limitations">5. My Thoughts, Criticisms &amp; Unstated Limitations</h2>
-<ul>
-<li><strong>Criticism 1 (AI): The Malignancy “Catch-22” (Label Requirement):</strong>
-<ul>
-<li>The framework’s method for determining if a shift is <em>harmful</em> requires passing the most anomalous target samples to an “external labeling function.” In real-world unsupervised deployment—where distribution shift detection is most critical precisely <em>because</em> we lack labels—this is a massive, often prohibitive assumption. While they argue you only need to label a tiny fraction of data, waiting for human-in-the-loop labeling defeats the purpose of an automated, real-time “loud failure.”</li>
-</ul></li>
-<li><strong>Criticism 2 (AI): Batch vs.&nbsp;Streaming Evaluation:</strong>
-<ul>
-<li>The methodology relies on classical two-sample testing (p vs q), which inherently assumes we are comparing two static <em>batches</em> of data. Real-world ML pipelines face continuous, time-correlated data streams. Standard KS or MMD tests assume i.i.d. samples within the target window; if the incoming stream has temporal auto-correlation, these tests will throw massive false-positive alarms. The authors briefly acknowledge this in their conclusion, but it remains a critical barrier to out-of-the-box deployment.</li>
-</ul></li>
-<li><strong>Criticism 3 (AI): Image-Centric Bias &amp; Softmax Geometries:</strong>
-<ul>
-<li>The finding that BBSDs (Softmax outputs) is the ultimate DR technique is highly specific to the geometry of neural networks trained on image classification (ResNet-18). Does this hold up in tabular environments using Gradient Boosted Trees? Does it hold in LLMs? Softmax calibration degrades terribly under shift; while this makes it <em>great</em> for detecting that a shift occurred, it might be overly sensitive to entirely benign shifts in strictly bounded tabular domains.</li>
-</ul></li>
-<li><strong>Criticism 4 (AI): The Danger of the Bonferroni Correction:</strong>
-<ul>
-<li>Using multiple univariate KS tests combined with a Bonferroni correction worked well here because the latent dimension <span class="math inline">\(K\)</span> was small (<span class="math inline">\(K=10\)</span> for BBSDs on CIFAR/MNIST). However, Bonferroni scales terribly. If applied to an ImageNet classifier (<span class="math inline">\(K=1000\)</span>), the threshold <span class="math inline">\(\alpha/K\)</span> becomes so conservative that the statistical power of the test would likely vanish, rendering the model blind to subtle shifts.</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="action-items-integration-into-my-work" class="level2">
-<h2 class="anchored" data-anchor-id="action-items-integration-into-my-work">6. Action Items &amp; Integration into My Work</h2>
-<ul class="task-list">
-<li><label><input type="checkbox"><strong>Adopt BBSDs as a Core Baseline:</strong> Any framework I build for monitoring ML models in production <em>must</em> benchmark against BBSDs + KS Test. It is computationally virtually free (since the model is already computing softmax anyway) and serves as the gold-standard baseline.</label></li>
-<li><label><input type="checkbox"><strong>Address the Malignancy Gap:</strong> Position my own research as solving the exact limitation this paper introduces: How do we determine shift <em>malignancy</em> entirely unsupervised, without requiring an external labeling oracle? (e.g., via predictive variance, entropy tracking, or self-consistency metrics).</label></li>
-<li><label><input type="checkbox"><strong>Incorporate the “Domain Classifier” concept for Explainability:</strong> Use their method of ranking anomalies via Domain Classifier confidence to explain <em>what</em> shifted in my own datasets, rather than just firing a binary alarm.</label></li>
-<li><label><input type="checkbox"><strong>Quote the “Failing Loudly” paradigm:</strong> This is an excellent philosophical framing for the introduction of my thesis. ML should not fail silently; MLOps pipelines must be designed with explicit statistical circuit-breakers.</label></li>
-</ul>
+<li>Deterministic prediction gives a point estimate.</li>
+<li>Probabilistic prediction gives a distribution, interval, or quantiles.</li>
+<li>Predictive uncertainty can come from inherent variability or lack of knowledge.</li>
+<li>Probability, confidence, and prediction intervals need precise wording.</li>
+<li>A good uncertainty estimate must be calibrated, sharp, and adaptive.</li>
+<li>The research contribution is to explain not only the forecast, but the uncertainty around the forecast.</li>
+</ol>
 
 
 </section>
@@ -993,13 +1230,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reviews/Explaining Set-Valued Predictions.html" class="pagination-link" aria-label="Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Explaining Set-Valued Predictions: SHAP Analysis for Conformal Classification</span>
+      <a href="../reviews/UbiQTree uncertainty quantification in XAI with tree ensembles.html" class="pagination-link" aria-label="UbiQTree: Uncertainty quantification in XAI with tree ensembles">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">UbiQTree: Uncertainty quantification in XAI with tree ensembles</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reviews/Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression.html" class="pagination-link" aria-label="Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression">
-        <span class="nav-page-text">Forecasting Value-at-Risk Using Deep Neural Network Quantile Regression</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reviews/Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants.html" class="pagination-link" aria-label="Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants">
+        <span class="nav-page-text">Uncertainty-Aware and Explainable Human Error Detection in the Operation of Nuclear Power Plants</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
